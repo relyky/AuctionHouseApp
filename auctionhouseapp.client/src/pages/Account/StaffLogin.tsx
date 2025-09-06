@@ -5,9 +5,10 @@
 
 import { useState } from 'react'
 import type { FormEvent } from 'react'
-import { Box, Button, Checkbox, FormControlLabel, FormLabel, FormControl, Link, TextField, Typography, Stack } from '@mui/material';
+import { Box, Button, Checkbox, FormControlLabel, FormLabel, FormControl, Link, TextField, Typography, Stack, useEventCallback } from '@mui/material';
 import MuiCard from '@mui/material/Card';
 import { styled } from '@mui/material/styles';
+import { postData } from '../../tools/httpHelper';
 
 export default function SignIn() {
   const [userIdError, setUserIdError] = useState(false);
@@ -15,17 +16,19 @@ export default function SignIn() {
   const [passwordError, setPasswordError] = useState(false);
   const [passwordErrorMessage, setPasswordErrorMessage] = useState('');
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = useEventCallback(async (event: FormEvent<HTMLFormElement>) => {
     if (userIdError || passwordError) {
       event.preventDefault();
       return;
     }
-    const data = new FormData(event.currentTarget);
-    console.log({
-      userId: data.get('userId'),
-      password: data.get('password'),
-    });
-  };
+
+    const data = new FormData(event.currentTarget)
+    const userId = data.get('userId')
+    const password = data.get('password')
+    const credential = `${userId}:${password}`;
+    const resp = await postData(`/api/Account/StaffLogin?credential=${credential}`)
+    console.log('handleSubmit.resp', { resp })
+  });
 
   const validateInputs = () => {
     const userId = document.getElementById('userId') as HTMLInputElement;
