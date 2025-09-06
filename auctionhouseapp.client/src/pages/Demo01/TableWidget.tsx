@@ -1,9 +1,10 @@
 import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 import { tableCellClasses } from '@mui/material/TableCell';
 import { styled } from '@mui/material/styles';
+import type { IWeatherForecast } from '../../dto/IWeatherForecast';
 
 export default function TableWidget(props: {
-  forecasts: IForecast[]
+  forecasts: IWeatherForecast[]
 }) {
   const { forecasts } = props;
 

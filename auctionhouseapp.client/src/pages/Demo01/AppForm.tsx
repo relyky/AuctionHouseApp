@@ -13,6 +13,7 @@ import CommandPanel from './CommandPanel';
 import CustomButtonLab from './CustomButtonLab';
 import CountUpLab from './CountUpLab';
 import QrCodeWidget from '../../widgets/QrCodeWidget';
+import type { IWeatherForecast } from '../../dto/IWeatherForecast';
 // Material-UI icons
 import StartIcon from '@mui/icons-material/NotStarted';
 import RefreshIcon from '@mui/icons-material/Refresh';
@@ -20,9 +21,9 @@ import UsePostDataLab from './UsePostDataLab';
 
 export default function Demo01_AppForm() {
   const counterValue = useAtomValue(counterAtom)
-  const [forecasts, setForecasts] = useState<IForecast[]>([]);
+  const [forecasts, setForecasts] = useState<IWeatherForecast[]>([]);
   const [f_loading, setLoading] = useState<boolean>(false);
-  const [toggleDataStream, f_starting, f_streaming] = useDataStream((forecast: IForecast) => {
+  const [toggleDataStream, f_starting, f_streaming] = useDataStream((forecast: IWeatherForecast) => {
     toast(`YES ${forecast.date} ${forecast.temperatureC}°C  ${forecast.temperatureF}°F ${forecast.summary}`)
   });
 
@@ -86,7 +87,7 @@ export default function Demo01_AppForm() {
   async function qryDataList() {
     try {
       setLoading(true)
-      const response = await axios.post<IForecast[]>('/api/WeatherForecast/QryDataList')
+      const response = await axios.post<IWeatherForecast[]>('/api/WeatherForecast/QryDataList')
       await delayPromise(800);
       setForecasts(response.data);
     }

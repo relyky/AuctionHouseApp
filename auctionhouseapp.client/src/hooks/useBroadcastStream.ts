@@ -53,7 +53,7 @@ export function useBroadcastStream(notifier: (info: ILiveAuctionStatus) => void)
             continue;
           }
 
-          // chunk 解析 => IForecast ※只會有一訊息物件。
+          // chunk 解析 => IWeatherForecast ※只會有一訊息物件。
           const json = chunk.slice(1); // 解析出單元 JSON 字串。
           const info: ILiveAuctionStatus = JSON.parse(json);
           notifier(info); // 通知外部處理資料

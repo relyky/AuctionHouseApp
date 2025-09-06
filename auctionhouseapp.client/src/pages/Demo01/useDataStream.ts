@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import type { IWeatherForecast } from "../../dto/IWeatherForecast";
 
-export default function useDataStream(notifier: (info: IForecast) => void)
+export default function useDataStream(notifier: (info: IWeatherForecast) => void)
   : [toggleDataStream: () => void, f_starting: boolean, f_streaming: boolean] {
   const [f_streaming, setStreaming] = useState<boolean>(false);
   const [f_starting, setStarting] = useState<boolean>(false);
@@ -39,9 +40,9 @@ export default function useDataStream(notifier: (info: IForecast) => void)
         // 最後一個 chunk === ']' 不處理。
         if (chunk === ']') continue;
 
-        // chunk 解析 => IForecast
+        // chunk 解析 => IWeatherForecast
         const json = chunk.slice(1); // 解析出單元 JSON 字串。
-        const info: IForecast = JSON.parse(json);
+        const info: IWeatherForecast = JSON.parse(json);
         notifier(info); // 通知外部處理資料
       }
     }
