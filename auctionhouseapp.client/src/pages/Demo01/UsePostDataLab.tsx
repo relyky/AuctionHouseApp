@@ -1,13 +1,14 @@
 import { useState } from "react";
 import { Box, Button, useEventCallback } from "@mui/material";
 import { postData } from "../../tools/httpHelper";
+import type { IStaffAccount } from "../Account/DTO/IStaffAccount";
 
 export default function UsePostDataLab() {
-  const [info, setInfo] = useState<any>()
+  const [info, setInfo] = useState<IStaffAccount>()
 
   const handlePostData = useEventCallback(async () => {
-    const userId = 'smart'
-    const info = await postData(`api/WeatherForecast/GetFormData/${userId}`);
+    const userId = 'pretty'
+    const info = await postData<IStaffAccount>(`api/WeatherForecast/GetFormData/${userId}`);
     setInfo(info);
   });
 
