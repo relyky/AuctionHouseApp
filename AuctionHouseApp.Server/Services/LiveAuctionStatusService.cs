@@ -1,4 +1,4 @@
-﻿using AuctionHouseTpl.Server.DTO;
+﻿using AuctionHouseApp.Server.DTO;
 using Dapper;
 using System.Collections.Concurrent;
 using System.Collections.Immutable;
@@ -6,7 +6,7 @@ using Vista.DB;
 using Vista.DB.Schema;
 using Vista.DbPanda;
 
-namespace AuctionHouseTpl.Server.Services;
+namespace AuctionHouseApp.Server.Services;
 
 /// <summary>
 /// 拍賣現在狀態資訊暫存庫。

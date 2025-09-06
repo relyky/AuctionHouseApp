@@ -1,5 +1,5 @@
-﻿using AuctionHouseTpl.Server.DTO;
-using AuctionHouseTpl.Server.Services;
+﻿using AuctionHouseApp.Server.DTO;
+using AuctionHouseApp.Server.Services;
 using Dapper;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
@@ -8,7 +8,7 @@ using Vista.DB;
 using Vista.DB.Schema;
 using Vista.DbPanda;
 
-namespace AuctionHouseTpl.Server.Controllers;
+namespace AuctionHouseApp.Server.Controllers;
 
 /// <summary>
 /// 競標者Biz

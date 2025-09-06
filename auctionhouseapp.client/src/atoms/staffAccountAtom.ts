@@ -1,38 +1,44 @@
-import { atom, useSetAtom } from "jotai"
 import { useMemo } from "react"
-import { postData } from "../tools/httpHelper"
+import { atom, useSetAtom } from "jotai"
+import { postData, ResponseError } from "../tools/httpHelper"
+import { delayPromise } from "../tools/utils"
+import { parseISO } from 'date-fns'
+import type { ILoginArgs } from "../dto/ILoginArgs"
+import type { ILoginUserInfo } from "../dto/ILoginUserInfo"
+import Swal from "sweetalert2"
 
 type AuthStatus = 'Guest' | 'Authing' | 'Authed'
 type StaffRole = 'Sales' | 'Manager'
+type UserType = 'VIP' | 'Staff'
 
 /**
- * ≥]≠p¶®≠˚§uªP∂Qª´•i¶@•Œ°C(¶“º{§ß´·¶X®÷™∫•iØ‡© )
+ * Ë®≠Ë®àÊàêÂì°Â∑•ËàáË≤¥Ë≥ìÂèØÂÖ±Áî®„ÄÇ(ËÄÉÊÖÆ‰πãÂæåÂêà‰ΩµÁöÑÂèØËÉΩÊÄß)
  */
 interface IAccountStateEx {
   loginUserId: string
   loginUserName: string
   /**
-   * §H≠˚√˛ßO: VIP.∂Qª´, Staff.§uß@§H≠˚
+   * ‰∫∫Âì°È°ûÂà•: VIP.Ë≤¥Ë≥ì, Staff.Â∑•‰Ωú‰∫∫Âì°
    */
   userType: 'VIP' | 'Staff'
   /**
-   * §uß@§H≠˚:®§¶‚≤M≥Ê: Sales, Manager
+   * Â∑•‰Ωú‰∫∫Âì°:ËßíËâ≤Ê∏ÖÂñÆ: Sales, Manager
    */
   roleList: StaffRole[]
   /**
-   * ±¬≈v™¨∫A
+   * ÊéàÊ¨äÁãÄÊÖã
    */
   status: AuthStatus
   /**
-   * ±¬≈v®Ï¥¡Æ…∂°
+   * ÊéàÊ¨äÂà∞ÊúüÊôÇÈñì
    */
   expiresTime?: Date
   /**
-   * ∂Qª´:πq∂l¶aß}°C
+   * Ë≤¥Ë≥ì:ÈõªÈÉµÂú∞ÂùÄ„ÄÇ
    */
   emailAddr?: string,
   /**
-   * ∂Qª´:¡pµ∏πq∏‹°C
+   * Ë≤¥Ë≥ì:ËÅØÁµ°ÈõªË©±„ÄÇ
    */
   phone?: string,
 }
@@ -40,7 +46,7 @@ interface IAccountStateEx {
 //-----------------------------------------------------------------------------
 const initialState: IAccountStateEx = {
   loginUserId: '',
-  loginUserName: '®”ª´',
+  loginUserName: '‰æÜË≥ì',
   userType: 'VIP',
   roleList: [],
   status: 'Guest',
@@ -58,10 +64,21 @@ export const selectAuthed = atom(
   (get) => {
     const state = get(staffAccountAtom)
     const now = new Date()
-    return (state.status === 'Authed' && state.expiresTime && state.expiresTime < now)
+    return (state.status === 'Authed' && state.expiresTime && state.expiresTime > now)
   }
 )
 selectAuthed.debugLabel = 'selectAuthed'
+
+// derivedAtom / selector
+// Áâπ‰æãÊáâÁî®ÔºöÁôªÂÖ•ËÄÖÊòØÂ∑•‰Ωú‰∫∫Âì°
+export const selectIsAuthedStaff = atom(
+  (get) => {
+    const state = get(staffAccountAtom)
+    const now = new Date()
+    return (state.status === 'Authed' && state.userType === 'Staff' && state.expiresTime && state.expiresTime > now)
+  }
+)
+selectIsAuthedStaff.debugLabel = 'selectIsAuthedStaff'
 
 // derivedAtom / selector
 export const selectAuthing = atom(
@@ -71,22 +88,52 @@ selectAuthing.debugLabel = 'selectAuthing'
 
 //-----------------------------------------------------------------------------
 
-async function doLoginAsync(args: unknown): Promise<any> {
+async function doLoginAsync(args: ILoginArgs): Promise<ILoginUserInfo> {
   try {
-    throw new Error('doLoginAsync •ºπÍß@');
+    const credential = `${args.vcode}:${args.userId}:${args.mima}` // ‰πãÂæåÂÜçÂä†ÂØÜ
+    const msg = await postData<MsgObj>(`api/Account/Login?credential=${credential}`)
+    if (msg.message !== 'Login success.')
+      throw new ResponseError(msg.message, 401, 'Unauthorized');
+
+    const loginUser = await postData<ILoginUserInfo>('api/Account/GetLoginUser')
+    return loginUser
   }
   catch (err: unknown) {
-
-    throw err; //°∞§@©w≠n throw ß_´h±NßP©w¨∞¶®•\°C
+    if (err instanceof ResponseError)
+      Swal.fire("ÁôªÂÖ•Â§±ÊïóÔºÅ", `${err.status} ${err.statusText}`, 'error');
+    throw err; //‚Äª‰∏ÄÂÆöË¶Å throw Âê¶ÂâáÂ∞áÂà§ÂÆöÁÇ∫ÊàêÂäü„ÄÇ
   }
 }
 
 export function useStaffAccountAction() {
   const setAccount = useSetAtom(staffAccountAtom)
 
-  // ¶^∂« handlers
-  return useMemo(() => {
+  // ÂõûÂÇ≥ handlers
+  return useMemo(() => ({
+    loginAsync: async (args: ILoginArgs) => {
+      try {
+        setAccount(prev => ({ ...prev, status: 'Authing' }))
+        const loginUser = await doLoginAsync(args);
+        await delayPromise(800); // ÊèêÊòáUX
 
+        const account: IAccountStateEx = {
+          loginUserId: loginUser.loginUserId,
+          loginUserName: loginUser.loginUserName,
+          userType: loginUser.userType as UserType,
+          roleList: loginUser.roleList as StaffRole[],
+          status: loginUser.status as AuthStatus,
+          expiresTime: parseISO(loginUser.expiresTime),
+          emailAddr: loginUser.emailAddr,
+          phone: loginUser.phone,
+        };
+
+        console.info('loginAsync', { loginUser, account })        
+        setAccount(account);
+      }
+      catch (err: unknown) {
+        setAccount(initialState)
+      }
+    },
     logoutAsync: async () => {
       try {
         setAccount(prev => ({ ...prev, status: 'Authing' }))
@@ -95,6 +142,6 @@ export function useStaffAccountAction() {
       } catch (err: unknown) {
         setAccount(initialState)
       }
-    },
-  }, [setAccount])
+    }
+  }), [setAccount])
 }

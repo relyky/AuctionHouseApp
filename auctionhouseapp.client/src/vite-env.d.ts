@@ -1,5 +1,9 @@
 /// <reference types="vite/client" />
 
+interface MsgObj {
+  message: string
+}
+
 type StepEnum =
   'Step1_PickLot' |
   'Step2_StartPrice' |

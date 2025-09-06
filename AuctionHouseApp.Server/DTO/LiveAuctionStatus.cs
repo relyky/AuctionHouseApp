@@ -1,6 +1,6 @@
 ﻿using System.Runtime.Serialization;
 
-namespace AuctionHouseTpl.Server.DTO;
+namespace AuctionHouseApp.Server.DTO;
 
 //type StepEnum =
 //  'Step1_PickLot' |

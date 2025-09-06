@@ -3,32 +3,49 @@
  * export default function StaffLogin()
  */
 
-import { useState } from 'react'
+import { useEffect, useLayoutEffect, useState } from 'react'
 import type { FormEvent } from 'react'
-import { Box, Button, Checkbox, FormControlLabel, FormLabel, FormControl, Link, TextField, Typography, Stack, useEventCallback } from '@mui/material';
+import { useNavigate } from 'react-router';
+import { useAtomValue } from 'jotai';
+import { Box, Button, FormLabel, FormControl, Link, TextField, Typography, Stack, useEventCallback } from '@mui/material';
 import MuiCard from '@mui/material/Card';
 import { styled } from '@mui/material/styles';
-import { postData } from '../../tools/httpHelper';
+import { selectAuthed, selectAuthing, selectIsAuthedStaff, staffAccountAtom, useStaffAccountAction } from '../../atoms/staffAccountAtom';
+import type { ILoginArgs } from '../../dto/ILoginArgs';
 
 export default function SignIn() {
+  const { loginAsync } = useStaffAccountAction()
+  const navigate = useNavigate()
+  const isAuthedStaff = useAtomValue(selectIsAuthedStaff);
+  const isAuthed = useAtomValue(selectAuthed)
+  const isAuthing = useAtomValue(selectAuthing)
+  // GO
   const [userIdError, setUserIdError] = useState(false);
   const [userIdErrorMessage, setUserIdErrorMessage] = useState('');
   const [passwordError, setPasswordError] = useState(false);
   const [passwordErrorMessage, setPasswordErrorMessage] = useState('');
 
-  const handleSubmit = useEventCallback(async (event: FormEvent<HTMLFormElement>) => {
+  //useLayoutEffect(() => {
+  //  postData('api/Account/GetXsrfToken')
+  //}, [])
+
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
     if (userIdError || passwordError) {
-      event.preventDefault();
+      //  event.preventDefault();
       return;
     }
 
     const data = new FormData(event.currentTarget)
-    const userId = data.get('userId')
-    const password = data.get('password')
-    const credential = `${userId}:${password}`;
-    const resp = await postData(`/api/Account/StaffLogin?credential=${credential}`)
-    console.log('handleSubmit.resp', { resp })
-  });
+    const loginArgs: ILoginArgs = {
+      userId: data.get('userId') as string,
+      mima: data.get('password') as string,
+      vcode: '123456'
+    };
+
+    await loginAsync(loginArgs)
+  };
 
   const validateInputs = () => {
     const userId = document.getElementById('userId') as HTMLInputElement;
@@ -57,6 +74,16 @@ export default function SignIn() {
     return isValid;
   };
 
+  //# 成功後轉址到主畫面
+  useEffect(() => {
+    console.log('isAuthed', { isAuthed, isAuthedStaff })
+    if (isAuthedStaff) {
+      navigate('/backend')
+    } else if (isAuthed) {
+      navigate('/');
+    }
+  }, [isAuthed, isAuthedStaff])
+
   return (
     <SignInContainer direction="column" justifyContent="space-between">
       <Card variant="outlined">
@@ -77,6 +104,7 @@ export default function SignIn() {
           <FormControl>
             <FormLabel htmlFor="userId">User Id</FormLabel>
             <TextField
+              defaultValue='smart'
               error={userIdError}
               helperText={userIdErrorMessage}
               id="userId"
@@ -94,6 +122,7 @@ export default function SignIn() {
           <FormControl>
             <FormLabel htmlFor="password">Password</FormLabel>
             <TextField
+              defaultValue='asvt'
               error={passwordError}
               helperText={passwordErrorMessage}
               name="password"
@@ -108,15 +137,17 @@ export default function SignIn() {
               color={passwordError ? 'error' : 'primary'}
             />
           </FormControl>
-          <FormControlLabel
+          {/* <FormControlLabel
             control={<Checkbox value="remember" color="primary" />}
             label="Remember me"
-          />
+          /> */}
           <Button
             type="submit"
             fullWidth
             variant="contained"
             onClick={validateInputs}
+            loading={isAuthing}
+            disabled={isAuthed || isAuthing}
           >
             Sign in
           </Button>
@@ -130,6 +161,8 @@ export default function SignIn() {
           </Link>
         </Box>
       </Card>
+
+      {/*<pre>for debug:accountInfo: {JSON.stringify(accountInfo, null, 2)}</pre>*/}
     </SignInContainer>
   );
 }

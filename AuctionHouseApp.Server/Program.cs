@@ -1,5 +1,5 @@
 using AuctionHouseApp.Server.Services;
-using AuctionHouseTpl.Server.Services;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Serilog;
 using System.Text.Json.Serialization;
 
@@ -46,6 +46,22 @@ try
   Log.Information("Web host start.");
 
   #region §§ Add services to the container. -----------------------------------
+
+  //## for Authentication & Authorization
+  builder.Services.Configure<CookiePolicyOptions>(options =>
+  {
+    options.MinimumSameSitePolicy = SameSiteMode.Lax; // SameSiteMode.Strict;
+    //options.Secure = CookieSecurePolicy.Always;
+  });
+
+  // for COOKIE Auth
+  // ref → https://blazorhelpwebsite.com/ViewBlogPost/36
+  builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(cfg =>
+    {
+      cfg.LoginPath = "/"; // default: /Accout/Login
+      cfg.Cookie.Name = ".AuctionHouseApp.Server.Cookies"; //default:.AspNetCore.Cookies
+    });
 
   // Add services to the container.
   builder.Services.AddSingleton<LiveAuctionStatusService>();

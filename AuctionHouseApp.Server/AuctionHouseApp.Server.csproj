@@ -22,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\auctionhousetpl.client\auctionhouseapp.client.esproj">
+    <ProjectReference Include="..\auctionhouseapp.client\auctionhouseapp.client.esproj">
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
     <ProjectReference Include="..\Vista.DB\Vista.DB.csproj" />

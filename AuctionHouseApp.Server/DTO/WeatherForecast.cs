@@ -1,6 +1,6 @@
 using Reinforced.Typings.Attributes;
 
-namespace AuctionHouseTpl.Server.DTO;
+namespace AuctionHouseApp.Server.DTO;
 
 [TsInterface(Namespace = "dto")]
 public record WeatherForecast

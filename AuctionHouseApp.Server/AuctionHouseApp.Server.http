@@ -1,0 +1,13 @@
+@AuctionHouseApp.Server_HostAddress = http://localhost:5197
+
+### 健康偵測
+POST {{AuctionHouseApp.Server_HostAddress}}/api/WeatherForecast/QryDataList
+Accept: application/json
+
+### 測試取 Bidder 
+POST {{AuctionHouseApp.Server_HostAddress}}/api/Bidder/GetBidder/B710
+Accept: application/json
+
+### 測試取 Bidder 失敗情境
+POST {{AuctionHouseApp.Server_HostAddress}}/api/Bidder/GetBidder/BXXX
+Accept: application/json

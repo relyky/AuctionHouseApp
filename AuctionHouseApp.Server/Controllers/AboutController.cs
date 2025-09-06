@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using System.Reflection;
 
-namespace AuctionHouseTpl.Server.Controllers;
+namespace AuctionHouseApp.Server.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
@@ -17,7 +17,7 @@ public class AboutController : ControllerBase
 
     var aboutInfo = new
     {
-      ApplicationName = "AuctionHouseTpl",
+      ApplicationName = "AuctionHouseApp",
       Version = version.ProductVersion ?? "N/A",
       Description = "This is a sample auction house application.",
       Author = "Your Name"

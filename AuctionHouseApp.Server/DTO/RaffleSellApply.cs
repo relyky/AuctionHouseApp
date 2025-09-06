@@ -1,6 +1,6 @@
 ﻿using Reinforced.Typings.Attributes;
 
-namespace AuctionHouseTpl.Server.DTO;
+namespace AuctionHouseApp.Server.DTO;
 
 /// <summary>
 /// 抽獎券銷售新增

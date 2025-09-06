@@ -1,12 +1,12 @@
-﻿using AuctionHouseTpl.Server.DTO;
-using AuctionHouseTpl.Server.Services;
+﻿using AuctionHouseApp.Server.DTO;
+using AuctionHouseApp.Server.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Vista.DB;
 using Vista.DB.Schema;
 using Dapper;
 
-namespace AuctionHouseTpl.Server.Controllers;
+namespace AuctionHouseApp.Server.Controllers;
 
 /// <summary>
 /// 拍賣廣播Biz

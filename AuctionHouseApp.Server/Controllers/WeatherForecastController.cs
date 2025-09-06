@@ -1,5 +1,5 @@
 using AuctionHouseApp.Server.Controllers;
-using AuctionHouseTpl.Server.DTO;
+using AuctionHouseApp.Server.DTO;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
 using Vista.DB;
@@ -7,7 +7,7 @@ using Vista.DB.Schema;
 using Vista.DbPanda;
 using Vista.Models;
 
-namespace AuctionHouseTpl.Server.Controllers;
+namespace AuctionHouseApp.Server.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]

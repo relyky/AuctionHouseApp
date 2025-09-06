@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System.Net;
 
-namespace AuctionHouseTpl.Server.Filters;
+namespace AuctionHouseApp.Server.Filters;
 
 /// <summary>
 /// 所有未處理的例外都會被這個 Filter 捕捉並記錄下來。
