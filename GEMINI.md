@@ -28,6 +28,15 @@
 - `auctionhousetpl.client/`: React + TypeScript 前端 SPA 專案。
 - `Vista.DB/`: C# 資料庫模型與資料存取層專案。
 
+## 忽略的檔案與目錄
+
+-   `node_modules`
+-   `.next`
+-   `.git`
+-   `.vscode`
+-   `obj`
+-   `bin`
+
 ## 開發環境設置與指令 (Development Setup & Commands)
 
 - 在操作此前，請確保已安裝 .NET 8 SDK 和 Node.js (LTS 版本)。

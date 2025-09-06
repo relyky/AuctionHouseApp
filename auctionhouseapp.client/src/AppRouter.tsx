@@ -11,7 +11,7 @@ import RaffleLayout from './layout/RaffleLayout'
 import BidderLayout from "./layout/BidderLayout";
 import AuctionLayout from "./layout/AuctionLayout";
 import Home from './pages/home/AppForm'
-import StaffLogin from './pages/StaffLogin/AppForm'
+import StaffLogin from './pages/Account/StaffLogin'
 import RaffleBuyer from './pages/RaffleBuyer/AppForm'
 import BackendIndex from './pages/BackendIndex/AppForm'
 import BackendRaffleCheck from './pages/BackendRaffleCheck/AppForm'
