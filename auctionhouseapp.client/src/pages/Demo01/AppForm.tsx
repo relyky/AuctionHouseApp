@@ -16,6 +16,7 @@ import QrCodeWidget from '../../widgets/QrCodeWidget';
 // Material-UI icons
 import StartIcon from '@mui/icons-material/NotStarted';
 import RefreshIcon from '@mui/icons-material/Refresh';
+import UsePostDataLab from './UsePostDataLab';
 
 export default function Demo01_AppForm() {
   const counterValue = useAtomValue(counterAtom)
@@ -28,6 +29,9 @@ export default function Demo01_AppForm() {
   return (
     <Container>
       <Typography variant='h3'>counterAtom: {counterValue}</Typography>
+      <Divider />
+      <UsePostDataLab />
+
       <Divider />
       <CustomButtonLab />
 
