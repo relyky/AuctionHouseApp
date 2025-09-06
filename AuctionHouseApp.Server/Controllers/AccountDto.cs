@@ -24,4 +24,15 @@ public record StaffAccount
   /// 角色: JSON String Array
   /// </summary>
   public string[] RoleList { get; init; } = [];
+
+  /// <summary>
+  /// 到期時間
+  /// </summary>
+  [TsProperty(Type = "string")]
+  public DateTime ExpiresTime { get; init; }
+
+  /// <summary>
+  /// 授權狀態: type AuthStatus = 'Guest' | 'Authing' | 'Authed'
+  /// </summary>
+  public required string Status { get; init; } = "Guest";
 }

@@ -8,4 +8,6 @@ export interface IStaffAccount
 	nickname: string;
 	phone: string;
 	roleList: string[];
+	expiresTime: string;
+	status: string;
 }

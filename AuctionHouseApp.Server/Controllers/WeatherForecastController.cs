@@ -107,6 +107,7 @@ public class WeatherForecastController(ILogger<WeatherForecastController> _logge
       Nickname = info.Nickname,
       Phone = info.Phone,
       RoleList = JsonSerializer.Deserialize<string[]>(info.RoleList) ?? [],
+      Status = "Authed" //  'Guest' | 'Authing' | 'Authed'
     };
 
     return Ok(result);
