@@ -1,13 +1,26 @@
 /**
- * ­t³dµù¥U routing ³W«h¡C
+ * è² è²¬è¨»å†Š routing è¦å‰‡ã€‚
  */
 
+import type { FC } from 'react'
 import { createBrowserRouter, RouterProvider } from "react-router";
 import type { LoaderFunction } from "react-router";
+import { Container, Typography } from "@mui/material";
 import MainLayout from "./layout/MainLayout";
+import RaffleLayout from './layout/RaffleLayout'
 import BidderLayout from "./layout/BidderLayout";
 import AuctionLayout from "./layout/AuctionLayout";
 import Home from './pages/home/AppForm'
+import StaffLogin from './pages/StaffLogin/AppForm'
+import RaffleBuyer from './pages/RaffleBuyer/AppForm'
+import BackendIndex from './pages/BackendIndex/AppForm'
+import BackendRaffleCheck from './pages/BackendRaffleCheck/AppForm'
+import BackendRaffleQuery from './pages/BackendRaffleQuery/AppForm'
+import RaffleIndex from './pages/RaffleIndex/AppForm'
+import RaffleSell from './pages/RaffleSell/AppForm'
+import RaffleSellQuery from './pages/RaffleSellQuery/AppForm'
+
+//---ä¸‹é¢æ¸¬è©¦ç”¨åŠŸèƒ½
 import LotsPage from './pages/lots/AppForm';
 import Demo01 from './pages/Demo01/AppForm';
 import Demo02 from './pages/Demo02/AppForm';
@@ -21,19 +34,35 @@ import ACU2040 from './pages/AUC2040/AppForm';
 import ACU3010 from './pages/AUC3010/AppForm';
 
 /**
- * ³]­p©ó¸ü¤Jµe­±®É­­©w¦³±ÂÅv¤~¥i¶}±Òµe­±¡I
- * loader ¤£¤ä´© hooks¡C
+ * è¨­è¨ˆæ–¼è¼‰å…¥ç•«é¢æ™‚é™å®šæœ‰æˆæ¬Šæ‰å¯é–‹å•Ÿç•«é¢ï¼
+ * loader ä¸æ”¯æ´ hooksã€‚
  */
 const authGuardLoader: LoaderFunction = (args, handlerCtx) => {
   console.debug("authGuardLoader", { args, handlerCtx });
 
   if (false) {
-    // ©ß¥X¤@­Ó 401 ¿ù»~¡A±a¦³¦Û©w¸qªº°T®§
+    // æ‹‹å‡ºä¸€å€‹ 401 éŒ¯èª¤ï¼Œå¸¶æœ‰è‡ªå®šç¾©çš„è¨Šæ¯
     throw new Response("YOU SHALL NOT PASS!!", { status: 401, statusText: "Unauthorized" });
   }
 
   return true;
 }
+
+//-------------------------------------
+/**
+ * æ–½å·¥ä¸­
+ */
+const UnderConstructX: FC<{
+  title: string
+}> = (props) => {
+  return (
+    <Container maxWidth="xs">
+      <Typography variant='h2'>{props.title}</Typography>
+      <Typography variant='h2'>æ–½å·¥ä¸­</Typography>
+    </Container>
+  )
+}
+//-------------------------------------
 
 const router = createBrowserRouter([
   {
@@ -41,9 +70,33 @@ const router = createBrowserRouter([
     element: <MainLayout />,
     children: [
       { index: true, element: <Home /> },
+      { path: "rafflebuyer", element: <RaffleBuyer />, loader: authGuardLoader },
       { path: "demo01", element: <Demo01 />, loader: authGuardLoader },
     ]
   },
+  {
+    path: "stafflogin",
+    element: <StaffLogin />,
+  },
+  {
+    path: "backend",
+    element: <MainLayout />,
+    children: [
+      { index: true, element: <BackendIndex /> },
+      { path: "rafflecheck", element: <BackendRaffleCheck />, loader: authGuardLoader },
+      { path: "rafflequery", element: <BackendRaffleQuery />, loader: authGuardLoader },
+    ]
+  },
+  {
+    path: "raffle",
+    element: <RaffleLayout />,
+    children: [
+      { index: true, element: <RaffleIndex /> },
+      { path: "sell", element: <RaffleSell /> },
+      { path: "sellquery", element: <RaffleSellQuery /> },
+    ]
+  },
+  //--------------------
   {
     path: "lots",
     element: <LotsPage />,
