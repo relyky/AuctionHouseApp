@@ -3,13 +3,14 @@
  */
 
 import type { FC } from 'react'
-import { createBrowserRouter, RouterProvider } from "react-router";
-import type { LoaderFunction } from "react-router";
-import { Container, Typography } from "@mui/material";
-import MainLayout from "./layout/MainLayout";
+import { createBrowserRouter, RouterProvider } from "react-router"
+import type { LoaderFunction } from "react-router"
+import { Container, Typography } from "@mui/material"
+import MainLayout from "./layout/MainLayout"
 import RaffleLayout from './layout/RaffleLayout'
-import BidderLayout from "./layout/BidderLayout";
-import AuctionLayout from "./layout/AuctionLayout";
+import BidderLayout from "./layout/BidderLayout"
+import AuctionLayout from "./layout/AuctionLayout"
+import BackendLayout from './layout/BackendLayout'
 import Home from './pages/home/AppForm'
 import StaffLogin from './pages/Account/StaffLogin'
 import RaffleBuyer from './pages/RaffleBuyer/AppForm'
@@ -80,7 +81,7 @@ const router = createBrowserRouter([
   },
   {
     path: "backend",
-    element: <MainLayout />,
+    element: <BackendLayout />,
     children: [
       { index: true, element: <BackendIndex /> },
       { path: "rafflecheck", element: <BackendRaffleCheck />, loader: authGuardLoader },

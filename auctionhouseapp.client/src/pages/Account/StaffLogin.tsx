@@ -149,7 +149,7 @@ export default function SignIn() {
             loading={isAuthing}
             disabled={isAuthed || isAuthing}
           >
-            Sign in
+            登入
           </Button>
           <Link
             component="button"
