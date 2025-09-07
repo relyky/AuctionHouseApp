@@ -137,7 +137,7 @@ export function useStaffAccountAction() {
     logoutAsync: async () => {
       try {
         setAccount(prev => ({ ...prev, status: 'Authing' }))
-        await postData('api/Account/Logout');
+        await postData('/api/Account/Logout');
         setAccount(initialState)
       } catch (err: unknown) {
         setAccount(initialState)
