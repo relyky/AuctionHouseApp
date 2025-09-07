@@ -4,7 +4,7 @@ import { Outlet, useNavigation } from "react-router";
 import { CircularProgress, AppBar, Toolbar, Typography, Box, Slide, IconButton, Menu, MenuItem, Divider, ListItemIcon, Avatar } from '@mui/material';
 import useScrollTrigger from '@mui/material/useScrollTrigger';
 import { useAtomValue } from 'jotai';
-import { staffAccountAtom } from '../atoms/staffAccountAtom';
+import { staffAccountAtom, useStaffAccountAction } from '../atoms/staffAccountAtom';
 // icons
 import MenuIcon from '@mui/icons-material/Menu';
 import AccountIcon from '@mui/icons-material/AccountCircle';
@@ -40,6 +40,7 @@ export default function HideAppBar(props: Props) {
   const isNavigating = Boolean(navigation.location);
   const isAuthed = useAtomValue(staffAccountAtom)
   const acct = useAtomValue(staffAccountAtom)
+  const { logoutAsync } = useStaffAccountAction()
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
   const handleMenu = (event: MouseEvent<HTMLElement>) => {
@@ -49,6 +50,11 @@ export default function HideAppBar(props: Props) {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  const handleLogout = async () => {
+    setAnchorEl(null);
+    await logoutAsync();
+  }
 
   return (
     <>
@@ -101,7 +107,7 @@ export default function HideAppBar(props: Props) {
                     {`${acct.loginUserId}/${acct.loginUserName}`}
                   </MenuItem>
                   <Divider />
-                  <MenuItem onClick={handleClose}>
+                  <MenuItem onClick={handleLogout}>
                     <ListItemIcon>
                       <LogoutIcon color='primary' />
                     </ListItemIcon>
