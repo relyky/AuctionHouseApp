@@ -76,7 +76,7 @@ export default function SignIn() {
 
   //# 成功後轉址到主畫面
   useEffect(() => {
-    console.log('isAuthed', { isAuthed, isAuthedStaff })
+    //console.log('isAuthed', { isAuthed, isAuthedStaff })
     if (isAuthedStaff) {
       navigate('/backend')
     } else if (isAuthed) {

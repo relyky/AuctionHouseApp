@@ -1,12 +1,15 @@
 /**
  * 設定 UI theme 資源與其他全域組態。
  */
+import { useEffect } from "react";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { CssBaseline } from "@mui/material";
 import { zhTW } from '@mui/material/locale'
+import { ToastContainer } from 'react-toastify';
+import { selectAuthed, useStaffAccountAction } from "./atoms/staffAccountAtom";
+import { useAtomValue } from "jotai";
 import AppRouter from "./AppRouter";
 import axios from 'axios'
-import { ToastContainer } from 'react-toastify';
 
 //-----------------------------------------------------------------------------
 
@@ -15,13 +18,13 @@ import { ToastContainer } from 'react-toastify';
  */
 axios.interceptors.response.use(
   res => res
-, err => {
-  // ※ 規定主機端 400 BadRequest 一律送回文字格式錯誤訊息。故可以從 AxiosError → Error 以簡化錯誤操作。
-  if (err.response?.status === 400)
-    return Promise.reject(new Error(err.response?.data as string, { cause: err }));
-  else
-    return Promise.reject(err);
-});
+  , err => {
+    // ※ 規定主機端 400 BadRequest 一律送回文字格式錯誤訊息。故可以從 AxiosError → Error 以簡化錯誤操作。
+    if (err.response?.status === 400)
+      return Promise.reject(new Error(err.response?.data as string, { cause: err }));
+    else
+      return Promise.reject(err);
+  });
 
 //-----------------------------------------------------------------------------
 /**
@@ -47,6 +50,16 @@ const customTheme = createTheme(
 );
 
 export default function App() {
+  const isAuthed = useAtomValue(selectAuthed)
+  const { refillLoginUserAsync } = useStaffAccountAction()
+
+  useEffect(() => {
+    //console.info('App.useEffect', { isAuthed });
+    if (!isAuthed) {
+      refillLoginUserAsync()
+    }
+  }, [isAuthed])
+
   return (
     <ThemeProvider theme={customTheme} >
       <CssBaseline />

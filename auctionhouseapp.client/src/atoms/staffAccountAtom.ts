@@ -91,11 +91,11 @@ selectAuthing.debugLabel = 'selectAuthing'
 async function doLoginAsync(args: ILoginArgs): Promise<ILoginUserInfo> {
   try {
     const credential = `${args.vcode}:${args.userId}:${args.mima}` // 之後再加密
-    const msg = await postData<MsgObj>(`api/Account/Login?credential=${credential}`)
+    const msg = await postData<MsgObj>(`/api/Account/Login?credential=${credential}`)
     if (msg.message !== 'Login success.')
       throw new ResponseError(msg.message, 401, 'Unauthorized');
 
-    const loginUser = await postData<ILoginUserInfo>('api/Account/GetLoginUser')
+    const loginUser = await postData<ILoginUserInfo>('/api/Account/GetLoginUser')
     return loginUser
   }
   catch (err: unknown) {
@@ -127,7 +127,7 @@ export function useStaffAccountAction() {
           phone: loginUser.phone,
         };
 
-        console.info('loginAsync', { loginUser, account })        
+        //console.info('loginAsync', { loginUser, account })        
         setAccount(account);
       }
       catch (err: unknown) {
@@ -139,6 +139,28 @@ export function useStaffAccountAction() {
         setAccount(prev => ({ ...prev, status: 'Authing' }))
         await postData('api/Account/Logout');
         setAccount(initialState)
+      } catch (err: unknown) {
+        setAccount(initialState)
+      }
+    },
+    refillLoginUserAsync: async () => {
+      try {
+        setAccount(prev => ({ ...prev, status: 'Authing' }))
+        const loginUser = await postData<ILoginUserInfo>('/api/Account/GetLoginUser')
+
+        const account: IAccountStateEx = {
+          loginUserId: loginUser.loginUserId,
+          loginUserName: loginUser.loginUserName,
+          userType: loginUser.userType as UserType,
+          roleList: loginUser.roleList as StaffRole[],
+          status: loginUser.status as AuthStatus,
+          expiresTime: parseISO(loginUser.expiresTime),
+          emailAddr: loginUser.emailAddr,
+          phone: loginUser.phone,
+        };
+
+        //console.info('loginAsync', { loginUser, account })        
+        setAccount(account);
       } catch (err: unknown) {
         setAccount(initialState)
       }

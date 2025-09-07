@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { NavLink, useNavigate } from "react-router";
 import { useAtomValue } from "jotai";
-import { Box, Button, Container, Typography } from "@mui/material";
+import { Alert, Box, Button, Container, Link, Typography } from "@mui/material";
 import { selectIsAuthedStaff, staffAccountAtom } from "../../atoms/staffAccountAtom";
 
 export default function BackendIndex_AppForm() {
@@ -9,10 +9,20 @@ export default function BackendIndex_AppForm() {
   const isAuthedStaff = useAtomValue(selectIsAuthedStaff)
   const acct = useAtomValue(staffAccountAtom)
 
+  //// 工作人員需先登入。
+  //useEffect(() => {
+  //  if (!isAuthedStaff) navigate('/stafflogin')
+  //}, [isAuthedStaff])
+
   // 工作人員需先登入。
-  useEffect(() => {
-    if (!isAuthedStaff) navigate('/stafflogin')
-  }, [isAuthedStaff])
+  if (!isAuthedStaff) {
+    return (
+      <Alert severity='error' sx={{ m: 3 }}>
+        未登入請先登入。
+        <Link href='/stafflogin'>工作人員登入</Link>
+      </Alert>
+    )
+  }
 
   return (
     <Container>
@@ -28,14 +38,14 @@ export default function BackendIndex_AppForm() {
       <Button component={NavLink} to='/backend/rafflecheck'>抽獎券銷售收費檢查</Button>
       <Button component={NavLink} to='/backend/rafflequery'>抽獎券銷售查詢</Button>
 
-      <Box sx={{ my: 2 }}>
+      {/* <Box sx={{ my: 2 }}>
         {[...new Array(12)].map(
           () => `Cras mattis consectetur purus sit amet fermentum.
 Cras justo odio, dapibus ac facilisis in, egestas eget quam.
 Morbi leo risus, porta ac consectetur ac, vestibulum at eros.
 Praesent commodo cursus magna, vel scelerisque nisl consectetur et.`,
         ).join('\n')}
-      </Box>
+      </Box> */}
     </Container>
   )
 }

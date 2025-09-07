@@ -1,12 +1,15 @@
 import { useState } from 'react';
 import type { FC, ReactElement, MouseEvent } from 'react';
-import { Outlet, useNavigation } from "react-router";
-import { CircularProgress, AppBar, Toolbar, Typography, Box, Slide, IconButton, Menu, MenuItem, Divider, ListItemIcon, Avatar } from '@mui/material';
+import { Outlet, useNavigate, useNavigation } from "react-router";
+import { useEventCallback, CircularProgress, AppBar, Toolbar, Typography, Box, Slide, IconButton, Menu, MenuItem, Divider, ListItemIcon, Container, Backdrop, Alert } from '@mui/material';
+import MuiLink from '@mui/material/Link';
 import useScrollTrigger from '@mui/material/useScrollTrigger';
 import { useAtomValue } from 'jotai';
-import { staffAccountAtom, useStaffAccountAction } from '../atoms/staffAccountAtom';
+import Overlay from './Overlay';
+import { selectIsAuthedStaff, staffAccountAtom, useStaffAccountAction } from '../atoms/staffAccountAtom';
 // icons
-import MenuIcon from '@mui/icons-material/Menu';
+//import MenuIcon from '@mui/icons-material/Menu';
+import HomeIcon from '@mui/icons-material/Home';
 import AccountIcon from '@mui/icons-material/AccountCircle';
 import LogoutIcon from '@mui/icons-material/Logout';
 
@@ -36,25 +39,31 @@ function HideOnScroll(props: Props) {
 }
 
 export default function HideAppBar(props: Props) {
-  const navigation = useNavigation();
+  const navigation = useNavigation()
+  const navigate = useNavigate()
   const isNavigating = Boolean(navigation.location);
-  const isAuthed = useAtomValue(staffAccountAtom)
+  //const isAuthed = useAtomValue(selectAuthed)
+  const isAuthedStaff = useAtomValue(selectIsAuthedStaff)
   const acct = useAtomValue(staffAccountAtom)
   const { logoutAsync } = useStaffAccountAction()
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
-  const handleMenu = (event: MouseEvent<HTMLElement>) => {
+  const handleMenu = useEventCallback((event: MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
-  };
+  });
 
-  const handleClose = () => {
+  const handleClose = useEventCallback(() => {
     setAnchorEl(null);
-  };
+  });
 
-  const handleLogout = async () => {
+  const handleLogout = useEventCallback(async () => {
     setAnchorEl(null);
     await logoutAsync();
-  }
+  });
+
+  const handleGoHome = useEventCallback(() => {
+    navigate('/backend');
+  });
 
   return (
     <>
@@ -66,14 +75,15 @@ export default function HideAppBar(props: Props) {
               edge="start"
               color="inherit"
               aria-label="menu"
+              onClick={handleGoHome}
               sx={{ mr: 2 }}
             >
-              <MenuIcon />
+              <HomeIcon />
             </IconButton>
             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
               慈善拍賣後台
             </Typography>
-            {isAuthed && (
+            {isAuthedStaff && (
               <div>
                 <IconButton
                   size="large"
@@ -123,9 +133,12 @@ export default function HideAppBar(props: Props) {
       <Box>
         <main>
           {isNavigating && <GlobalSpinner />}
-          <Outlet />
+          {isAuthedStaff ? <Outlet /> : <NotAuthorized />}
+          {/* <Outlet /> */}
         </main>
+        <pre>account: {JSON.stringify(acct, null, 2)}</pre>
       </Box>
+      <Overlay />
     </>
   );
 }
@@ -136,3 +149,30 @@ const GlobalSpinner: FC = () => (
     <CircularProgress color='info' size="5rem" />
   </Box>
 )
+
+//-----------------------------------------------------------------------------
+//const Overlay: FC = () => {
+//  const blocking = useAtomValue(blockingAtom)
+//  const isAuthing = useAtomValue(selectAuthing)
+//  return (
+//    <Backdrop
+//      sx={{ color: 'white', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+//      open={blocking || isAuthing}
+//    >
+//      <CircularProgress color="inherit" size='6rem' />
+//    </Backdrop>
+//  )
+//}
+
+//-----------------------------------------------------------------------------
+const NotAuthorized: FC = () => {
+  return (
+    <Container>
+      {/* <Typography variant='h1'>401 NotAuthorized</Typography> */}
+      <Alert severity='error' sx={{ fontSize: '1.5em', m: 3 }}>
+        未登入請先登入。
+        <MuiLink href='/stafflogin'>工作人員登入</MuiLink>
+      </Alert>
+    </Container>
+  )
+}
