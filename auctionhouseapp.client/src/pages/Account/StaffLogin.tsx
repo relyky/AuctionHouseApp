@@ -12,6 +12,7 @@ import MuiCard from '@mui/material/Card';
 import { styled } from '@mui/material/styles';
 import { selectAuthed, selectAuthing, selectIsAuthedStaff, staffAccountAtom, useStaffAccountAction } from '../../atoms/staffAccountAtom';
 import type { ILoginArgs } from '../../dto/ILoginArgs';
+import { postData } from '../../tools/httpHelper';
 
 export default function SignIn() {
   const { loginAsync } = useStaffAccountAction()
@@ -25,9 +26,9 @@ export default function SignIn() {
   const [passwordError, setPasswordError] = useState(false);
   const [passwordErrorMessage, setPasswordErrorMessage] = useState('');
 
-  //useLayoutEffect(() => {
-  //  postData('api/Account/GetXsrfToken')
-  //}, [])
+  useLayoutEffect(() => {
+    postData('/api/Account/GetXsrfToken')
+  }, [])
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();

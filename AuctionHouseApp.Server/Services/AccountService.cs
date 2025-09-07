@@ -24,7 +24,6 @@ public class AccountService(
 {
   readonly object _lockObj = new object();
 
-
   /// <summary>
   /// 認證檢查
   /// </summary>
@@ -63,7 +62,6 @@ public class AccountService(
       return false;
     }
   }
-
 
   /// <summary>
   /// 取得授權資料，並存入授權資料緩存區。
@@ -197,11 +195,11 @@ public class AccountService(
     var identity = id as ClaimsIdentity;
     if (identity == null) return;
 
-    var jtiClaim = identity.Claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.Jti);
-    if (jtiClaim == null) return;
+    //var jtiClaim = identity.Claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.Jti);
+    //if (jtiClaim == null) return;
 
-    if (!Guid.TryParse(jtiClaim.Value, out Guid authGuid))
-      return;
+    //if (!Guid.TryParse(jtiClaim.Value, out Guid authGuid))
+    //  return;
 
     // 移除登入註記
     lock (_lockObj)

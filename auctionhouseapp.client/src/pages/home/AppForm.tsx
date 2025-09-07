@@ -20,7 +20,12 @@ export default function Home_AppForm() {
 
       </Box>
 
-
+      {/* for debug */}
+      {import.meta.env.DEV &&
+        <Box sx={{ border: 'solid 1px red', p: 2 }}>
+          <Box typography='h6'>環境參數(.env)</Box>
+          <pre>{JSON.stringify(import.meta.env, null, 2)}</pre>
+        </Box>}
     </Container>
   )
 

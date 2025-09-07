@@ -20,7 +20,17 @@ public class AccountController(
   AccountService _account
   ) : ControllerBase
 {
-  //[ServiceFilter<ValidateXsrfTokenFilter>]
+  /// <summary>
+  /// for Anti-Forgery
+  /// </summary>
+  [HttpPost("[action]")]
+  public ActionResult<string> GetXsrfToken()
+  {
+    ValidateXsrfTokenFilter.ResponseAndStoreXsrfToken(this.HttpContext, _cache);
+    return NoContent();
+  }
+
+  [ServiceFilter<ValidateXsrfTokenFilter>]
   [HttpPost("[action]")]
   public async Task<ActionResult> Login([FromQuery] string credential)
   {

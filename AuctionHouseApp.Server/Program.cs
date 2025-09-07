@@ -1,3 +1,4 @@
+using AuctionHouseApp.Server.Models;
 using AuctionHouseApp.Server.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Serilog;
@@ -62,6 +63,9 @@ try
       cfg.LoginPath = "/"; // default: /Accout/Login
       cfg.Cookie.Name = ".AuctionHouseApp.Server.Cookies"; //default:.AspNetCore.Cookies
     });
+
+  //§ for Anit-Forgery
+  builder.Services.AddScoped<ValidateXsrfTokenFilter>();
 
   // Add services to the container.
   builder.Services.AddSingleton<LiveAuctionStatusService>();
