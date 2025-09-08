@@ -1,7 +1,11 @@
 /// <reference types="vite/client" />
 
+type EditMode = 'List' | 'Add' | 'Edit' | 'Step1' | 'Step2' | 'Step3' | 'Step4' | 'Step5'
+
+// 此專案的通用型訊息物件
 interface MsgObj {
-  message: string
+  message: string,
+  formNo?: string,
 }
 
 type StepEnum =
