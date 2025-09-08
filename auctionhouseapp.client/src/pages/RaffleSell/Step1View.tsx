@@ -50,6 +50,8 @@ export default function RaffleSell_Step1View() {
   return (
     <Container maxWidth='xs'>
       <Typography variant='h5' gutterBottom>銷售抽獎券</Typography>
+      <Button onClick={()=>alert('查詢帶出之前有買過的客戶')}>老客戶</Button>
+
       <form onSubmit={handleSubmit}>
         <Stack spacing={2}>
           <TextField name='buyerName' label='買家名稱' required />
