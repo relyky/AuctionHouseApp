@@ -118,4 +118,14 @@ interface IRaffleOrder {
   checkedDtm: string;
 }
 
+interface IRaffleTicket {
+  raffleTicketNo: string;
+  raffleSoldNo: string;
+  buyerName: string;
+  buyerEmail: string;
+  buyerPhone: string;
+  emailTimes: number;
+  lastEmailDtm: string;
+}
+
 //#endregion

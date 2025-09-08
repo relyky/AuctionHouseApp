@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import type { FormEvent } from 'react';
 import { useSetAtom } from 'jotai';
-import { Alert, Button, Container, Stack, TextField, Typography, useEventCallback } from "@mui/material";
+import { Alert, Button, Container, Stack, TextField, Toolbar, Typography, useEventCallback } from "@mui/material";
 import { postFormData, ResponseError } from '../../tools/httpHelper';
 import { raffleSellAtom } from './atom';
 
@@ -41,7 +41,10 @@ export default function RaffleSell_Step1View() {
   return (
     <Container maxWidth='xs'>
       <Typography variant='h5' gutterBottom>銷售抽獎券</Typography>
-      <Button onClick={()=>alert('查詢帶出之前有買過的客戶')}>老客戶</Button>
+      <Toolbar>
+        <Button onClick={() => alert('自有買過的客戶查詢帶出')}>老客戶</Button>
+        <Button onClick={() => alert('自貴賓清單查詢帶出')}>貴賓</Button>
+      </Toolbar>
 
       <form onSubmit={handleSubmit}>
         <Stack spacing={2}>
