@@ -1,7 +1,7 @@
 ///## post data with JSON only.
-///# ref¡÷[Using Fetch](https://developer.mozilla.org/zh-TW/docs/Web/API/Fetch_API/Using_Fetch)
+///# refâ†’[Using Fetch](https://developer.mozilla.org/zh-TW/docs/Web/API/Fetch_API/Using_Fetch)
 
-//## ©w¸q ResponseError Ãş§O¡AÄ~©Ó¦Û¤º«Øªº Error Ãş§O
+//## å®šç¾© ResponseError é¡åˆ¥ï¼Œç¹¼æ‰¿è‡ªå…§å»ºçš„ Error é¡åˆ¥
 export class ResponseError extends Error {
   status: number;
   statusText: string;
@@ -9,14 +9,14 @@ export class ResponseError extends Error {
   constructor(message: string, status: number, statusText: string) {
     super(message);
     this.name = 'ResponseError';
-    // ·s¼W¦Û©w¸qÄİ©Ê
+    // æ–°å¢è‡ªå®šç¾©å±¬æ€§
     this.status = status;
     this.statusText = statusText;
   }
 }
 
-/// »¡©ú:
-/// response ¥u±µ¨ü: 200 JSON object »P 204 NoConennt¡C
+/// èªªæ˜:
+/// response åªæ¥å—: 200 JSON object èˆ‡ 204 NoConenntã€‚
 export function postData<TResult>(url: string, args?: object, authToken?: string): Promise<TResult> {
   const headers: HeadersInit = {
     'Content-Type': 'application/json',
@@ -31,7 +31,7 @@ export function postData<TResult>(url: string, args?: object, authToken?: string
       body: JSON.stringify(args),
       method: 'POST',
       mode: 'same-origin', // no-cors, cors, *same-origin
-      credentials: 'same-origin', // include, same-origin, *omit // §¨±a Cookie ¶i¦æ»{ÃÒ¡C
+      credentials: 'same-origin', // include, same-origin, *omit // å¤¾å¸¶ Cookie é€²è¡Œèªè­‰ã€‚
       cache: 'no-cache',
       referrer: 'no-referrer',
     }).then(resp => {
@@ -50,8 +50,8 @@ export function postData<TResult>(url: string, args?: object, authToken?: string
 }
 
 //-----------------------------------------------------------------------------
-/// »¡©ú:
-/// response ¥u±µ¨ü: 200 BLOB object »P 400 ErrMsg¡C
+/// èªªæ˜:
+/// response åªæ¥å—: 200 BLOB object èˆ‡ 400 ErrMsgã€‚
 export async function downloadFile(url: string, args?: object, authToken?: string) {
 
   interface ContentDispositionOptions {
@@ -87,7 +87,7 @@ export async function downloadFile(url: string, args?: object, authToken?: strin
     return result;
   }
 
-  /// ¤U¸üÀÉ¦W©ñ¦b response headers[Content-Disposition] ¤¤¡C
+  /// ä¸‹è¼‰æª”åæ”¾åœ¨ response headers[Content-Disposition] ä¸­ã€‚
   function extractFilename(response: Response): string {
     const contentDisposition = response.headers.get('Content-Disposition');
     if (!contentDisposition)
@@ -121,7 +121,7 @@ export async function downloadFile(url: string, args?: object, authToken?: strin
       body: JSON.stringify(args),
       method: 'POST',
       mode: 'same-origin', // no-cors, cors, *same-origin
-      credentials: 'same-origin', // include, same-origin, *omit // §¨±a Cookie ¶i¦æ»{ÃÒ¡C
+      credentials: 'same-origin', // include, same-origin, *omit // å¤¾å¸¶ Cookie é€²è¡Œèªè­‰ã€‚
       cache: 'no-cache',
       referrer: 'no-referrer',
     });
@@ -156,8 +156,8 @@ export async function downloadFile(url: string, args?: object, authToken?: strin
 }
 
 //-----------------------------------------------------------------------------
-/// »¡©ú:
-/// response ¥u±µ¨ü: 200 JSON object »P 204 NoConennt¡C
+/// èªªæ˜:
+/// response åªæ¥å—: 200 JSON object èˆ‡ 204 NoConenntã€‚
 export function uploadFile<TResult>(url: string, formData: FormData, authToken?: string): Promise<TResult> {
   const headers: HeadersInit = {}
 
@@ -170,7 +170,7 @@ export function uploadFile<TResult>(url: string, formData: FormData, authToken?:
       body: formData,
       method: 'POST',
       mode: 'same-origin', // no-cors, cors, *same-origin
-      credentials: 'same-origin', // include, same-origin, *omit // §¨±a Cookie ¶i¦æ»{ÃÒ¡C
+      credentials: 'same-origin', // include, same-origin, *omit // å¤¾å¸¶ Cookie é€²è¡Œèªè­‰ã€‚
       cache: 'no-cache',
       referrer: 'no-referrer',
     }).then(resp => {
@@ -189,11 +189,11 @@ export function uploadFile<TResult>(url: string, formData: FormData, authToken?:
 }
 
 
-/// »¡©ú:
-/// response ¥u±µ¨ü: 200 JSON object »P 204 NoConennt¡C
+/// èªªæ˜:
+/// response åªæ¥å—: 200 JSON object èˆ‡ 204 NoConenntã€‚
 export function postFormData<TResult>(url: string, formData: FormData, authToken?: string): Promise<TResult> {
   const headers: HeadersInit = {
-    //'Content-Type': 'application/json', // Åı browser ¦Û¦æ§PÂ_
+    //'Content-Type': 'application/json', // è®“ browser è‡ªè¡Œåˆ¤æ–·
   }
 
   if (typeof authToken === 'string')
@@ -205,7 +205,7 @@ export function postFormData<TResult>(url: string, formData: FormData, authToken
       body: formData,
       method: 'POST',
       mode: 'same-origin', // no-cors, cors, *same-origin
-      credentials: 'same-origin', // include, same-origin, *omit // §¨±a Cookie ¶i¦æ»{ÃÒ¡C
+      credentials: 'same-origin', // include, same-origin, *omit // å¤¾å¸¶ Cookie é€²è¡Œèªè­‰ã€‚
       cache: 'no-cache',
       referrer: 'no-referrer',
     }).then(resp => {

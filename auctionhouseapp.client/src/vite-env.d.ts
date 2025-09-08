@@ -1,11 +1,12 @@
 /// <reference types="vite/client" />
 
-type EditMode = 'List' | 'Add' | 'Edit' | 'Step1' | 'Step2' | 'Step3' | 'Step4' | 'Step5'
+type EditMode = 'List' | 'Add' | 'Edit' | 'Step1' | 'Step2' | 'Step3' | 'Step4' | 'Step5' | 'Finish';
 
 // 此專案的通用型訊息物件
 interface MsgObj {
   message: string,
   formNo?: string,
+  nextStep?: stirng,
 }
 
 type StepEnum =
@@ -97,3 +98,24 @@ interface IHammeredRecord {
   biddingSn: number
   hammerTime: string // ISO 8601 格式的時間字串
 }
+
+//#region 與 DB Schema 對應的資料表介面定義
+
+interface IRaffleOrder {
+  raffleOrderNo: string;
+  buyerName: string;
+  buyerEmail: string;
+  buyerPhone: string;
+  purchaseCount: number;
+  purchaseAmount: number;
+  hasPaid: string;
+  salesId: string;
+  soldDtm: string;
+  status: string;
+  remark: string;
+  isChecked: string;
+  checker: string;
+  checkedDtm: string;
+}
+
+//#endregion

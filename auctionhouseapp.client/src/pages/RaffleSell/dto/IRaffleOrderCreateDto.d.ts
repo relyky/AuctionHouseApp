@@ -9,6 +9,4 @@ export interface IRaffleOrderCreateDto
 	buyerPhone: string;
 	purchaseCount: number;
 	purchaseAmount: number;
-	remark: string;
-	errMsg: string;
 }

@@ -19,17 +19,19 @@ export default function RaffleLayout() {
     <Box sx={{ pb: 7 }}>
       {isNavigating && <GlobalSpinner />}
       <Outlet />
-      <Box>
-        <pre>account: {JSON.stringify(acct, null, 2)}</pre>
-      </Box>
+
+      {/* for debug
+        <pre>account: {JSON.stringify(acct, null, 2)}</pre>        
+      */}
+
       <Paper sx={{ position: 'fixed', bottom: 0, left: 0, right: 0 }} elevation={3}>
         <BottomNavigation showLabels>
-          <BottomNavigationAction label="後台首頁" icon={<HomeIcon />}
+          <BottomNavigationAction label="後台首頁" icon={<HomeIcon color='primary' />}
             component={Link} to='/backend' />
-          <BottomNavigationAction label="抽獎券銷售" icon={<MoneyIcon />}
+          <BottomNavigationAction label="抽獎券銷售" icon={<MoneyIcon color='primary' />}
             component={Link} to='/raffle/sell' 
           />
-          <BottomNavigationAction label="抽獎券查詢" icon={<SearchIcon />}
+          <BottomNavigationAction label="抽獎券查詢" icon={<SearchIcon color='primary' />}
             component={Link} to='/raffle/sellquery'
           />
         </BottomNavigation>
