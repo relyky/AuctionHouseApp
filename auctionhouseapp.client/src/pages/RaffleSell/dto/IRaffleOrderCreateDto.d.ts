@@ -10,4 +10,5 @@ export interface IRaffleOrderCreateDto
 	purchaseCount: number;
 	purchaseAmount: number;
 	remark: string;
+	errMsg: string;
 }

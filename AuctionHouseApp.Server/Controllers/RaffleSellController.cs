@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.JSInterop.Infrastructure;
 
 namespace AuctionHouseApp.Server.Controllers;
 
@@ -8,10 +9,15 @@ namespace AuctionHouseApp.Server.Controllers;
 public class RaffleSellController : ControllerBase
 {
   [HttpPost("[action]")]
-  public ActionResult Create([FromForm] RaffleOrderCreateDto dto)
+  public async Task<ActionResult<RaffleOrderCreateDto>> Create([FromForm] RaffleOrderCreateDto dto)
   {
-    // TODO: 在此處實作資料庫存取邏輯
+    // 
+    await Task.Delay(1000);
 
-    return Ok(new { message = "資料已成功接收", data = dto });
+    // 基本輸入檢查
+    //return BadRequest("這是錯誤訊息");
+    return BadRequest("這是測試用錯誤訊息");
+
+    return Ok(new { errMsg = "SUCCESS", formNo = "NEXTFORMNO", nextStep = 0 });
   }
 }

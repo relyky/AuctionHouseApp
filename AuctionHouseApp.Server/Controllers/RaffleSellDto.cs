@@ -11,4 +11,9 @@ public record RaffleOrderCreateDto
   public required decimal PurchaseCount { get; init; }
   public required decimal PurchaseAmount { get; init; }
   public string? Remark { get; init; }
+
+  /// <summary>
+  /// 回應訊息
+  /// </summary>
+  public string? errMsg { get; init; }
 }
