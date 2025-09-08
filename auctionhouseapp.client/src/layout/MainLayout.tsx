@@ -18,33 +18,6 @@ export default function MainLayout() {
         <NavLink to="/">
           首頁
         </NavLink>
-        <NavLink to="/staff/login">
-          工作人員登入
-        </NavLink>
-        <NavLink to="/raffle">
-          銷售Index
-        </NavLink>
-        <NavLink to="/raffle/sell">
-          銷售抽獎券
-        </NavLink>
-        <NavLink to="/raffle/sellquery">
-          銷售查詢
-        </NavLink>
-        <NavLink to="/rafflebuyer ">
-          (買家)抽獎券購買查詢
-        </NavLink>
-        <NavLink to="/backend/rafflecheck">
-          抽獎券銷售收費檢查
-        </NavLink>
-        <NavLink to="/backend/rafflequery">
-          抽獎券銷售查詢
-        </NavLink>
-      </nav>
-
-      <nav style={navStyle}>
-        <NavLink to="/">
-          首頁
-        </NavLink>
         <NavLink to="/demo01" target='_blank'>
           Demo01
         </NavLink>

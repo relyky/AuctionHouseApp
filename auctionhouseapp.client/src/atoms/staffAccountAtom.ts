@@ -3,6 +3,7 @@ import { atom, useSetAtom } from "jotai"
 import { postData, ResponseError } from "../tools/httpHelper"
 import { delayPromise } from "../tools/utils"
 import { parseISO } from 'date-fns'
+import { encrypt2 } from "../tools/aesHelper"
 import type { ILoginArgs } from "../dto/ILoginArgs"
 import type { ILoginUserInfo } from "../dto/ILoginUserInfo"
 import Swal from "sweetalert2"
@@ -90,7 +91,8 @@ selectAuthing.debugLabel = 'selectAuthing'
 
 async function doLoginAsync(args: ILoginArgs): Promise<ILoginUserInfo> {
   try {
-    const credential = `${args.vcode}:${args.userId}:${args.mima}` // 之後再加密
+    //const credential = `${args.vcode}:${args.userId}:${args.mima}` // 之後再加密    
+    const credential = encrypt2(`${args.vcode}:${args.userId}:${args.mima}`)
     const msg = await postData<MsgObj>(`/api/Account/Login?credential=${credential}`)
     if (msg.message !== 'Login success.')
       throw new ResponseError(msg.message, 401, 'Unauthorized');

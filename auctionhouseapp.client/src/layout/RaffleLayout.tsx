@@ -24,7 +24,7 @@ export default function RaffleLayout() {
       </Box>
       <Paper sx={{ position: 'fixed', bottom: 0, left: 0, right: 0 }} elevation={3}>
         <BottomNavigation showLabels>
-          <BottomNavigationAction label="後台" icon={<HomeIcon />}
+          <BottomNavigationAction label="後台首頁" icon={<HomeIcon />}
             component={Link} to='/backend' />
           <BottomNavigationAction label="抽獎券銷售" icon={<MoneyIcon />}
             component={Link} to='/raffle/sell' 

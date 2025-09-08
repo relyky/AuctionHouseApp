@@ -50,10 +50,10 @@ function generateRandom32String() {
 /**
  * AES 256 CBC 加密器 + PBKDF2
  */
-export function encrypt2(plaintext: string, keySeed: string): string {
+export function encrypt2(plaintext: string, keySeed?: string): string {
   const iterations = 9972
   const salt = enc.Hex.parse('dc8383f5cd494aa9aee4288ae3128aeb')
-  const seed = enc.Hex.parse(keySeed)
+  const seed = enc.Hex.parse(keySeed ?? import.meta.env.VITE_AES1_SEED)
   const iv = random(128 / 8);
   const ivStr = iv.toString(enc.Hex)
 
@@ -74,10 +74,10 @@ export function encrypt2(plaintext: string, keySeed: string): string {
 /**
  * AES 256 CBC 解密器 + PBKDF2
  */
-export function decrypt2(cipherPackage: string, keySeed: string): string {
+export function decrypt2(cipherPackage: string, keySeed?: string): string {
   const iterations = 9972
   const salt = enc.Hex.parse('dc8383f5cd494aa9aee4288ae3128aeb')
-  const seed = enc.Hex.parse(keySeed) 
+  const seed = enc.Hex.parse(keySeed ?? import.meta.env.VITE_AES1_SEED) 
   //const [ivStr, ciphertext] = cipherPackage.split('.')
   const ivStr = cipherPackage.slice(0,32)
   const ciphertext = cipherPackage.slice(32)
@@ -103,7 +103,7 @@ export function decrypt2(cipherPackage: string, keySeed: string): string {
 export function encrypt3(plaintext: object): string {
   const iterations = 9983
   const salt = enc.Hex.parse('dc8383f5cd494ea9aee4288ae3128aeb')
-  const seed = enc.Hex.parse(process.env.AES2_SEED)
+  const seed = enc.Hex.parse(import.meta.env.VITE_AES2_SEED) // process.env.AES2_SEED
   const iv = random(128 / 8);
   const ivStr = iv.toString(enc.Hex)
 
@@ -127,7 +127,7 @@ export function encrypt3(plaintext: object): string {
 export function decrypt3(cipherPackage: string): object {
   const iterations = 9983 
   const salt = enc.Hex.parse('dc8383f5cd494ea9aee4288ae3128aeb')
-  const seed = enc.Hex.parse(process.env.AES2_SEED)
+  const seed = enc.Hex.parse(import.meta.env.VITE_AES2_SEED) // process.env.AES2_SEED
   //const [ivStr, ciphertext] = cipherPackage.split('.')
   const ivStr = cipherPackage.slice(0, 32)
   const ciphertext = cipherPackage.slice(32)

@@ -17,6 +17,7 @@ namespace AuctionHouseApp.Server.Controllers;
 public class AccountController(
   ILogger<AccountController> _logger,
   IMemoryCache _cache,
+  AesHelperService _aesHelper,
   AccountService _account
   ) : ControllerBase
 {
@@ -36,7 +37,8 @@ public class AccountController(
   {
     try
     {
-      string[] decoded = credential.Split(":");
+      var decodedText = _aesHelper.Decrypt2(credential);
+      string[] decoded = decodedText.Split(":");
       LoginArgs login = new()
       {
         UserId = decoded[1],
