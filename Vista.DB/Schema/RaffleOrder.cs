@@ -7,15 +7,15 @@ using System.ComponentModel.DataAnnotations.Schema;
 /// <summary>
 /// 抽獎券銷售交易檔
 /// </summary>
-[Table("RaffleSell")]
-public class RaffleSell 
+[Table("RaffleOrder")]
+public class RaffleOrder 
 {
   /// <summary>
   /// 銷售編號:格式 RSnnnnn
   /// </summary>
   [Display(Name = "銷售編號")]
   [Key]
-  public string RaffleSoldNo { get; set; } = default!;
+  public string RaffleOrderNo { get; set; } = default!;
   /// <summary>
   /// 買家名稱
   /// </summary>
@@ -57,7 +57,7 @@ public class RaffleSell
   [Display(Name = "賣出時間")]
   public DateTime? SoldDtm { get; set; }
   /// <summary>
-  /// 銷售狀態: ForSale | HasSold
+  /// 銷售狀態: ForSale | HasSold | Invalid
   /// </summary>
   [Display(Name = "銷售狀態")]
   public string Status { get; set; } = default!;
@@ -78,9 +78,9 @@ public class RaffleSell
   [Display(Name = "查驗時間")]
   public DateTime? CheckedDtm { get; set; }
 
-  public void Copy(RaffleSell src)
+  public void Copy(RaffleOrder src)
   {
-    this.RaffleSoldNo = src.RaffleSoldNo;
+    this.RaffleOrderNo = src.RaffleOrderNo;
     this.BuyerName = src.BuyerName;
     this.BuyerEmail = src.BuyerEmail;
     this.BuyerPhone = src.BuyerPhone;
@@ -96,10 +96,10 @@ public class RaffleSell
     this.CheckedDtm = src.CheckedDtm;
   }
 
-  public RaffleSell Clone()
+  public RaffleOrder Clone()
   {
-    return new RaffleSell {
-      RaffleSoldNo = this.RaffleSoldNo,
+    return new RaffleOrder {
+      RaffleOrderNo = this.RaffleOrderNo,
       BuyerName = this.BuyerName,
       BuyerEmail = this.BuyerEmail,
       BuyerPhone = this.BuyerPhone,
