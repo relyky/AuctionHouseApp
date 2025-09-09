@@ -1,8 +1,12 @@
 import { useAtomValue } from 'jotai'
 import { Container, Typography, Alert, Button } from '@mui/material'
 import { raffleSellAtom } from './atom'
+import { useNavigate } from 'react-router'
+// icons
+import NextIcon from '@mui/icons-material/ArrowForwardIos';
 
 export default function RaffleSell_FinishView() {
+  const navigate = useNavigate()
   const { raffleOrder } = useAtomValue(raffleSellAtom)
 
   if (!raffleOrder) {
@@ -22,8 +26,10 @@ export default function RaffleSell_FinishView() {
           已放棄！感謝您的使用。
         </Alert>
       }
-      <Button variant="contained" sx={{ mt: 2 }} onClick={() => window.location.reload()}>
-        銷售新抽獎券
+
+      <Button variant="contained" size='large' fullWidth sx={{ mt: 3 }} endIcon={<NextIcon />}
+        onClick={() => navigate(0)}>
+        啟動下一輪銷售
       </Button>
     </Container>
   )
