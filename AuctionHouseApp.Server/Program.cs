@@ -81,9 +81,12 @@ try
 
   builder.Services.AddMemoryCache();
   builder.Services.AddHttpContextAccessor();
+
+  // 註冊：客製服務
   builder.Services.AddSingleton<AccountService>();
   builder.Services.AddSingleton<SysParamsService>();
   builder.Services.AddScoped<AesHelperService>();
+  builder.Services.AddScoped<EmailProxyService>();
 
   #endregion
 

@@ -1,5 +1,7 @@
 using AuctionHouseApp.Server.Controllers;
 using AuctionHouseApp.Server.DTO;
+using AuctionHouseApp.Server.Models;
+using AuctionHouseApp.Server.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
 using Vista.DB;
@@ -11,7 +13,9 @@ namespace AuctionHouseApp.Server.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class WeatherForecastController(ILogger<WeatherForecastController> _logger)
+public class WeatherForecastController(
+  EmailProxyService _emlSvc,
+  ILogger<WeatherForecastController> _logger)
   : ControllerBase
 {
   private static readonly string[] Summaries = [
@@ -95,7 +99,6 @@ public class WeatherForecastController(ILogger<WeatherForecastController> _logge
   /// <summary>
   /// 代刚 postData
   /// </summary>
-  /// <returns></returns>
   [HttpPost("[action]/{userId}")]
   public ActionResult<StaffAccount> GetFormData(string userId)
   {
@@ -113,4 +116,16 @@ public class WeatherForecastController(ILogger<WeatherForecastController> _logge
     return Ok(result);
   }
 
+  /// <summary>
+  /// 代刚盚癳 email
+  /// </summary>
+  [HttpPost("[action]")]
+  public ActionResult<MsgObj> TestSendEmail()
+  {
+    string[] toList = new string[] { "rely_kao@asiavista.com.tw" };
+    string[]? ccList = null; // new string[] { "elva_lin@asiavista.com.tw" };
+    _emlSvc.SendTextEmail(toList, $"[代刚獺ン]代刚獺ン{DateTime.Now:yyMMddTHHmmss}", "代刚盚ゅ獺ン", ccList);
+
+    return Ok(new MsgObj("癳獺ン"));
+  }
 }

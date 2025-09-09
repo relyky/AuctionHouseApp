@@ -18,6 +18,7 @@ import type { IWeatherForecast } from '../../dto/IWeatherForecast';
 import StartIcon from '@mui/icons-material/NotStarted';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import UsePostDataLab from './UsePostDataLab';
+import TestSendEmail from './TestSendEmail';
 
 export default function Demo01_AppForm() {
   const counterValue = useAtomValue(counterAtom)
@@ -30,6 +31,9 @@ export default function Demo01_AppForm() {
   return (
     <Container>
       <Typography variant='h3'>counterAtom: {counterValue}</Typography>
+      <Divider />
+      <TestSendEmail />
+
       <Divider />
       <UsePostDataLab />
 
