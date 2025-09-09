@@ -1,4 +1,5 @@
 ﻿using AuctionHouseApp.Server.Models;
+using AuctionHouseApp.Server.Services;
 using Dapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -14,7 +15,9 @@ namespace AuctionHouseApp.Server.Controllers;
 [Authorize]
 [Route("api/[controller]")]
 [ApiController]
-public class RaffleSellController : ControllerBase
+public class RaffleSellController(
+  SysParamsService _prmSvc
+  ) : ControllerBase
 {
   [HttpPost("[action]")]
   public ActionResult<RaffleOrder> Create([FromForm] RaffleOrderCreateDto dto)
@@ -60,18 +63,17 @@ VALUES
     }
   }
 
-  ///// <summary>
-  ///// 取得新下訂單
-  ///// </summary>
-  //[HttpPost("[action]/{id}")]
-  //public ActionResult<RaffleOrder> GetNewRaffleOrder(string id)
-  //{
-  //  using var conn = DBHelper.AUCDB.Open();
-  //
-  //  // 取得未付款訂單。該訂單應該未付款且狀態是"ForSale"
-  //  var info = conn.GetEx<RaffleOrder>(new { RaffleOrderNo = id, Status = "ForSale", HasPaid = "N" });
-  //  return info;
-  //}
+  /// <summary>
+  /// 系統參數：抽獎券單價
+  /// </summary>
+  [HttpPost("[action]")]
+  public ActionResult GetRaffleUnitPrice()
+  {
+    return Ok(new
+    {
+      RaffleUnitPrice = _prmSvc.GetRaffleUnitPrice()
+    });
+  }
 
   /// <summary>
   /// 同意下單或放棄訂單
@@ -80,7 +82,8 @@ VALUES
   public ActionResult<RaffleOrder> CommitRaffleOrder(string id, string hasPaid)
   {
     //# Access DB
-    if(hasPaid == "Y") {
+    if (hasPaid == "Y")
+    {
       string updateHasSold = """
 UPDATE [dbo].[RaffleOrder]
 SET [HasPaid] = 'Y', [Status] = 'HasSold', [SoldDtm] = GETDATE()
@@ -90,7 +93,8 @@ WHERE RaffleOrderNo = @RaffleOrderNo
       using var txn = conn.BeginTransaction();
 
       int affected = conn.Execute(updateHasSold, new { RaffleOrderNo = id }, txn);
-      if(affected != 1) {
+      if (affected != 1)
+      {
         txn.Rollback();
         return BadRequest(new MsgObj("更新訂單執行失敗！", id));
       }
@@ -101,9 +105,9 @@ WHERE RaffleOrderNo = @RaffleOrderNo
       // 產生抽獎券子程序
       DoGenRaffleTickets(updated, conn, txn);
 
-      txn.Commit();      
+      txn.Commit();
       return Ok(updated);
-    } 
+    }
     else
     {
       string updateInvalid = """
@@ -141,7 +145,7 @@ VALUES
  @RaffleSoldNo, @BuyerName, @BuyerEmail, @BuyerPhone, 0, NULL)
 """;
 
-    for(int i = 0; i < order.PurchaseCount; i++)
+    for (int i = 0; i < order.PurchaseCount; i++)
     {
       conn.Execute(sql, new
       {

@@ -1,6 +1,7 @@
 /// <reference types="vite/client" />
 
-type EditMode = 'List' | 'Add' | 'Edit' | 'Step1' | 'Step2' | 'Step3' | 'Step4' | 'Step5' | 'Finish';
+type EditMode = 'Init' |  'List' | 'Add' | 'Edit' | 'Step1' | 'Step2' | 'Step3' | 'Step4' | 'Step5' | 'Finish';
+// Init 礶﹍て更吏挂砞﹚╰参把计单
 
 // 盡硄ノ癟ン
 interface MsgObj {

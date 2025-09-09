@@ -54,7 +54,7 @@ export default function RaffleTickeEmailWidget(props: {
       </Stack>
 
       {ticketList.length > 0 &&
-        <Button variant='contained' size='large' fullWidth sx={{ my: 2 }}
+        <Button variant={emailTimes > 0 ? 'outlined' : 'contained'} fullWidth sx={{ my: 2 }}
           onClick={handleSendTicketEmail}>
           寄出抽獎券<small>(已寄出{emailTimes}次)</small></Button>
       }

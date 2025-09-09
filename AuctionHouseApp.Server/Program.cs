@@ -82,6 +82,7 @@ try
   builder.Services.AddMemoryCache();
   builder.Services.AddHttpContextAccessor();
   builder.Services.AddSingleton<AccountService>();
+  builder.Services.AddSingleton<SysParamsService>();
   builder.Services.AddScoped<AesHelperService>();
 
   #endregion

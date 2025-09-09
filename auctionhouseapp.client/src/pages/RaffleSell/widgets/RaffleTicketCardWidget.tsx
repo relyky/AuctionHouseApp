@@ -1,9 +1,5 @@
 import { useTheme } from '@mui/material/styles';
-import { Box, Card, CardContent, CardMedia, IconButton, Typography } from '@mui/material';
-// icons
-import SkipPreviousIcon from '@mui/icons-material/SkipPrevious';
-import PlayArrowIcon from '@mui/icons-material/PlayArrow';
-import SkipNextIcon from '@mui/icons-material/SkipNext';
+import { Box, Card, CardContent, CardMedia, Typography } from '@mui/material';
 // resource
 import mediaImage from '../../../assets/images/live-from-space.jpg';
 

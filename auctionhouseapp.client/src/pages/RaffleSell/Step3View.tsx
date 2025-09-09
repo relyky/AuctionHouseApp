@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { useAtom } from 'jotai';
-import { Container, Typography, Alert, Button } from '@mui/material'
+import { Container, Typography, Button } from '@mui/material'
 import { raffleSellAtom } from './atom';
 import { useEventCallback } from 'usehooks-ts';
-import RaffleTickeEmailWidget from './widgets/RaffleTickeEmailWidgettsx';
+import RaffleTickeEmailWidget from './widgets/RaffleTickeEmailWidget';
 
 export default function RaffleSell_Step3View() {
   const [{ raffleOrder }, setFormState] = useAtom(raffleSellAtom);
@@ -21,7 +21,7 @@ export default function RaffleSell_Step3View() {
 
       {raffleOrder && <RaffleTickeEmailWidget raffleOrderNo={raffleOrder.raffleOrderNo} />}
 
-      <Button onClick={handleFinish}>完成</Button>
+      <Button variant='contained' onClick={handleFinish} fullWidth>完成</Button>
     </Container>
   )
 }
