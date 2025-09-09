@@ -47,6 +47,8 @@ export default function RaffleTickeEmailWidget(props: {
 
       {errMsg && <Alert severity='error' sx={{ m: 3 }} >{errMsg}</Alert>}
 
+
+
       <Stack gap={2}>
         {ticketList.map((ticket) => (
           <RaffleTicketCardWidget key={ticket.raffleTicketNo} ticket={ticket} />

@@ -11,6 +11,7 @@ import RaffleLayout from './layout/RaffleLayout'
 import BidderLayout from "./layout/BidderLayout"
 import AuctionLayout from "./layout/AuctionLayout"
 import BackendLayout from './layout/BackendLayout'
+import BuyerLayout from './layout/BuyerLayout'
 import Home from './pages/home/AppForm'
 import StaffLogin from './pages/Account/StaffLogin'
 import RaffleBuyer from './pages/RaffleBuyer/AppForm'
@@ -73,6 +74,13 @@ const router = createBrowserRouter([
       { index: true, element: <Home /> },
       { path: "rafflebuyer", element: <RaffleBuyer />, loader: authGuardLoader },
       { path: "demo01", element: <Demo01 />, loader: authGuardLoader },
+    ]
+  },
+  {
+    path: "rafflebuyer",
+    element: <BuyerLayout />,
+    children: [
+      { index: true, element: <RaffleBuyer /> },
     ]
   },
   {
