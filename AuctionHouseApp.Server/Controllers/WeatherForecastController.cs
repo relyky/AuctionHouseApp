@@ -3,6 +3,9 @@ using AuctionHouseApp.Server.DTO;
 using AuctionHouseApp.Server.Models;
 using AuctionHouseApp.Server.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.SqlServer.Server;
+using System.Net.Mail;
+using System.Text;
 using System.Text.Json;
 using Vista.DB;
 using Vista.DB.Schema;
@@ -122,9 +125,37 @@ public class WeatherForecastController(
   [HttpPost("[action]")]
   public ActionResult<MsgObj> TestSendEmail()
   {
+    // 舱獺ず甧
+    //FileInfo file = new FileInfo(@"Template/ReportSampleTpl.html");
+    FileInfo file = new FileInfo(@"Template/RaffleBuyerNoteEmailSample.html");
+
+    StringBuilder html = new();
+    using (var reader = System.IO.File.OpenText(file.FullName))
+    {
+      html.Append(reader.ReadToEnd());
+    }
+
+//    string html = """
+//    <h1 style='color:blue;'>代刚 HTML 獺ン at {DateTime.Now:MM-dd HH:mm:ss}</h1>
+//""";
+
+    // Go
     string[] toList = new string[] { "rely_kao@asiavista.com.tw" };
     string[]? ccList = null; // new string[] { "elva_lin@asiavista.com.tw" };
-    _emlSvc.SendTextEmail(toList, $"[代刚獺ン]代刚獺ン{DateTime.Now:yyMMddTHHmmss}", "代刚盚ゅ獺ン", ccList);
+
+    // 代刚盚 ゅ 獺ン
+    //_emlSvc.SendTextEmail(toList, $"[代刚獺ン]代刚獺ン{DateTime.Now:yyMMddTHHmmss}", "代刚盚ゅ獺ン", ccList);
+
+    // 代刚盚 HTML 獺ン
+    MailMessage mail = new MailMessage();
+    mail.To.Add(new MailAddress("rely_kao@asiavista.com.tw", "蔼ぱ界"));
+
+    // 秎ンず甧
+    mail.Subject = $"代刚 HTML 獺ン at ${DateTime.Now:MM-dd HH:mm:ss}";
+    mail.Body = html.ToString();
+    mail.IsBodyHtml = true;
+
+    _emlSvc.SendEmail(mail);
 
     return Ok(new MsgObj("癳獺ン"));
   }
