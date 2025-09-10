@@ -1,18 +1,21 @@
-﻿<!-- TICKET_BLOCK_START -->
-<div class="ticket-card" style="display: none;">
-  <div class="ticket-card-content">
-    <h3>拍賣活動抽獎券</h3>
-    <div class="ticket-no">NO. {{TICKET_NO}}</div>
-    <div class="ticket-holder-info">
-      票券擁有人<br>
-      🧑 {{TICKET_HOLDER_NAME}}<br>
-      📧 {{TICKET_HOLDER_EMAIL}}<br>
-      📞 {{TICKET_HOLDER_PHONE}}
-    </div>
-  </div>
-  <div class="ticket-card-image" style="outline: solid red">
-    <img src="{{TICKET_IMAGE_URL}}" alt="Raffle Image">
-  </div>
+<!-- Ticket Block -->
+<div class="ticket-card">
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+    <tr>
+      <td valign="top">
+        <h3>拍賣活動抽獎券</h3>
+        <div class="ticket-no">NO. {{TICKET_NO}}</div>
+        <div class="ticket-holder-info">
+          票券擁有人<br>
+          🧑 {{TICKET_HOLDER_NAME}}<br>
+          📧 {{TICKET_HOLDER_EMAIL}}<br>
+          📞 {{TICKET_HOLDER_PHONE}}
+        </div>
+      </td>
+      <td width="120" valign="middle" style="padding-left: 16px;">
+        <img src="{{TICKET_IMAGE_URL}}" alt="Raffle Image" width="120" style="border-radius: 4px;">
+      </td>
+    </tr>
+  </table>
 </div>
-<!-- TICKET_BLOCK_END -->
-<!-- {{TICKET_BLOCK_SLOT}} -->
+<!-- {{RAFFLE_TICKETS_BLOCK}} -->
