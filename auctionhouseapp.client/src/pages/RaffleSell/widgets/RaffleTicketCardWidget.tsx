@@ -29,7 +29,7 @@ export default function RaffleTicketCardWidget(props: {
             </Typography>
             <Box typography='body2' color='text.secondary'>😀 {ticket.buyerName}</Box>
             <Box typography='body2' color='text.secondary'>📧 {ticket.buyerEmail}</Box>
-            <Box typography='body2' color='text.secondary'>☎️ {ticket.buyerPhone}</Box>
+            <Box typography='body2' color='text.secondary'>📞 {ticket.buyerPhone}</Box>
           </Box>
         </CardContent>
       </Box>

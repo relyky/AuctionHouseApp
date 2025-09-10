@@ -58,11 +58,9 @@
     .order-details-table .label {
       font-weight: 600;
       color: #555;
-      width: 15%;
     }
     .order-details-table .value {
       color: #111;
-      width: 35%;
     }
     .ticket-section {
       margin-top: 28px;
@@ -114,9 +112,7 @@
         <tbody>
           <tr>
             <td class="label">訂單編號</td>
-            <td class="value">{{ORDER_NO}}</td>
-            <td class="label"></td>
-            <td class="value"></td>
+            <td class="value colspan="3"">{{ORDER_NO}}</td>
           </tr>
           <tr>
             <td class="label">買家名稱</td>
@@ -150,7 +146,7 @@
       </table>
 
       <div class="ticket-section">
-        <div class="section-title">您的抽獎券 (共 {{PURCHASE_COUNT}} 張)</div>
+        <div class="section-title">您的抽獎券 (共 {{TICKET_LIST_COUNT}} 張)</div>
         
         <!-- {{RAFFLE_TICKETS_BLOCK}} -->
 

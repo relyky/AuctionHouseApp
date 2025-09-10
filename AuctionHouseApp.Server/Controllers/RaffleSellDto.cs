@@ -11,3 +11,11 @@ public record RaffleOrderCreateDto
   public required decimal PurchaseCount { get; init; }
   public required decimal PurchaseAmount { get; init; }
 }
+
+
+[TsInterface(Namespace = "pages.RaffleSell.dto")]
+public record SendNoteEmailResult
+{
+  public required string RaffleOrderNo { get; init; }
+  public required int EmailTimes { get; init; }
+}

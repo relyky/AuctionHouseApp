@@ -107,7 +107,7 @@ export default function RaffleSell_Step2View() {
           </Alert>}
 
         <Stack direction='row'>
-          <FormControlLabel label="已收款" sx={{ flexGrow: 1 }}
+          <FormControlLabel label="已收款才勾選" sx={{ flexGrow: 1 }}
             control={<Checkbox
               checked={hasPaid}
               onChange={(_, chk) => setHasPaid(chk)} />}
@@ -120,10 +120,11 @@ export default function RaffleSell_Step2View() {
           />
         </Stack>
 
-        <Button variant='contained' color='primary'
+        <Button variant={hasPaid ? 'contained' : 'outlined'}
+          color='primary'
           loading={f_loading} disabled={!isConfirm}
           onClick={handleSubmit}
-        >{hasPaid ? '下一步' : '將放棄' }</Button>
+        >{hasPaid ? '下一步' : '無法收款只能放棄' }</Button>
       </Stack>
 
       {/* for debug 

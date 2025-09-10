@@ -3,6 +3,7 @@ import { Alert, Box, Button, LinearProgress, Stack } from '@mui/material';
 import { postData, ResponseError } from '../../../tools/httpHelper';
 import RaffleTicketCardWidget from './RaffleTicketCardWidget';
 import { useEventCallback } from 'usehooks-ts';
+import type { ISendNoteEmailResult } from '../dto/ISendNoteEmailResult';
 
 export default function RaffleTickeEmailWidget(props: {
   raffleOrderNo: string;
@@ -10,14 +11,17 @@ export default function RaffleTickeEmailWidget(props: {
   const [ticketList, setTicketList] = useState<IRaffleTicket[]>([])
   const [f_loading, setLoading] = useState<boolean>(false)
   const [errMsg, setErrMsg] = useState<string | null>(null)
+  const [emailTimes, setEmailTimes] = useState<number>(0)
 
   //# 一進入就取出訂單下的抽獎券清單
   useEffect(() => {
     setLoading(true)
     setErrMsg(null)
     postData<IRaffleTicket[]>(`/api/RaffleSell/LoadRaffleTicket/${props.raffleOrderNo}`)
-      .then(setTicketList)
-      .catch(error => {
+      .then((newTicketList) => {
+        setTicketList(newTicketList)
+        setEmailTimes(newTicketList[0]?.emailTimes ?? 0)
+      }).catch(error => {
         if (error instanceof ResponseError) {
           console.error('handleSubmit ResponseError', error.message);
           setErrMsg(error.message)
@@ -31,12 +35,25 @@ export default function RaffleTickeEmailWidget(props: {
       })
   }, [])
 
-  const emailTimes = useMemo(() => {
-    return ticketList[0]?.emailTimes ?? 0
-  },[])
-
-  const handleSendTicketEmail = useEventCallback(() => {
-    alert('未實作')
+  const handleSendNoteEmail = useEventCallback(() => {
+    setLoading(true)
+    setErrMsg(null)
+    postData<ISendNoteEmailResult>(`/api/RaffleSell/SendNoteEmail/${props.raffleOrderNo}`)
+      .then((result) => {
+        // 更新寄信次數
+        setEmailTimes(result.emailTimes)
+      }).catch(error => {
+        if (error instanceof ResponseError) {
+          console.error('handleSubmit ResponseError', error.message);
+          setErrMsg(error.message)
+        }
+        else {
+          console.error('handleSubmit error', { error });
+          setErrMsg("出現預期之外的錯誤請通知系統工程師。" + error);
+        }
+      }).finally(() => {
+        setLoading(false)
+      })
   });
 
   return (
@@ -47,8 +64,6 @@ export default function RaffleTickeEmailWidget(props: {
 
       {errMsg && <Alert severity='error' sx={{ m: 3 }} >{errMsg}</Alert>}
 
-
-
       <Stack gap={2}>
         {ticketList.map((ticket) => (
           <RaffleTicketCardWidget key={ticket.raffleTicketNo} ticket={ticket} />
@@ -57,7 +72,7 @@ export default function RaffleTickeEmailWidget(props: {
 
       {ticketList.length > 0 &&
         <Button variant={emailTimes > 0 ? 'outlined' : 'contained'} fullWidth sx={{ my: 2 }}
-          onClick={handleSendTicketEmail}>
+          onClick={handleSendNoteEmail}>
           寄出抽獎券<small>(已寄出{emailTimes}次)</small></Button>
       }
 

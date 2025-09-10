@@ -2,10 +2,10 @@
 using AuctionHouseApp.Server.Services;
 using Dapper;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
-using Microsoft.JSInterop.Infrastructure;
+using System.Net.Mail;
+using System.Text;
 using Vista.DB;
 using Vista.DB.Schema;
 using Vista.DbPanda;
@@ -16,7 +16,8 @@ namespace AuctionHouseApp.Server.Controllers;
 [Route("api/[controller]")]
 [ApiController]
 public class RaffleSellController(
-  SysParamsService _prmSvc
+  SysParamsService _prmSvc,
+  EmailProxyService _emlSvc
   ) : ControllerBase
 {
   [HttpPost("[action]")]
@@ -167,5 +168,140 @@ VALUES
     using var conn = DBHelper.AUCDB.Open();
     var tickets = conn.Query<RaffleTicket>(sql, new { RaffleSoldNo = id });
     return Ok(tickets);
+  }
+
+  /// <summary>
+  /// 寄出購買通知信
+  /// </summary>
+  [HttpPost("[action]/{id}")]
+  public ActionResult<SendNoteEmailResult> SendNoteEmail(string id)
+  {
+    const string selectOrderSql = """
+SELECT TOP 1 *
+FROM [dbo].[RaffleOrder] (NOLOCK)
+WHERE RaffleOrderNo = @RaffleOrderNo 
+ AND HasPaid = 'Y'
+ AND Status = 'HasSold'
+ ORDER BY RaffleOrderNo ASC
+""";
+
+    const string selectTicketSql = """
+SELECT *
+FROM [dbo].[RaffleTicket] (NOLOCK)
+WHERE RaffleSoldNo = @RaffleOrderNo 
+ ORDER BY RaffleTicketNo ASC
+""";
+
+    // 更新寄出通知信次數，並取回目前寄出次數。
+    const string updateEmailTimes = """
+UPDATE [dbo].[RaffleTicket]
+ SET EmailTimes = EmailTimes + 1,
+     LastEmailDtm = GETDATE()
+ WHERE [RaffleSoldNo] = @RaffleOrderNo;
+
+SELECT TOP 1 EmailTimes
+ FROM [dbo].[RaffleTicket]
+ WHERE [RaffleSoldNo] = @RaffleOrderNo;
+""";
+
+    try
+    {
+      if (String.IsNullOrWhiteSpace(id))
+        return BadRequest("無查詢參數！");
+
+      //# 先取範本
+      StringBuilder htmlTpl = new(DoReadTemplateFile(@"Template/RaffleBuyerNoteEmailTpl.html"));
+      string ticketTpl = DoReadTemplateFile(@"Template/RaffleBuyerNoteEmailTpl_TicketBlock.html");
+
+      //# 取得訂單與抽獎券
+      using var conn = DBHelper.AUCDB.Open();
+      using var txn = conn.BeginTransaction();
+      var param = new { RaffleOrderNo = id };
+      var order = conn.QueryFirst<RaffleOrder>(selectOrderSql, param, txn);
+      var ticketList = conn.Query<RaffleTicket>(selectTicketSql, param, txn).ToArray();
+
+      // 填入主檔範本
+      htmlTpl = DoFillTemplateTpl(htmlTpl, order);
+      htmlTpl = htmlTpl.Replace("{{TICKET_LIST_COUNT}}", $"{ticketList.Length}");
+
+      // 填入TICKET BLOCK
+      foreach(var ticket in ticketList)
+        htmlTpl = DoFillTemplateTicket(htmlTpl, ticket, ticketTpl);
+
+      // 組織 Email 內容
+      MailMessage mail = new();
+      mail.To.Add(new MailAddress(order.BuyerEmail, order.BuyerName));
+      mail.Subject = $"{_emlSvc.EmailProps.SubjectPrefix} 感謝您購買本次抽獎券，您的訂單編號 {order.RaffleOrderNo} 已成立";
+      mail.Body = htmlTpl.ToString();
+      mail.IsBodyHtml = true;
+
+      // 寄出 Email
+      _emlSvc.SendEmail(mail);
+
+      //# 成功更新寄出通知信次數。
+      int emailTimes = conn.ExecuteScalar<int>(updateEmailTimes, param, txn);
+      txn.Commit();
+
+      return Ok(new SendNoteEmailResult
+      {
+        RaffleOrderNo = order.RaffleOrderNo,
+        EmailTimes = emailTimes
+      });
+    }
+    catch (Exception ex)
+    {
+      return BadRequest("出現例外！" + ex.Message);
+    }
+  }
+
+  /// <summary>
+  /// helper: 讀取範本檔
+  /// </summary>
+  [NonAction]
+  private string DoReadTemplateFile(string filePath)
+  {
+    //# 先取範本
+    FileInfo fi = new (filePath);
+    using var reader = System.IO.File.OpenText(fi.FullName);
+    return reader.ReadToEnd();    
+  }
+
+  /// <summary>
+  /// helper: 填入主檔範本
+  /// </summary>
+  [NonAction]
+  private StringBuilder DoFillTemplateTpl(StringBuilder htmlTpl, RaffleOrder order)
+  {
+    htmlTpl = htmlTpl.Replace("{{BUYER_NAME}}", order.BuyerName);
+    htmlTpl = htmlTpl.Replace("{{ORDER_NO}}", order.RaffleOrderNo);
+    htmlTpl = htmlTpl.Replace("{{BUYER_PHONE}}", order.BuyerPhone);
+    htmlTpl = htmlTpl.Replace("{{BUYER_EMAIL}}", order.BuyerEmail);
+    htmlTpl = htmlTpl.Replace("{{PURCHASE_COUNT}}", $"{order.PurchaseCount}");
+    htmlTpl = htmlTpl.Replace("{{PURCHASE_AMOUNT}}", $"{order.PurchaseAmount:N0}");
+    htmlTpl = htmlTpl.Replace("{{HAS_PAID}}", order.HasPaid == "Y" ? "是" : "否");
+    htmlTpl = htmlTpl.Replace("{{ORDER_STATUS}}", order.Status);
+    htmlTpl = htmlTpl.Replace("{{SALES_ID}}", order.SalesId);
+    htmlTpl = htmlTpl.Replace("{{SOLD_DTM}}", $"{order.SoldDtm:yyyy-MM-dd HH:mm}");
+    return htmlTpl;
+  }
+
+  /// <summary>
+  /// helper: 填入 TICKET_BLOCK
+  /// </summary>
+  [NonAction]
+  private StringBuilder DoFillTemplateTicket(StringBuilder htmlTpl, RaffleTicket ticket, string ticketTpl)
+  {
+    StringBuilder htmlTicket = new (ticketTpl);
+
+    // 填入 TICKET 欄位
+    htmlTicket = htmlTicket.Replace("{{TICKET_NO}}", ticket.RaffleTicketNo);
+    htmlTicket = htmlTicket.Replace("{{TICKET_HOLDER_NAME}}", ticket.BuyerName);
+    htmlTicket = htmlTicket.Replace("{{TICKET_HOLDER_EMAIL}}", ticket.BuyerEmail);
+    htmlTicket = htmlTicket.Replace("{{TICKET_HOLDER_PHONE}}", ticket.BuyerPhone);
+    htmlTicket = htmlTicket.Replace("{{TICKET_IMAGE_URL}}", _prmSvc.GetRaffleTicketImageUrl());
+
+    // 填入 TICKET_BLOCK
+    htmlTpl = htmlTpl.Replace("<!-- {{RAFFLE_TICKETS_BLOCK}} -->", htmlTicket.ToString());
+    return htmlTpl;
   }
 }
