@@ -5,8 +5,9 @@ import mediaImage from '../../../assets/images/live-from-space.jpg';
 
 /**
  * 專門顯示抽獎券
+ * ref: https://mui.com/material-ui/react-card/#media
  */
-export default function MediaControlCard(props: {
+export default function RaffleTicketCardWidget(props: {
   ticket: IRaffleTicket
 }) {
   const { ticket } = props

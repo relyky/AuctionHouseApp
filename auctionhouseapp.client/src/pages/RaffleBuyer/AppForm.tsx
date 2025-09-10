@@ -1,6 +1,10 @@
-import { Typography, Box, Container, LinearProgress, Alert } from "@mui/material";
+import { Typography, Box, Container, LinearProgress, Alert, Stack } from "@mui/material";
 import SearchWidget from "../../widgets/SearchWidget";
 import { useState } from "react";
+import { useEventCallback } from "usehooks-ts";
+import { postData, ResponseError } from "../../tools/httpHelper";
+import type { IQryRaffleOrderArgs } from "./dto/IQryRaffleOrderArgs";
+import RaffleTicketCardWidget from "../RaffleSell/widgets/RaffleTicketCardWidget";
 
 /**
  * 抽將券買家查詢
@@ -9,25 +13,50 @@ import { useState } from "react";
 export default function RaffleBuyer_AppForm() {
   const [f_loading, setLoading] = useState<boolean>(false)
   const [errMsg, setErrMsg] = useState<string | null>(null)
+  const [orderList, setOrderList] = useState<IRaffleOrder[]>([]); // TODO: Define proper type
+  const [ticketList, setTicketList] = useState<IRaffleTicket[]>([]); // TODO: Define proper type
 
-  const handleSearch = (value: string) => {
-    setLoading(true)
-    setErrMsg(null)
-    setTimeout(() => {
-      setErrMsg('未找到相關記錄，請檢查您的輸入是否正確。');
+  const handleSearch = useEventCallback(async (value: string) => {
+    try {
+      setLoading(true)
+      setErrMsg(null)
+
+      // reset previous results
+      setOrderList([])
+      setTicketList([])
+
+      // GO
+      const args: IQryRaffleOrderArgs = { buyerEmail: value };
+      const orderListTmp = await postData<IRaffleOrder[]>('/api/RaffleBuyer/QryRaffleOrder', args);
+      if (orderListTmp.length === 0) {
+        setErrMsg("查無訂單資料，請確認輸入的E-mail地址是否正確。")
+        return;
+      };
+     
+      const ticketListTmp = await postData<IRaffleTicket[]>('/api/RaffleBuyer/QryRaffleTicket', args);
+
+      setOrderList(orderListTmp);
+      setTicketList(ticketListTmp);
+    } catch (error) {
+      if (error instanceof ResponseError) {
+        console.error('handleSubmit ResponseError', error.message);
+        setErrMsg(error.message)
+      }
+      else {
+        console.error('handleSubmit error', { error });
+        setErrMsg("出現預期之外的錯誤請通知系統工程師。" + error);
+      }
+    } finally {
       setLoading(false)
-    }, 2000)
-
-    console.log('Searching for:', value);
-    // TODO: Implement search logic here
-  };
+    }
+  });
 
   return (
     <Container maxWidth='sm' sx={{ outline: 'dashed red 1px' }}>
       <Typography variant='h5' component="div" sx={{ mb: 2 }}>買家/抽獎券查詢</Typography>
 
       <SearchWidget
-        placeholder="請輸入訂單編號、名稱、電郵地址、聯絡電話..."
+        placeholder="請輸入E-mail 地址"
         helpText={helpContent}
         onSearch={handleSearch}
       />
@@ -36,7 +65,16 @@ export default function RaffleBuyer_AppForm() {
 
       {errMsg && <Alert severity="error" sx={{ m: 2 }}>{errMsg}</Alert>}
 
+      <Stack gap={2}>
+        {ticketList.map((ticket) => (
+          <RaffleTicketCardWidget key={ticket.raffleTicketNo} ticket={ticket} />
+        ))}
+      </Stack>
+
       {/* TODO: Display search results here */}
+      <pre>orderList: {JSON.stringify(orderList, null, 2)}</pre>
+      <pre>ticketList: {JSON.stringify(ticketList, null, 2)}</pre>
+
     </Container>
   )
 }
