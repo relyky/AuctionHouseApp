@@ -1,67 +1,98 @@
-﻿<!DOCTYPE html>
-<html lang="zh-hant">
+<!DOCTYPE html>
+<html lang="zh-TW">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>購買通知信</title>
+  <title>購買成功通知</title>
   <style>
     body {
-      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-      background-color: #f4f4f4;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background-color: #f0f2f5;
       margin: 0;
-      padding: 0;
+      padding: 20px;
+      color: #333;
     }
-
-    .container {
-      max-width: 600px;
-      margin: 20px auto;
+    .email-container {
+      max-width: 680px;
+      margin: 0 auto;
       background-color: #ffffff;
+      border: 1px solid #e1e1e1;
       border-radius: 8px;
       overflow: hidden;
-      border: 1px solid #dddddd;
     }
-
     .header {
-      background-color: #007bff;
+      background-color: #4a90e2;
       color: #ffffff;
-      padding: 20px;
+      padding: 24px;
       text-align: center;
     }
-
-      .header h1 {
-        margin: 0;
-        font-size: 24px;
-      }
-
-    .content {
-      padding: 30px;
-      color: #333333;
+    .header h1 {
+      margin: 0;
+      font-size: 28px;
+      font-weight: 600;
     }
-
-      .content p {
-        line-height: 1.6;
-      }
-
-    .order-details {
+    .content {
+      padding: 24px 32px;
+    }
+    .content p {
+      font-size: 16px;
+      line-height: 1.7;
+    }
+    .section-title {
+      font-size: 20px;
+      font-weight: 600;
+      margin-top: 28px;
+      margin-bottom: 16px;
+      border-bottom: 2px solid #eeeeee;
+      padding-bottom: 8px;
+    }
+    .order-details-table {
       width: 100%;
       border-collapse: collapse;
-      margin: 20px 0;
+      font-size: 15px;
+    }
+    .order-details-table td {
+      padding: 10px 4px;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    .order-details-table .label {
+      font-weight: 600;
+      color: #555;
+      width: 15%;
+    }
+    .order-details-table .value {
+      color: #111;
+      width: 35%;
+    }
+    .ticket-section {
+      margin-top: 28px;
+    }
+    .ticket-card {
+      border: 1px solid #e1e1e1;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      background-color: #f9f9f9;
+      padding: 16px;
+    }
+    .ticket-card h3 {
+      font-size: 18px;
+      font-weight: 600;
+      margin: 0 0 4px 0;
+    }
+    .ticket-card .ticket-no {
+      font-size: 16px;
+      font-weight: 500;
+      color: #4a90e2;
+      margin-bottom: 12px;
+    }
+    .ticket-holder-info {
+      font-size: 15px;
+      line-height: 1.8;
+      color: #444;
     }
 
-      .order-details th, .order-details td {
-        padding: 12px;
-        border: 1px solid #eeeeee;
-        text-align: left;
-      }
-
-      .order-details th {
-        background-color: #f8f8f8;
-        font-weight: bold;
-        width: 30%;
-      }
-
     .footer {
-      background-color: #f4f4f4;
+      background-color: #f8f9fa;
       color: #888888;
       padding: 20px;
       text-align: center;
@@ -70,41 +101,166 @@
   </style>
 </head>
 <body>
-  <div class="container">
+  <div class="email-container">
     <div class="header">
       <h1>購買成功通知</h1>
     </div>
     <div class="content">
       <p>親愛的 <strong>{{BUYER_NAME}}</strong>,</p>
-      <p>感謝您的購買！我們已收到您的訂單，以下是您的訂單詳細資訊：</p>
+      <p>感謝您的購買！我們已收到您的訂單，以下是您的訂單與抽獎券詳細資訊。</p>
 
-      <table class="order-details">
-        <tr>
-          <th>訂單編號</th>
-          <td>{{ORDER_NO}}</td>
-        </tr>
-        <tr>
-          <th>買家名稱</th>
-          <td>{{BUYER_NAME}}</td>
-        </tr>
-        <tr>
-          <th>買家電郵地址</th>
-          <td>{{BUYER_EMAIL}}</td>
-        </tr>
-        <tr>
-          <th>買家聯絡電話</th>
-          <td>{{BUYER_PHONE}}</td>
-        </tr>
-        <tr>
-          <th>購買抽獎券張數</th>
-          <td>{{TICKET_COUNT}} 張</td>
-        </tr>
+      <div class="section-title">購買訂單資訊</div>
+      <table class="order-details-table">
+        <tbody>
+          <tr>
+            <td class="label">訂單編號</td>
+            <td class="value">{{ORDER_NO}}</td>
+            <td class="label"></td>
+            <td class="value"></td>
+          </tr>
+          <tr>
+            <td class="label">買家名稱</td>
+            <td class="value" colspan="3">{{BUYER_NAME}}</td>
+          </tr>
+          <tr>
+            <td class="label">聯絡電話</td>
+            <td class="value">{{BUYER_PHONE}}</td>
+            <td class="label">電郵地址</td>
+            <td class="value">{{BUYER_EMAIL}}</td>
+          </tr>
+          <tr>
+            <td class="label">購買張數</td>
+            <td class="value">{{PURCHASE_COUNT}}</td>
+            <td class="label">購買金額</td>
+            <td class="value">{{PURCHASE_AMOUNT}}</td>
+          </tr>
+          <tr>
+            <td class="label">是否已付款</td>
+            <td class="value">{{HAS_PAID}}</td>
+            <td class="label">訂單狀態</td>
+            <td class="value">{{ORDER_STATUS}}</td>
+          </tr>
+          <tr>
+            <td class="label">負責業務</td>
+            <td class="value">{{SALES_ID}}</td>
+            <td class="label">賣出時間</td>
+            <td class="value">{{SOLD_DTM}}</td>
+          </tr>
+        </tbody>
       </table>
 
-      <p>我們將盡快處理您的訂單。如果您有任何疑問，請隨時與我們聯繫。</p>
+      <div class="ticket-section">
+        <div class="section-title">您的抽獎券 (共 {{PURCHASE_COUNT}} 張)</div>
+        
+        <!-- Ticket 1 -->
+        <div class="ticket-card">
+          <table width="100%" cellpadding="0" cellspacing="0" border="0">
+            <tr>
+              <td valign="top">
+                <h3>拍賣活動抽獎券</h3>
+                <div class="ticket-no">NO. {{TICKET_NO_1}}</div>
+                <div class="ticket-holder-info">
+                  票券擁有人<br>
+                  🧑 {{TICKET_HOLDER_NAME}}<br>
+                  📧 {{TICKET_HOLDER_EMAIL}}<br>
+                  📞 {{TICKET_HOLDER_PHONE}}
+                </div>
+              </td>
+              <td width="120" valign="middle" style="padding-left: 16px;">
+                <img src="{{TICKET_IMAGE_URL}}" alt="Raffle Image" width="120" style="border-radius: 4px;">
+              </td>
+            </tr>
+          </table>
+        </div>
+
+        <!-- Ticket 2 -->
+        <div class="ticket-card">
+          <table width="100%" cellpadding="0" cellspacing="0" border="0">
+            <tr>
+              <td valign="top">
+                <h3>拍賣活動抽獎券</h3>
+                <div class="ticket-no">NO. {{TICKET_NO_2}}</div>
+                <div class="ticket-holder-info">
+                  票券擁有人<br>
+                  🧑 {{TICKET_HOLDER_NAME}}<br>
+                  📧 {{TICKET_HOLDER_EMAIL}}<br>
+                  📞 {{TICKET_HOLDER_PHONE}}
+                </div>
+              </td>
+              <td width="120" valign="middle" style="padding-left: 16px;">
+                <img src="{{TICKET_IMAGE_URL}}" alt="Raffle Image" width="120" style="border-radius: 4px;">
+              </td>
+            </tr>
+          </table>
+        </div>
+
+        <!-- Ticket 3 -->
+        <div class="ticket-card">
+          <table width="100%" cellpadding="0" cellspacing="0" border="0">
+            <tr>
+              <td valign="top">
+                <h3>拍賣活動抽獎券</h3>
+                <div class="ticket-no">NO. {{TICKET_NO_3}}</div>
+                <div class="ticket-holder-info">
+                  票券擁有人<br>
+                  🧑 {{TICKET_HOLDER_NAME}}<br>
+                  📧 {{TICKET_HOLDER_EMAIL}}<br>
+                  📞 {{TICKET_HOLDER_PHONE}}
+                </div>
+              </td>
+              <td width="120" valign="middle" style="padding-left: 16px;">
+                <img src="{{TICKET_IMAGE_URL}}" alt="Raffle Image" width="120" style="border-radius: 4px;">
+              </td>
+            </tr>
+          </table>
+        </div>
+
+        <!-- Ticket 4 -->
+        <div class="ticket-card">
+          <table width="100%" cellpadding="0" cellspacing="0" border="0">
+            <tr>
+              <td valign="top">
+                <h3>拍賣活動抽獎券</h3>
+                <div class="ticket-no">NO. {{TICKET_NO_4}}</div>
+                <div class="ticket-holder-info">
+                  票券擁有人<br>
+                  🧑 {{TICKET_HOLDER_NAME}}<br>
+                  📧 {{TICKET_HOLDER_EMAIL}}<br>
+                  📞 {{TICKET_HOLDER_PHONE}}
+                </div>
+              </td>
+              <td width="120" valign="middle" style="padding-left: 16px;">
+                <img src="{{TICKET_IMAGE_URL}}" alt="Raffle Image" width="120" style="border-radius: 4px;">
+              </td>
+            </tr>
+          </table>
+        </div>
+
+        <!-- Ticket 5 -->
+        <div class="ticket-card">
+          <table width="100%" cellpadding="0" cellspacing="0" border="0">
+            <tr>
+              <td valign="top">
+                <h3>拍賣活動抽獎券</h3>
+                <div class="ticket-no">NO. {{TICKET_NO_5}}</div>
+                <div class="ticket-holder-info">
+                  票券擁有人<br>
+                  🧑 {{TICKET_HOLDER_NAME}}<br>
+                  📧 {{TICKET_HOLDER_EMAIL}}<br>
+                  📞 {{TICKET_HOLDER_PHONE}}
+                </div>
+              </td>
+              <td width="120" valign="middle" style="padding-left: 16px;">
+                <img src="{{TICKET_IMAGE_URL}}" alt="Raffle Image" width="120" style="border-radius: 4px;">
+              </td>
+            </tr>
+          </table>
+        </div>
+
+      </div>
+
       <p>祝您好運！</p>
-      <br>
-      <p>誠摯地，<br>AuctionHouse 團隊</p>
+      <p>誠摯地,<br>AuctionHouse 團隊</p>
     </div>
     <div class="footer">
       <p>這是一封系統自動發送的郵件，請勿直接回覆。</p>
@@ -112,3 +268,4 @@
     </div>
   </div>
 </body>
+</html>
