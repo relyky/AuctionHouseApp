@@ -124,7 +124,7 @@ export default function RaffleSell_Step2View() {
           color='primary'
           loading={f_loading} disabled={!isConfirm}
           onClick={handleSubmit}
-        >{hasPaid ? '下一步' : '無法收款只能放棄' }</Button>
+        >{hasPaid ? '確認購買' : '未收款只能放棄' }</Button>
       </Stack>
 
       {/* for debug 
