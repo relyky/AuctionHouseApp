@@ -87,6 +87,7 @@ export default function SearchWidget({ placeholder, helpTitle, helpText, onSearc
         onChange={(e) => setValue(e.target.value)}
         onKeyDown={(e) => e.key === 'Enter' && handleSearchClick()}
         placeholder={placeholder}
+        sx={{ mb: 2 }}
         endAdornment={
           <InputAdornment position="end">
             <IconButton size="large" onClick={handleSearchClick}>

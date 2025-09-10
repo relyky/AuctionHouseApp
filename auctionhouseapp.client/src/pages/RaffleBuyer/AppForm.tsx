@@ -5,6 +5,7 @@ import { useEventCallback } from "usehooks-ts";
 import { postData, ResponseError } from "../../tools/httpHelper";
 import type { IQryRaffleOrderArgs } from "./dto/IQryRaffleOrderArgs";
 import RaffleTicketCardWidget from "../RaffleSell/widgets/RaffleTicketCardWidget";
+import RaffleOrderTableWidget from "./widgets/RaffleOrderTableWidget";
 
 /**
  * 抽將券買家查詢
@@ -32,7 +33,7 @@ export default function RaffleBuyer_AppForm() {
         setErrMsg("查無訂單資料，請確認輸入的E-mail地址是否正確。")
         return;
       };
-     
+
       const ticketListTmp = await postData<IRaffleTicket[]>('/api/RaffleBuyer/QryRaffleTicket', args);
 
       setOrderList(orderListTmp);
@@ -52,11 +53,11 @@ export default function RaffleBuyer_AppForm() {
   });
 
   return (
-    <Container maxWidth='sm' sx={{ outline: 'dashed red 1px' }}>
+    <Container maxWidth='sm'>
       <Typography variant='h5' component="div" sx={{ mb: 2 }}>買家/抽獎券查詢</Typography>
 
       <SearchWidget
-        placeholder="請輸入E-mail 地址"
+        placeholder="請輸入買家 E-mail 地址"
         helpText={helpContent}
         onSearch={handleSearch}
       />
@@ -65,16 +66,22 @@ export default function RaffleBuyer_AppForm() {
 
       {errMsg && <Alert severity="error" sx={{ m: 2 }}>{errMsg}</Alert>}
 
+      {/* TODO: Display search results here */}
+
+      {orderList.map((order) => (
+        <RaffleOrderTableWidget key={order.raffleOrderNo} order={order} />
+      ))}
+
       <Stack gap={2}>
         {ticketList.map((ticket) => (
           <RaffleTicketCardWidget key={ticket.raffleTicketNo} ticket={ticket} />
         ))}
       </Stack>
 
-      {/* TODO: Display search results here */}
-      <pre>orderList: {JSON.stringify(orderList, null, 2)}</pre>
-      <pre>ticketList: {JSON.stringify(ticketList, null, 2)}</pre>
-
+      {import.meta.env.DEV && false &&
+        <pre>orderList: {JSON.stringify(orderList, null, 2)}<br />
+          ticketList: {JSON.stringify(ticketList, null, 2)}</pre>
+      }
     </Container>
   )
 }
@@ -82,8 +89,7 @@ export default function RaffleBuyer_AppForm() {
 //-----------------
 const helpContent = (
   <>
-    <Typography sx={{ mb: 1 }}>請在此輸入您的訂單編號以查詢您擁有的抽獎券。請在此輸入您的訂單編號以查詢您擁有的抽獎券。請在此輸入您的訂單編號以查詢您擁有的抽獎券。</Typography>
-    <Typography sx={{ mb: 1 }}>訂單編號是您購買時收到的唯一識別碼，通常以 'RS' 開頭。</Typography>
-    <Typography>如果您遺失了訂單編號，請聯繫客服尋求協助。</Typography>
+    <Typography sx={{ mb: 1 }}>請在此輸入您的電郵地址以查詢您擁有的抽獎券。</Typography>
+    <Typography>如果您有其他疑問請聯繫客服尋求協助。</Typography>
   </>
 );
