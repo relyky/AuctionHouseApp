@@ -1,4 +1,4 @@
-import { Paper, Box, Button } from '@mui/material'
+import { Box, Button } from '@mui/material'
 import { postData } from '../../tools/httpHelper'
 
 export default function TestSendEmail() {
@@ -9,12 +9,6 @@ export default function TestSendEmail() {
           .then(console.log)
           .catch(console.log)
       }}>TestSendEmail</Button>
-
-      <Button onClick={() => {
-        postData<MsgObj>('/api/RaffleSell/SendNoteEmail/RS00042')
-          .then(console.log)
-          .catch(console.log)
-      }}>Test Send Notify Email</Button>
 
     </Box>
   )

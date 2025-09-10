@@ -5,6 +5,7 @@ import RaffleTicketCardWidget from './RaffleTicketCardWidget';
 import { useEventCallback } from 'usehooks-ts';
 import type { ISendNoteEmailResult } from '../dto/ISendNoteEmailResult';
 import { delayPromise } from '../../../tools/utils';
+import Swal from 'sweetalert2';
 
 export default function RaffleTickeEmailWidget(props: {
   raffleOrderNo: string
@@ -53,6 +54,7 @@ export default function RaffleTickeEmailWidget(props: {
       if (error instanceof ResponseError) {
         console.error('handleSubmit ResponseError', error.message);
         setErrMsg(error.message)
+        Swal.fire('執行失敗！', error.message, 'error')
       }
       else {
         console.error('handleSubmit error', { error });
