@@ -225,7 +225,7 @@ SELECT TOP 1 EmailTimes
       htmlTpl = htmlTpl.Replace("{{TICKET_LIST_COUNT}}", $"{ticketList.Length}");
 
       // 填入TICKET BLOCK
-      foreach(var ticket in ticketList)
+      foreach (var ticket in ticketList)
         htmlTpl = DoFillTemplateTicket(htmlTpl, ticket, ticketTpl);
 
       // 組織 Email 內容
@@ -261,9 +261,9 @@ SELECT TOP 1 EmailTimes
   private string DoReadTemplateFile(string filePath)
   {
     //# 先取範本
-    FileInfo fi = new (filePath);
+    FileInfo fi = new(filePath);
     using var reader = System.IO.File.OpenText(fi.FullName);
-    return reader.ReadToEnd();    
+    return reader.ReadToEnd();
   }
 
   /// <summary>
@@ -291,7 +291,7 @@ SELECT TOP 1 EmailTimes
   [NonAction]
   private StringBuilder DoFillTemplateTicket(StringBuilder htmlTpl, RaffleTicket ticket, string ticketTpl)
   {
-    StringBuilder htmlTicket = new (ticketTpl);
+    StringBuilder htmlTicket = new(ticketTpl);
 
     // 填入 TICKET 欄位
     htmlTicket = htmlTicket.Replace("{{TICKET_NO}}", ticket.RaffleTicketNo);
@@ -303,5 +303,35 @@ SELECT TOP 1 EmailTimes
     // 填入 TICKET_BLOCK
     htmlTpl = htmlTpl.Replace("<!-- {{RAFFLE_TICKETS_BLOCK}} -->", htmlTicket.ToString());
     return htmlTpl;
+  }
+
+
+
+  /// <summary>
+  /// 測試寄送 email
+  /// </summary>
+  [HttpPost("[action]")]
+  public ActionResult<MsgObj> TestSendEmail([FromBody] TestSendEmailArgs args)
+  {
+    string[] toList = new string[] { args.BuyerEmail };
+
+    //if (args.BuyerEmail == "letfail@mail.server")
+    //  throw new ApplicationException("測試 TestSendEmail 失敗！");
+
+    // 測試寄出 純文字 信件。
+    var now = DateTime.Now;
+    string subject = $"測試 Email 通訊是否有效[{now:HHmmss}]";
+
+    StringBuilder mailBody = new();
+    mailBody.AppendLine("您好:");
+    mailBody.AppendLine("這封信是為了測試 Email 通訊是否正常運作。若您順利收到此信件代表成功。");
+    mailBody.AppendLine($"📩 郵件時戳：{now:yyyy-MM-dd HH:mm:ss}");
+    mailBody.AppendLine();
+    mailBody.AppendLine("這是系統送出信件請勿回覆。");
+    mailBody.AppendLine("感謝您的協助。");
+
+    _emlSvc.SendTextEmail(toList, subject, mailBody.ToString());
+
+    return Ok(new MsgObj("SUCCESS"));
   }
 }

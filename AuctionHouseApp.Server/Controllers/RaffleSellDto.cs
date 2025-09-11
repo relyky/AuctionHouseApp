@@ -19,3 +19,9 @@ public record SendNoteEmailResult
   public required string RaffleOrderNo { get; init; }
   public required int EmailTimes { get; init; }
 }
+
+[TsInterface(Namespace = "pages.RaffleSell.dto")]
+public record TestSendEmailArgs
+{
+  public required string BuyerEmail { get; init; }
+}

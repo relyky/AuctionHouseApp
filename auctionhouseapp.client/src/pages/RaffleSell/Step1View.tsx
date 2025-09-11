@@ -1,9 +1,14 @@
 import { useState } from 'react';
 import type { ChangeEvent, FormEvent } from 'react';
 import { useAtomValue, useSetAtom } from 'jotai';
-import { Alert, Button, Container, Stack, TextField, Toolbar, Typography, useEventCallback } from "@mui/material";
-import { postFormData, ResponseError } from '../../tools/httpHelper';
+import { Alert, Button, Container, IconButton, InputAdornment, Stack, TextField, Toolbar, Typography, useEventCallback } from "@mui/material";
+import { postData, postFormData, ResponseError } from '../../tools/httpHelper';
 import { raffleSellAtom, raffleUnitPriceAtom } from './atom';
+import { delayPromise } from '../../tools/utils';
+import Swal from 'sweetalert2';
+//icons
+import MailIcon from '@mui/icons-material/MailOutline';
+import CheckEmailIcon from '@mui/icons-material/MarkEmailRead';
 
 /**
  * 業務-銷售抽獎券
@@ -14,8 +19,10 @@ export default function RaffleSell_Step1View() {
   const [f_loading, setLoading] = useState<boolean>(false)
   const [errMsg, setErrMsg] = useState<string | null>(null)
   const raffleUnitPrice = useAtomValue(raffleUnitPriceAtom) // 抽獎券單價 
-  const [purchaseCount, setPurchaseCount] = useState<number>(1); // 控制購買張數
-  const [purchaseAmount, setPurchaseAmount] = useState<number>(raffleUnitPrice); // 控制購買金額
+  const [purchaseCount, setPurchaseCount] = useState<number>(1); // 控制:購買張數
+  const [purchaseAmount, setPurchaseAmount] = useState<number>(raffleUnitPrice); // 控制:購買金額
+  const [buyerEmail, setBuyerEmail] = useState<string>(''); // 控制:買家電郵地址
+  const [hasCheckEmail, setHasCheckEmail] = useState<boolean>(false)
 
   const handleSubmit = useEventCallback(async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -49,6 +56,28 @@ export default function RaffleSell_Step1View() {
     setPurchaseAmount(newAmount)
   });
 
+  const handleCheckEmail = useEventCallback(async () => {
+    Swal.fire({
+      title: '請稍候...',
+      text: '正在處理中',
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading();
+        postData<MsgObj>('/api/RaffleSell/TestSendEmail', { buyerEmail })
+          .then(() => {
+            Swal.close()
+            setHasCheckEmail(true)
+            Swal.fire({ text: '已送出測試信。需買家收件確認才算成功。', icon: 'info' });
+          }).
+          catch(error => {
+            Swal.close()
+            console.error('handleCheckEmail error', { error });
+            Swal.fire({ title: '測試失敗！', icon: 'error' });
+          })
+      }
+    });
+  });
+
   return (
     <Container maxWidth='xs'>
       <Typography variant='h5' gutterBottom>銷售抽獎券</Typography>
@@ -60,11 +89,27 @@ export default function RaffleSell_Step1View() {
       <form onSubmit={handleSubmit}>
         <Stack spacing={2}>
           <TextField name='buyerName' label='買家名稱' required />
-          <TextField name='buyerEmail' label='買家電郵地址' type='email' required />
+
+          <TextField name='buyerEmail' label='買家電郵地址' type='email' required
+            helperText="可按右側按鈕寄測試 Email。"
+            value={buyerEmail} onChange={(e) => setBuyerEmail(e.target.value)}
+            slotProps={{
+              input: {
+                endAdornment: <InputAdornment position="end" >
+                  <IconButton edge="end" size='large' onClick={handleCheckEmail}>
+                    {hasCheckEmail ? <CheckEmailIcon color='info' /> : <MailIcon color='primary' />}
+                  </IconButton>
+                </InputAdornment>
+              }
+            }}
+          />
+
           <TextField name='buyerPhone' label='買家聯絡電話' type='tel' required />
+
           <TextField name='purchaseCount' label='購買張數' type='number' required
             value={purchaseCount} onChange={handlePurchaseCount}
             slotProps={{ htmlInput: { min: 1 } }} />
+
           <TextField name='purchaseAmount' label='購買金額' type='number' required
             value={purchaseAmount} onChange={(e) => setPurchaseAmount(Number(e.target.value))}
             slotProps={{ htmlInput: { min: 0 } }} />
@@ -73,11 +118,6 @@ export default function RaffleSell_Step1View() {
             <Alert severity="error" onClose={() => setErrMsg(null)}>
               {errMsg}
             </Alert>}
-
-          <Alert severity="warning">
-            增加測試電子信箱是有效的功能。
-            ？名稱輸入可以支援二行
-          </Alert>
 
           {/*<FormControlLabel required control={<Checkbox name='hasPaid' required defaultChecked={true} />} label="已付款" />*/}
           <Button type='submit' variant='contained' color='primary' loading={f_loading}>建立訂單</Button>
