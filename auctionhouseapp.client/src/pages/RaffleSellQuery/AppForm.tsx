@@ -3,9 +3,9 @@ import SearchWidget from "../../widgets/SearchWidget";
 import { useState } from "react";
 import { useEventCallback } from "usehooks-ts";
 import { postData, ResponseError } from "../../tools/httpHelper";
-import type { IQryRaffleOrderArgs } from "../RaffleBuyer/dto/IQryRaffleOrderArgs";
+import type { IQryRaffleOrderArgs } from "./dto/IQryRaffleOrderArgs";
 import RaffleTicketCardWidget from "../RaffleSell/widgets/RaffleTicketCardWidget";
-import RaffleOrderTableWidget from "../RaffleBuyer/widgets/RaffleOrderTableWidget";
+import RaffleOrderTableWidget from "./widgets/RaffleOrderTableWidget";
 
 /**
  * 業務-協助買家查詢賣出訂單/抽獎券
@@ -29,13 +29,13 @@ export default function RaffleSellQuery_AppForm() {
 
       // GO
       const args: IQryRaffleOrderArgs = { buyerEmail: value };
-      const orderListTmp = await postData<IRaffleOrder[]>('/api/RaffleSell/QryRaffleOrder', args);
+      const orderListTmp = await postData<IRaffleOrder[]>('/api/RaffleSellQuery/QryRaffleOrder', args);
       if (orderListTmp.length === 0) {
         setErrMsg("查無訂單資料，請確認輸入的E-mail地址是否正確。")
         return;
       };
 
-      const ticketListTmp = await postData<IRaffleTicket[]>('/api/RaffleSell/QryRaffleTicket', args);
+      const ticketListTmp = await postData<IRaffleTicket[]>('/api/RaffleSellQuery/QryRaffleTicket', args);
 
       setOrderList(orderListTmp);
       setTicketList(ticketListTmp);

@@ -74,6 +74,11 @@ export default function RaffleSell_Step1View() {
               {errMsg}
             </Alert>}
 
+          <Alert severity="warning">
+            增加測試電子信箱是有效的功能。
+            ？名稱輸入可以支援二行
+          </Alert>
+
           {/*<FormControlLabel required control={<Checkbox name='hasPaid' required defaultChecked={true} />} label="已付款" />*/}
           <Button type='submit' variant='contained' color='primary' loading={f_loading}>建立訂單</Button>
         </Stack>

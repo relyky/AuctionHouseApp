@@ -3,9 +3,9 @@ import SearchWidget from "../../widgets/SearchWidget";
 import { useState } from "react";
 import { useEventCallback } from "usehooks-ts";
 import { postData, ResponseError } from "../../tools/httpHelper";
-import type { IQryRaffleOrderArgs } from "./dto/IQryRaffleOrderArgs";
+import type { IQryRaffleOrderArgs } from "../RaffleSellQuery/dto/IQryRaffleOrderArgs";
 import RaffleTicketCardWidget from "../RaffleSell/widgets/RaffleTicketCardWidget";
-import RaffleOrderTableWidget from "./widgets/RaffleOrderTableWidget";
+import RaffleOrderTableWidget from "../RaffleSellQuery/widgets/RaffleOrderTableWidget";
 
 /**
  * 抽將券買家查詢
