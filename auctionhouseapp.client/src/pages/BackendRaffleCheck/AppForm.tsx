@@ -54,7 +54,7 @@ export default function StaffLogin_AppForm() {
 
   return (
     <Container maxWidth='sm'>
-      <Typography variant='h3' gutterBottom>抽獎券收費檢查</Typography>
+      <Typography variant='h3' gutterBottom>抽獎券銷售查驗</Typography>
       <Box>業務把收到的錢交給經理後，經理打勾確認。</Box>
 
       {/* 選取業務 */}

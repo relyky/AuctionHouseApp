@@ -1,5 +1,4 @@
 import { Box, CircularProgress, Container, MenuItem, Select, } from '@mui/material';
-import { useColorScheme } from '@mui/material/styles';
 import type { FC } from 'react'
 import { Outlet, NavLink, useNavigation } from "react-router";
 
@@ -38,8 +37,6 @@ export default function MainLayout() {
         </NavLink>
       </nav>
 
-      <ModeSwitcher />
-
       <main>
         {isNavigating && <GlobalSpinner />}
         <Outlet />
@@ -56,22 +53,3 @@ const GlobalSpinner: FC = () => (
 )
 
 //=============================================================================
-const ModeSwitcher: FC = () => {
-  const { mode, setMode } = useColorScheme();
-  if (!mode) {
-    return null;
-  }
-  return (
-    <Select
-      value={mode}
-      onChange={(event) =>
-        setMode(event.target.value as 'system' | 'light' | 'dark')
-      }
-      sx={{ minWidth: 120 }}
-    >
-      <MenuItem value="system">System</MenuItem>
-      <MenuItem value="light">Light</MenuItem>
-      <MenuItem value="dark">Dark</MenuItem>
-    </Select>
-  );
-}

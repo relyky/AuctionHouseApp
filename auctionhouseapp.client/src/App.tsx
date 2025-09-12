@@ -61,7 +61,7 @@ export default function App() {
   }, [isAuthed])
 
   return (
-    <ThemeProvider theme={customTheme} >
+    <ThemeProvider theme={customTheme} defaultMode='light' >
       <CssBaseline />
       <AppRouter />
       <ToastContainer />
