@@ -1,5 +1,5 @@
-import { useTheme } from '@mui/material/styles';
 import { Box, Card, CardContent, CardMedia, Typography } from '@mui/material';
+//import { useTheme } from '@mui/material/styles';
 // resource
 import mediaImage from '../../../assets/images/live-from-space.jpg';
 
@@ -11,7 +11,7 @@ export default function RaffleTicketCardWidget(props: {
   ticket: IRaffleTicket
 }) {
   const { ticket } = props
-  const theme = useTheme();
+  //const theme = useTheme();
 
   return (
     <Card sx={{ display: 'flex' }}>

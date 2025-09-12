@@ -28,4 +28,19 @@
     <ProjectReference Include="..\Vista.DB\Vista.DB.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Template\RaffleBuyerNoteEmailSample.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Template\RaffleBuyerNoteEmailTpl.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Template\RaffleBuyerNoteEmailTpl_TicketBlock.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Template\ReportSampleTpl.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

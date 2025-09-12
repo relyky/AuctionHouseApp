@@ -1,11 +1,9 @@
-import { useEffect } from "react";
-import { NavLink, useNavigate } from "react-router";
-import { useAtomValue } from "jotai";
 import { Alert, Box, Button, Container, Link, Typography } from "@mui/material";
+import { useAtomValue } from "jotai";
+import { NavLink } from "react-router";
 import { selectIsAuthedStaff, staffAccountAtom } from "../../atoms/staffAccountAtom";
 
 export default function BackendIndex_AppForm() {
-  const navigate = useNavigate()
   const isAuthedStaff = useAtomValue(selectIsAuthedStaff)
   const acct = useAtomValue(staffAccountAtom)
 

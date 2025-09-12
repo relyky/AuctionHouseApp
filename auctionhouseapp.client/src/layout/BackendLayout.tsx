@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import type { FC, ReactElement, MouseEvent } from 'react';
 import { Outlet, useNavigate, useNavigation } from "react-router";
-import { useEventCallback, CircularProgress, AppBar, Toolbar, Typography, Box, Slide, IconButton, Menu, MenuItem, Divider, ListItemIcon, Container, Backdrop, Alert } from '@mui/material';
+import { useEventCallback, CircularProgress, AppBar, Toolbar, Typography, Box, Slide, IconButton, Menu, MenuItem, Divider, ListItemIcon, Container, Alert } from '@mui/material';
 import MuiLink from '@mui/material/Link';
 import useScrollTrigger from '@mui/material/useScrollTrigger';
 import { useAtomValue } from 'jotai';

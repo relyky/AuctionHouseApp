@@ -6,7 +6,7 @@ import { decrypt2, decrypt3, encrypt2, encrypt3 } from "../../tools/aesHelper";
 
 export default function UsePostDataLab() {
   const [info, setInfo] = useState<IStaffAccount>()
-  const [plainObj, setPlainObj] = useState<object>({
+  const [plainObj, _setPlainObj] = useState<object>({
     astr: 'ABC123',
     anum: 98754321987,
     atxt: '今天天氣真好'

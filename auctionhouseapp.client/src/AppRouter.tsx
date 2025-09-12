@@ -2,38 +2,36 @@
  * 負責註冊 routing 規則。
  */
 
-import type { FC } from 'react'
-import { createBrowserRouter, RouterProvider } from "react-router"
 import type { LoaderFunction } from "react-router"
-import { Container, Typography } from "@mui/material"
-import MainLayout from "./layout/MainLayout"
-import RaffleLayout from './layout/RaffleLayout'
-import BidderLayout from "./layout/BidderLayout"
+import { createBrowserRouter, RouterProvider } from "react-router"
 import AuctionLayout from "./layout/AuctionLayout"
 import BackendLayout from './layout/BackendLayout'
+import BidderLayout from "./layout/BidderLayout"
 import BuyerLayout from './layout/BuyerLayout'
-import Home from './pages/home/AppForm'
+import MainLayout from "./layout/MainLayout"
+import RaffleLayout from './layout/RaffleLayout'
 import StaffLogin from './pages/Account/StaffLogin'
-import RaffleBuyer from './pages/RaffleBuyer/AppForm'
 import BackendIndex from './pages/BackendIndex/AppForm'
 import BackendRaffleCheck from './pages/BackendRaffleCheck/AppForm'
 import BackendRaffleQuery from './pages/BackendRaffleQuery/AppForm'
+import Home from './pages/home/AppForm'
+import RaffleBuyer from './pages/RaffleBuyer/AppForm'
 import RaffleIndex from './pages/RaffleIndex/AppForm'
 import RaffleSell from './pages/RaffleSell/AppForm'
 import RaffleSellQuery from './pages/RaffleSellQuery/AppForm'
 
 //---下面測試用功能
-import LotsPage from './pages/lots/AppForm';
-import Demo01 from './pages/Demo01/AppForm';
-import Demo02 from './pages/Demo02/AppForm';
-import ACU1010 from './pages/AUC1010/AppForm';
-import ACU1020 from './pages/AUC1020/AppForm';
-import ACU1030 from './pages/AUC1030/AppForm';
-import ACU2010 from './pages/AUC2010/AppForm';
-import ACU2020 from './pages/AUC2020/AppForm';
-import ACU2030 from './pages/AUC2030/AppForm';
-import ACU2040 from './pages/AUC2040/AppForm';
-import ACU3010 from './pages/AUC3010/AppForm';
+import ACU1010 from './pages/AUC1010/AppForm'
+import ACU1020 from './pages/AUC1020/AppForm'
+import ACU1030 from './pages/AUC1030/AppForm'
+import ACU2010 from './pages/AUC2010/AppForm'
+import ACU2020 from './pages/AUC2020/AppForm'
+import ACU2030 from './pages/AUC2030/AppForm'
+import ACU2040 from './pages/AUC2040/AppForm'
+import ACU3010 from './pages/AUC3010/AppForm'
+import Demo01 from './pages/Demo01/AppForm'
+import Demo02 from './pages/Demo02/AppForm'
+import LotsPage from './pages/lots/AppForm'
 
 /**
  * 設計於載入畫面時限定有授權才可開啟畫面！
@@ -54,16 +52,16 @@ const authGuardLoader: LoaderFunction = (args, handlerCtx) => {
 /**
  * 施工中
  */
-const UnderConstructX: FC<{
-  title: string
-}> = (props) => {
-  return (
-    <Container maxWidth="xs">
-      <Typography variant='h2'>{props.title}</Typography>
-      <Typography variant='h2'>施工中</Typography>
-    </Container>
-  )
-}
+//const UnderConstruct: FC<{
+//  title: string
+//}> = (props) => {
+//  return (
+//    <Container maxWidth="xs">
+//      <Typography variant='h2'>{props.title}</Typography>
+//      <Typography variant='h2'>施工中</Typography>
+//    </Container>
+//  )
+//}
 //-------------------------------------
 
 const router = createBrowserRouter([

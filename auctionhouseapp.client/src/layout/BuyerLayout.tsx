@@ -1,10 +1,7 @@
-import { useState } from 'react';
-import type { FC, ReactElement, MouseEvent } from 'react';
-import { Outlet, useNavigate, useNavigation } from "react-router";
-import { useEventCallback, CircularProgress, AppBar, Toolbar, Typography, Box, Slide, IconButton, Menu, MenuItem, Divider, ListItemIcon, Container, Backdrop, Alert } from '@mui/material';
-import MuiLink from '@mui/material/Link';
+import { AppBar, Box, CircularProgress, IconButton, Slide, Toolbar, Typography, useEventCallback } from '@mui/material';
 import useScrollTrigger from '@mui/material/useScrollTrigger';
-import { useAtomValue } from 'jotai';
+import type { FC, ReactElement } from 'react';
+import { Outlet, useNavigate, useNavigation } from "react-router";
 import Overlay from './Overlay';
 // icons
 //import MenuIcon from '@mui/icons-material/Menu';
