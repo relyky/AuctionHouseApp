@@ -136,7 +136,8 @@ export default function HideAppBar(props: Props) {
           {isAuthedStaff ? <Outlet /> : <NotAuthorized />}
           {/* <Outlet /> */}
         </main>
-        <pre>account: {JSON.stringify(acct, null, 2)}</pre>
+
+        {import.meta.env.DEV && <pre>account: {JSON.stringify(acct, null, 2)}</pre>}
       </Box>
       <Overlay />
     </>

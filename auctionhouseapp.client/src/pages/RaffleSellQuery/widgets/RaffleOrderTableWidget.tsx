@@ -1,23 +1,5 @@
 import { Paper, Table, TableBody, TableCell, TableContainer, TableRow } from '@mui/material'
-import { parseISO, format } from 'date-fns'
-
-/**
- * 格式化 ISO Date 字串。以 yyyy-MM-dd HH:mm 格式顯示。
- * helper funciton
- * @param isoDateStr
- * @returns
- */
-function formatDateString(isoDateStr: string) {
-  try {
-    if (!isoDateStr) return ''
-    if(typeof isoDateStr === 'string')
-      return format(parseISO(isoDateStr), 'yyyy-MM-dd HH:mm');
-    return 'invalid time'
-  }
-  catch {
-    return 'invalid time'
-  }
-}
+import { formatDateString } from '../../../tools/utils'
 
 /**
  * A component to display the details of a raffle order in a table.

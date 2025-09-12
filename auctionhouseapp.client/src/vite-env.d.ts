@@ -8,6 +8,7 @@ interface MsgObj {
   message: string,
   formNo?: string,
   nextStep?: stirng,
+  severity?: 'error' | 'warning' | 'info' | 'success'
 }
 
 type StepEnum =

@@ -1,6 +1,7 @@
 /**
  * 工具函式庫
  */
+import { parseISO, format } from 'date-fns'
 
 /**
  * 延遲指定毫秒
@@ -40,4 +41,36 @@ export function beep(frequency: number = 800, duration: number = 200): void {
 
   oscillator.start();
   oscillator.stop(audioContext.currentTime + duration / 1000);
+}
+
+/**
+* 格式化 ISO Date 字串。以 yyyy-MM-dd HH:mm 格式顯示。
+* helper funciton
+*/
+export function formatDateString(isoDateStr: string) {
+  try {
+    if (!isoDateStr) return ''
+    if (typeof isoDateStr === 'string')
+      return format(parseISO(isoDateStr), 'yyyy-MM-dd HH:mm');
+    return 'invalid date'
+  }
+  catch {
+    return 'invalid date'
+  }
+}
+
+/**
+* 格式化 ISO Date 字串。以 yyyy-MM-dd 格式顯示。
+* helper funciton
+*/
+export function formatDateYmd(isoDateStr: string) {
+  try {
+    if (!isoDateStr) return ''
+    if (typeof isoDateStr === 'string')
+      return format(parseISO(isoDateStr), 'yyyy-MM-dd');
+    return 'invalid date'
+  }
+  catch {
+    return 'invalid date'
+  }
 }

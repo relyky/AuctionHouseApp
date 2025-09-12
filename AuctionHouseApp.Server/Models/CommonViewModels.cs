@@ -8,4 +8,4 @@
 //  nextStep?: stirng,
 //}
 
-public record MsgObj(string Message, string? FormNo = null, string? NextStep = null);
+public record MsgObj(string Message, string? FormNo = null, string? NextStep = null, string? Severity = null);
