@@ -142,8 +142,8 @@ public class AccountService(
       {
         ///※ 授權資料建議存入Database，可用 MemoryCache 加速。
         //## 一個人只能在一個位置登入
-        //_cache.Set<AuthUser>($"AuthPool:{authUser.UserId}", authUser, TimeSpan.FromMinutes(expiresMinutes));
-        DoStoreAuthSession(authUser);
+        _cache.Set<AuthUser>($"AuthPool:{authUser.UserId}", authUser, TimeSpan.FromMinutes(expiresMinutes));
+        DoStoreAuthSession(authUser); // 存入 DB 為準
       }
 
       // success
@@ -171,8 +171,14 @@ public class AccountService(
 
     lock (_lockObj)
     {
-      //var auth = _cache.Get<AuthUser>($"AuthPool:{identity.Name}");
-      var auth = DoLoadAuthSession(identity.Name ?? "");
+      var auth = _cache.Get<AuthUser>($"AuthPool:{identity.Name}");
+      if (auth == null)
+      {
+        auth = DoLoadAuthSession(identity.Name ?? "");
+        if (auth != null) // 重新放回快取區
+          _cache.Set<AuthUser>($"AuthPool:{identity.Name}", auth, auth.ExpiresUtc);
+      }
+
       if (auth == null) return null;
 
       // 再確認一次授權ID有無相同
@@ -210,6 +216,9 @@ public class AccountService(
     }
   }
 
+  /// <summary>
+  /// Store AuthData to DB
+  /// </summary>
   private void DoStoreAuthSession(AuthUser auth)
   {
     _logger.LogInformation($"DoStoreAuthSession:{auth.UserId}, Expires:{auth.ExpiresUtc}.");
@@ -226,6 +235,9 @@ public class AccountService(
     txn.Commit();
   }
 
+  /// <summary>
+  /// Load AuthData from DB
+  /// </summary>
   private AuthUser? DoLoadAuthSession(string UserId)
   {
     _logger.LogInformation($"DoLoadAuthSession:{UserId}.");
