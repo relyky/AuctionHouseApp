@@ -1,7 +1,6 @@
 ﻿using AuctionHouseApp.Server.Controllers;
 using AuctionHouseApp.Server.Models;
 using Microsoft.Extensions.Caching.Memory;
-using System.IdentityModel.Tokens.Jwt;
 using System.Net;
 using System.Security.Claims;
 using System.Security.Principal;
@@ -9,6 +8,7 @@ using System.Text.Json;
 using Vista.DB;
 using Vista.DB.Schema;
 using Vista.DbPanda;
+using Vista.Models;
 
 namespace AuctionHouseApp.Server.Services;
 
@@ -142,7 +142,8 @@ public class AccountService(
       {
         ///※ 授權資料建議存入Database，可用 MemoryCache 加速。
         //## 一個人只能在一個位置登入
-        _cache.Set<AuthUser>($"AuthPool:{authUser.UserId}", authUser, TimeSpan.FromMinutes(expiresMinutes));
+        //_cache.Set<AuthUser>($"AuthPool:{authUser.UserId}", authUser, TimeSpan.FromMinutes(expiresMinutes));
+        DoStoreAuthSession(authUser);
       }
 
       // success
@@ -170,7 +171,8 @@ public class AccountService(
 
     lock (_lockObj)
     {
-      var auth = _cache.Get<AuthUser>($"AuthPool:{identity.Name}");
+      //var auth = _cache.Get<AuthUser>($"AuthPool:{identity.Name}");
+      var auth = DoLoadAuthSession(identity.Name ?? "");
       if (auth == null) return null;
 
       // 再確認一次授權ID有無相同
@@ -206,5 +208,33 @@ public class AccountService(
     {
       _cache.Remove($"AuthPool:{identity.Name}");
     }
+  }
+
+  private void DoStoreAuthSession(AuthUser auth)
+  {
+    _logger.LogInformation($"DoStoreAuthSession:{auth.UserId}, Expires:{auth.ExpiresUtc}.");
+
+    using var conn = DBHelper.AUCDB.Open();
+    using var txn = conn.BeginTransaction();
+    conn.DeleteEx<AuthSession>(new { auth.UserId }, txn);
+    conn.InsertEx<AuthSession>(new AuthSession
+    {
+      UserId = auth.UserId,
+      ExpiresDtm = auth.ExpiresUtc,
+      Session = Utils.JsonSerialize(auth, false, false)
+    }, txn);
+    txn.Commit();
+  }
+
+  private AuthUser? DoLoadAuthSession(string UserId)
+  {
+    _logger.LogInformation($"DoLoadAuthSession:{UserId}.");
+
+    using var conn = DBHelper.AUCDB.Open();
+    var session = conn.GetEx<AuthSession>(new { UserId });
+    if (session is null) return null;
+
+    var auth = JsonSerializer.Deserialize<AuthUser>(session.Session);
+    return auth;
   }
 }
