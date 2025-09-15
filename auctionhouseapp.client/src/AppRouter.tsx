@@ -2,13 +2,14 @@
  * 負責註冊 routing 規則。
  */
 
-import type { LoaderFunction } from "react-router"
+//import type { LoaderFunction } from "react-router"
 import { createBrowserRouter, RouterProvider } from "react-router"
 import AuctionLayout from "./layout/AuctionLayout"
 import BackendLayout from './layout/BackendLayout'
 import BidderLayout from "./layout/BidderLayout"
 import BuyerLayout from './layout/BuyerLayout'
 import MainLayout from "./layout/MainLayout"
+import PublicLayout from "./layout/PublicLayout"
 import RaffleLayout from './layout/RaffleLayout'
 import StaffLogin from './pages/Account/StaffLogin'
 import BackendIndex from './pages/BackendIndex/AppForm'
@@ -69,7 +70,7 @@ import ThemeDemo from './pages/theme/AppForm'
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <MainLayout />,
+    element: <PublicLayout />,
     children: [
       { index: true, element: <Home /> },
       { path: "rafflebuyer", element: <RaffleBuyer /> },
