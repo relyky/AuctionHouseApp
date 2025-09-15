@@ -32,6 +32,7 @@ import ACU3010 from './pages/AUC3010/AppForm'
 import Demo01 from './pages/Demo01/AppForm'
 import Demo02 from './pages/Demo02/AppForm'
 import LotsPage from './pages/lots/AppForm'
+import ThemeDemo from './pages/theme/AppForm'
 
 /**
  * 設計於載入畫面時限定有授權才可開啟畫面！
@@ -72,6 +73,7 @@ const router = createBrowserRouter([
       { index: true, element: <Home /> },
       { path: "rafflebuyer", element: <RaffleBuyer />, loader: authGuardLoader },
       { path: "demo01", element: <Demo01 />, loader: authGuardLoader },
+      { path: "theme", element: <ThemeDemo />, loader: authGuardLoader },
     ]
   },
   {

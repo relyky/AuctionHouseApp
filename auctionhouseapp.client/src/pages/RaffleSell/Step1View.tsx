@@ -86,7 +86,7 @@ export default function RaffleSell_Step1View() {
       </Toolbar>
 
       <form onSubmit={handleSubmit}>
-        <Stack spacing={2}>
+        <Stack spacing={1}>
           <TextField name='buyerName' label='買家名稱' required />
 
           <TextField name='buyerEmail' label='買家電郵地址' type='email' required

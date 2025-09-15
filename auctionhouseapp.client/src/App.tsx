@@ -32,6 +32,9 @@ axios.interceptors.response.use(
  */
 const customTheme = createTheme(
   {
+    typography: {
+      htmlFontSize: 12, // default: 16px;
+    },
     colorSchemes: { light: true, dark: true }, // 啟用 light 與 dark 模式
     cssVariables: {
       colorSchemeSelector: 'class' // 使用 class 作為色彩方案選擇器
