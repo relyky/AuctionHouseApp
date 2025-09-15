@@ -27,15 +27,15 @@ export default function RaffleTicketCardWidget(props: {
             <Typography variant="subtitle2" sx={{ color: 'text.secondary' }}>
               票券擁有人
             </Typography>
-            <Box typography='body2' color='text.secondary'>😀 {ticket.buyerName}</Box>
-            <Box typography='body2' color='text.secondary'>📧 {ticket.buyerEmail}</Box>
-            <Box typography='body2' color='text.secondary'>📞 {ticket.buyerPhone}</Box>
+            <Box typography='body2' color='text.secondary' sx={{ overflowWrap: 'anywhere', wordBreak: 'break-all' }}>😀 {ticket.buyerName}</Box>
+            <Box typography='body2' color='text.secondary' sx={{ overflowWrap: 'anywhere', wordBreak: 'break-all' }}>📧 {ticket.buyerEmail}</Box>
+            <Box typography='body2' color='text.secondary' sx={{ overflowWrap: 'anywhere', wordBreak: 'break-all' }}>📞 {ticket.buyerPhone}</Box>
           </Box>
         </CardContent>
       </Box>
       <CardMedia
         component="img"
-        sx={{ width: 151 }}
+        sx={{ width: { xs: 71, sm: 151 } }}
         image={mediaImage}
         alt="album cover"
       />

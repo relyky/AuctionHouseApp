@@ -6,6 +6,7 @@ import SearchWidget from "../../widgets/SearchWidget";
 import RaffleTicketCardWidget from "../RaffleSell/widgets/RaffleTicketCardWidget";
 import type { IQryRaffleOrderArgs } from "./dto/IQryRaffleOrderArgs";
 import RaffleOrderTableWidget from "./widgets/RaffleOrderTableWidget";
+import RaffleOrderGridWidget from "./widgets/RaffleOrderGridWidget";
 
 /**
  * 業務-協助買家查詢賣出訂單/抽獎券
@@ -70,19 +71,23 @@ export default function RaffleSellQuery_AppForm() {
       {/* TODO: Display search results here */}
 
       {orderList.map((order) => (
-        <RaffleOrderTableWidget key={order.raffleOrderNo} order={order} />
+        <RaffleOrderGridWidget key={order.raffleOrderNo} order={order} />
       ))}
 
-      <Stack gap={2}>
+      {/* orderList.map((order) => (
+        <RaffleOrderTableWidget key={order.raffleOrderNo} order={order} />
+      )) */}
+
+      <Stack gap={2} sx={{ mb: 2 }}>
         {ticketList.map((ticket) => (
           <RaffleTicketCardWidget key={ticket.raffleTicketNo} ticket={ticket} />
         ))}
       </Stack>
 
-      {import.meta.env.DEV && false &&
+      {/* import.meta.env.DEV &&
         <pre>orderList: {JSON.stringify(orderList, null, 2)}<br />
           ticketList: {JSON.stringify(ticketList, null, 2)}</pre>
-      }
+      */}
     </Container>
   )
 }

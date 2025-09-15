@@ -1,13 +1,15 @@
 import { Alert, Button, Container, IconButton, InputAdornment, Stack, TextField, Toolbar, Typography, useEventCallback } from "@mui/material";
 import { useAtomValue, useSetAtom } from 'jotai';
 import type { ChangeEvent, FormEvent } from 'react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
 import { postData, postFormData, ResponseError } from '../../tools/httpHelper';
 import { raffleSellAtom, raffleUnitPriceAtom } from './atom';
 //icons
 import MailIcon from '@mui/icons-material/MailOutline';
 import CheckEmailIcon from '@mui/icons-material/MarkEmailRead';
+import PlusIcon from '@mui/icons-material/Add';
+import MinusIcon from '@mui/icons-material/Remove';
 
 /**
  * 業務-銷售抽獎券
@@ -18,7 +20,7 @@ export default function RaffleSell_Step1View() {
   const [f_loading, setLoading] = useState<boolean>(false)
   const [errMsg, setErrMsg] = useState<string | null>(null)
   const raffleUnitPrice = useAtomValue(raffleUnitPriceAtom) // 抽獎券單價 
-  const [purchaseCount, setPurchaseCount] = useState<number>(1); // 控制:購買張數
+  const [purchaseCount, setPurchaseCount] = useState<string>('1'); // 控制:購買張數
   const [purchaseAmount, setPurchaseAmount] = useState<number>(raffleUnitPrice); // 控制:購買金額
   const [buyerEmail, setBuyerEmail] = useState<string>(''); // 控制:買家電郵地址
   const [hasCheckEmail, setHasCheckEmail] = useState<boolean>(false)
@@ -49,10 +51,7 @@ export default function RaffleSell_Step1View() {
 
   const handlePurchaseCount = useEventCallback((event: ChangeEvent<HTMLInputElement>) => {
     const newCount = Number(event.target.value); // Number(event.target.value)
-    const newAmount = raffleUnitPrice * newCount
-    //console.log('handlePurchaseCount', { newCount, newAmount })
-    setPurchaseCount(newCount)
-    setPurchaseAmount(newAmount)
+    setPurchaseCount(String(newCount))
   });
 
   const handleCheckEmail = useEventCallback(async () => {
@@ -77,6 +76,19 @@ export default function RaffleSell_Step1View() {
     });
   });
 
+  const decreasePurchaseCount = useEventCallback(() => {
+    setPurchaseCount(prev => Number(prev) <= 1 ? '1' : String(Number(prev) - 1));
+  });
+
+  const increasePurchaseCount = useEventCallback(() => {
+    setPurchaseCount(prev => String(Number(prev) + 1));
+  });
+
+  // 依「購買張數」計算「購買金額」
+  useEffect(() => {
+    setPurchaseAmount(raffleUnitPrice * Number(purchaseCount))
+  }, [purchaseCount])
+  
   return (
     <Container maxWidth='xs'>
       <Typography variant='h5' gutterBottom>銷售抽獎券</Typography>
@@ -107,7 +119,20 @@ export default function RaffleSell_Step1View() {
 
           <TextField name='purchaseCount' label='購買張數' type='number' required
             value={purchaseCount} onChange={handlePurchaseCount}
-            slotProps={{ htmlInput: { min: 1 } }} />
+            slotProps={{
+              htmlInput: { min: 1 },
+              input: {
+                endAdornment: <InputAdornment position="end">
+                  <IconButton onClick={decreasePurchaseCount}>
+                    <MinusIcon color='primary' />
+                  </IconButton>
+                  <IconButton onClick={increasePurchaseCount}>
+                    <PlusIcon color='primary' />
+                  </IconButton>
+                </InputAdornment>,
+              }
+            }}
+          />
 
           <TextField name='purchaseAmount' label='購買金額' type='number' required
             value={purchaseAmount} onChange={(e) => setPurchaseAmount(Number(e.target.value))}

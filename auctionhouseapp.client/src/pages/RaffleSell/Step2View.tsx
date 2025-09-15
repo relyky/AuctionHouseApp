@@ -99,7 +99,7 @@ export default function RaffleSell_Step2View() {
 
       <Divider sx={{ my: 2 }} />
 
-      <Stack spacing={2}>
+      <Stack spacing={2} sx={{ mb: 2 }}>
 
         {errMsg &&
           <Alert severity="error" onClose={() => setErrMsg(null)}>
@@ -124,7 +124,7 @@ export default function RaffleSell_Step2View() {
           color='primary'
           loading={f_loading} disabled={!isConfirm}
           onClick={handleSubmit}
-        >{hasPaid ? '確認購買' : '未收款只能放棄' }</Button>
+        >{hasPaid ? '確認購買' : '未收款只能放棄'}</Button>
       </Stack>
 
       {/* for debug 

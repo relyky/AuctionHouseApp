@@ -1,5 +1,5 @@
 import { useAtom } from 'jotai';
-import { Container, Typography, Button } from '@mui/material'
+import { Container, Typography, Button, Box } from '@mui/material'
 import { raffleSellAtom } from './atom';
 import { useEventCallback } from 'usehooks-ts';
 import RaffleTickeEmailWidget from './widgets/RaffleTickeEmailWidget';
@@ -24,7 +24,10 @@ export default function RaffleSell_Step3View() {
           afterSendEmail={setEmailTimes}
         />}
 
-      <Button variant={emailTimes > 0 ? 'contained' : 'outlined'} onClick={handleFinish} fullWidth>完成</Button>
+      <Button variant={emailTimes > 0 ? 'contained' : 'outlined'}
+        fullWidth sx={{ mb: 2 }}
+        onClick={handleFinish}>完成</Button>
+
     </Container>
   )
 }
