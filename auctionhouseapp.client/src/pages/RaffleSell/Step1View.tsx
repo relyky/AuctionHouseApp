@@ -10,6 +10,8 @@ import MailIcon from '@mui/icons-material/MailOutline';
 import CheckEmailIcon from '@mui/icons-material/MarkEmailRead';
 import PlusIcon from '@mui/icons-material/Add';
 import MinusIcon from '@mui/icons-material/Remove';
+import PickBuyerDlg from "./PickBuyerDlg";
+import type { IBuyerProfile } from "./dto/IBuyerProfile";
 
 /**
  * 業務-銷售抽獎券
@@ -23,6 +25,8 @@ export default function RaffleSell_Step1View() {
   const [purchaseCount, setPurchaseCount] = useState<string>('1'); // 控制:購買張數
   const [purchaseAmount, setPurchaseAmount] = useState<number>(raffleUnitPrice); // 控制:購買金額
   const [buyerEmail, setBuyerEmail] = useState<string>(''); // 控制:買家電郵地址
+  const [buyerPhone, setBuyerPhone] = useState<string>(''); // 控制:買家
+  const [buyerName, setBuyerName] = useState<string>(''); // 控制:買家
   const [hasCheckEmail, setHasCheckEmail] = useState<boolean>(false)
 
   const handleSubmit = useEventCallback(async (event: FormEvent<HTMLFormElement>) => {
@@ -84,22 +88,32 @@ export default function RaffleSell_Step1View() {
     setPurchaseCount(prev => String(Number(prev) + 1));
   });
 
+  const handlePickBuyer = useEventCallback((buyer: IBuyerProfile) => {
+    setBuyerName(buyer.buyerName);
+    setBuyerEmail(buyer.buyerEmail);
+    setBuyerPhone(buyer.buyerPhone);
+  });
+
   // 依「購買張數」計算「購買金額」
   useEffect(() => {
     setPurchaseAmount(raffleUnitPrice * Number(purchaseCount))
   }, [purchaseCount])
-  
+
   return (
     <Container maxWidth='xs'>
       <Typography variant='h5' gutterBottom>銷售抽獎券</Typography>
       <Toolbar>
+        <PickBuyerDlg onPick={handlePickBuyer} />
+
         <Button onClick={() => alert('自有買過的客戶查詢帶出')}>老客戶</Button>
         <Button onClick={() => alert('自貴賓清單查詢帶出')}>貴賓</Button>
       </Toolbar>
 
       <form onSubmit={handleSubmit}>
         <Stack spacing={1}>
-          <TextField name='buyerName' label='買家名稱' required />
+          <TextField name='buyerName' label='買家名稱' required
+            value={buyerName} onChange={(e) => setBuyerName(e.target.value)}
+          />
 
           <TextField name='buyerEmail' label='買家電郵地址' type='email' required
             helperText="可按右側按鈕寄測試 Email。"
@@ -115,7 +129,9 @@ export default function RaffleSell_Step1View() {
             }}
           />
 
-          <TextField name='buyerPhone' label='買家聯絡電話' type='tel' required />
+          <TextField name='buyerPhone' label='買家聯絡電話' type='tel' required
+            value={buyerPhone} onChange={(e) => setBuyerPhone(e.target.value)}
+          />
 
           <TextField name='purchaseCount' label='購買張數' type='number' required
             value={purchaseCount} onChange={handlePurchaseCount}

@@ -25,3 +25,11 @@ public record TestSendEmailArgs
 {
   public required string BuyerEmail { get; init; }
 }
+
+[TsInterface(Namespace = "pages.RaffleSell.dto")]
+public record BuyerProfile
+{
+  public required string BuyerName { get; init; }
+  public required string BuyerEmail { get; init; }
+  public required string BuyerPhone { get; init; }
+}

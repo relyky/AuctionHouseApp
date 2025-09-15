@@ -1,4 +1,4 @@
-import { Alert, Box, Container, LinearProgress, Typography, useEventCallback } from "@mui/material";
+import { Alert, Container, LinearProgress, Typography, useEventCallback } from "@mui/material";
 import { useEffect, useState } from "react";
 import type { ICalcRaffleOrderStatisticsResult } from "./dto/ICalcRaffleOrderStatisticsResult";
 import { postData } from "../../tools/httpHelper";

@@ -1,6 +1,5 @@
-import { Alert, Container, LinearProgress, Stack, Typography } from "@mui/material";
+import { useEventCallback, Box, Alert, Container, LinearProgress, Stack, Typography } from "@mui/material";
 import { useState } from "react";
-import { useEventCallback } from "usehooks-ts";
 import { postData, ResponseError } from "../../tools/httpHelper";
 import SearchWidget from "../../widgets/SearchWidget";
 import RaffleTicketCardWidget from "../RaffleSell/widgets/RaffleTicketCardWidget";
@@ -63,6 +62,7 @@ export default function RaffleSellQuery_AppForm() {
         helpText={helpContent}
         onSearch={handleSearch}
       />
+      <Box sx={{ mb: 2 }}></Box>
 
       {f_loading && <LinearProgress color='info' sx={{ m: 1 }} />}
 
@@ -71,7 +71,7 @@ export default function RaffleSellQuery_AppForm() {
       {/* TODO: Display search results here */}
 
       {orderList.map((order) => (
-        <RaffleOrderGridWidget key={order.raffleOrderNo} order={order} />
+          <RaffleOrderGridWidget key={order.raffleOrderNo} order={order} />
       ))}
 
       {/* orderList.map((order) => (

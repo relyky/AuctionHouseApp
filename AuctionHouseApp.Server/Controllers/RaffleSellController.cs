@@ -305,8 +305,6 @@ SELECT TOP 1 EmailTimes
     return htmlTpl;
   }
 
-
-
   /// <summary>
   /// 測試寄送 email
   /// </summary>
@@ -333,5 +331,21 @@ SELECT TOP 1 EmailTimes
     _emlSvc.SendTextEmail(toList, subject, mailBody.ToString());
 
     return Ok(new MsgObj("SUCCESS"));
+  }
+
+  [HttpPost("[action]")]
+  public async Task<ActionResult<IEnumerable<BuyerProfile>>> SearchBuyerProfile([FromQuery] string keyword)
+  {
+    const string sql = """
+SELECT DISTINCT BuyerName, BuyerEmail, BuyerPhone
+FROM [dbo].[RaffleOrder] O (NOLOCK)
+WHERE BuyerName LIKE @Keyword
+ OR BuyerEmail LIKE @Keyword
+ OR BuyerPhone LIKE @Keyword
+""";
+
+    using var conn = await DBHelper.AUCDB.OpenAsync();
+    var buyerList = await conn.QueryAsync<BuyerProfile>(sql, new { Keyword = $"%{keyword}%" });
+    return Ok(buyerList);
   }
 }
