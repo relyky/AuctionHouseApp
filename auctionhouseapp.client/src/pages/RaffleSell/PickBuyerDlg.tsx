@@ -1,12 +1,15 @@
-import { useState, useRef, useEffect } from 'react';
-import { Alert, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, LinearProgress, Typography, useEventCallback } from '@mui/material'
-import type { DialogProps } from '@mui/material';
-import type { IBuyerProfile } from './dto/IBuyerProfile';
-import SearchWidget from '../../widgets/SearchWidget';
+import { Alert, Button, Dialog, DialogActions, DialogContent, DialogTitle, LinearProgress, Table, TableBody, TableCell, TableHead, TableRow, Typography, useEventCallback } from '@mui/material';
+import { useEffect, useRef, useState } from 'react';
 import { postData, ResponseError } from '../../tools/httpHelper';
 import { delayPromise } from '../../tools/utils';
+import SearchWidget from '../../widgets/SearchWidget';
+import type { IBuyerProfile } from './dto/IBuyerProfile';
 
+/**
+ * 查詢已有買過的客戶。(老客戶)
+ */
 export default function PickBuyerDlg(props: {
+  label: string;
   onPick: (buyer: IBuyerProfile) => void
 }) {
   const [open, setOpen] = useState(false);
@@ -26,6 +29,10 @@ export default function PickBuyerDlg(props: {
 
   const handleSearch = useEventCallback(async (value: string) => {
     try {
+      // validation
+      if (!value) return;
+      value = value.trim();
+
       // reset previous results
       setLoading(true)
       setErrMsg(null)
@@ -49,6 +56,11 @@ export default function PickBuyerDlg(props: {
     }
   });
 
+  const handlePickItem = useEventCallback((item: IBuyerProfile) => {
+    props.onPick(item)
+    setOpen(false)
+  })
+
   useEffect(() => {
     if (open) {
       const { current: descriptionElement } = descriptionElementRef;
@@ -60,11 +72,10 @@ export default function PickBuyerDlg(props: {
 
   return (
     <>
-      <Button onClick={handleOpen}>老客戶</Button>
+      <Button onClick={handleOpen}>{props.label}</Button>
       <Dialog
         open={open}
         onClose={handleClose}
-        scroll='paper'
       >
         <DialogTitle>
           <SearchWidget
@@ -73,12 +84,34 @@ export default function PickBuyerDlg(props: {
             onSearch={handleSearch}
           />
         </DialogTitle>
-        <DialogContent dividers>
+        <DialogContent dividers sx={{ p: 0 }}>
           {f_loading && <LinearProgress color='info' />}
 
           {errMsg && <Alert severity='error'>{errMsg}</Alert>}
 
-          <pre>{JSON.stringify(buyerList, null, 1)}</pre>
+          {/* <TableContainer> */}
+          <Table stickyHeader>
+            <TableHead>
+              <TableRow>
+                <TableCell>客戶名稱</TableCell>
+                <TableCell>電郵地址</TableCell>
+                <TableCell>聯絡電話</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {Array.isArray(buyerList) && buyerList.map((item, index) => (
+                <TableRow key={index} hover sx={{ cursor: 'pointer' }}
+                  onClick={_ => handlePickItem(item)}>
+                  <TableCell>{item.buyerName}</TableCell>
+                  <TableCell>{item.buyerEmail}</TableCell>
+                  <TableCell>{item.buyerPhone}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+          {/* </TableContainer> */}
+
+          {/* <pre>{JSON.stringify(buyerList, null, 1)}</pre> */}
         </DialogContent>
         <DialogActions sx={{ justifyContent: 'center' }} >
           <Button onClick={handleClose}>取消</Button>

@@ -105,7 +105,6 @@ export default function SignIn() {
           <FormControl>
             <FormLabel htmlFor="userId">User Id</FormLabel>
             <TextField
-              defaultValue='smart'
               error={userIdError}
               helperText={userIdErrorMessage}
               id="userId"
@@ -123,7 +122,6 @@ export default function SignIn() {
           <FormControl>
             <FormLabel htmlFor="password">Password</FormLabel>
             <TextField
-              defaultValue='asvt'
               error={passwordError}
               helperText={passwordErrorMessage}
               name="password"

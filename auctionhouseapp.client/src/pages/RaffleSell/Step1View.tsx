@@ -103,9 +103,7 @@ export default function RaffleSell_Step1View() {
     <Container maxWidth='xs'>
       <Typography variant='h5' gutterBottom>銷售抽獎券</Typography>
       <Toolbar>
-        <PickBuyerDlg onPick={handlePickBuyer} />
-
-        <Button onClick={() => alert('自有買過的客戶查詢帶出')}>老客戶</Button>
+        <PickBuyerDlg label='老客戶' onPick={handlePickBuyer} />
         <Button onClick={() => alert('自貴賓清單查詢帶出')}>貴賓</Button>
       </Toolbar>
 

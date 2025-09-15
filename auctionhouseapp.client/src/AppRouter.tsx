@@ -37,17 +37,18 @@ import ThemeDemo from './pages/theme/AppForm'
 /**
  * 設計於載入畫面時限定有授權才可開啟畫面！
  * loader 不支援 hooks。
+ * 註：經深思該 loader 機制不太適合實作 AuthGuard。
  */
-const authGuardLoader: LoaderFunction = (args, handlerCtx) => {
-  console.debug("authGuardLoader", { args, handlerCtx });
-
-  if (false) {
-    // 拋出一個 401 錯誤，帶有自定義的訊息
-    throw new Response("YOU SHALL NOT PASS!!", { status: 401, statusText: "Unauthorized" });
-  }
-
-  return true;
-}
+//const authGuardLoader: LoaderFunction = (args, handlerCtx) => {
+//  console.debug("authGuardLoader", { args, handlerCtx });
+//
+//  if (false) {
+//    // 拋出一個 401 錯誤，帶有自定義的訊息
+//    throw new Response("YOU SHALL NOT PASS!!", { status: 401, statusText: "Unauthorized" });
+//  }
+//
+//  return true;
+//}
 
 //-------------------------------------
 /**
@@ -71,9 +72,9 @@ const router = createBrowserRouter([
     element: <MainLayout />,
     children: [
       { index: true, element: <Home /> },
-      { path: "rafflebuyer", element: <RaffleBuyer />, loader: authGuardLoader },
-      { path: "demo01", element: <Demo01 />, loader: authGuardLoader },
-      { path: "theme", element: <ThemeDemo />, loader: authGuardLoader },
+      { path: "rafflebuyer", element: <RaffleBuyer /> },
+      { path: "demo01", element: <Demo01 /> },
+      { path: "theme", element: <ThemeDemo /> },
     ]
   },
   {
@@ -92,8 +93,8 @@ const router = createBrowserRouter([
     element: <BackendLayout />,
     children: [
       { index: true, element: <BackendIndex /> },
-      { path: "rafflecheck", element: <BackendRaffleCheck />, loader: authGuardLoader },
-      { path: "rafflequery", element: <BackendRaffleQuery />, loader: authGuardLoader },
+      { path: "rafflecheck", element: <BackendRaffleCheck /> },
+      { path: "rafflequery", element: <BackendRaffleQuery /> },
     ]
   },
   {
