@@ -104,16 +104,23 @@ export default function RaffleSell_Step1View() {
       <Typography variant='h5' gutterBottom>銷售抽獎券</Typography>
       <Toolbar>
         <PickBuyerDlg label='老客戶' onPick={handlePickBuyer} />
-        <Button onClick={() => alert('自貴賓清單查詢帶出')}>貴賓</Button>
+
+        {import.meta.env.DEV && /* 正式版先藏起來 */
+          <Button onClick={() => alert('自貴賓清單查詢帶出')}>貴賓</Button>
+        }
       </Toolbar>
 
       <form onSubmit={handleSubmit}>
-        <Stack spacing={1}>
+        <Stack spacing={2}>
           <TextField name='buyerName' label='買家名稱' required
             value={buyerName} onChange={(e) => setBuyerName(e.target.value)}
           />
 
           <TextField name='buyerEmail' label='買家電郵地址' type='email' required
+            value={buyerEmail} onChange={(e) => setBuyerEmail(e.target.value)}
+          />
+
+          {/* <TextField name='buyerEmail' label='買家電郵地址' type='email' required
             helperText="可按右側按鈕寄測試 Email。"
             value={buyerEmail} onChange={(e) => setBuyerEmail(e.target.value)}
             slotProps={{
@@ -125,7 +132,7 @@ export default function RaffleSell_Step1View() {
                 </InputAdornment>
               }
             }}
-          />
+          /> */}
 
           <TextField name='buyerPhone' label='買家聯絡電話' type='tel' required
             value={buyerPhone} onChange={(e) => setBuyerPhone(e.target.value)}
