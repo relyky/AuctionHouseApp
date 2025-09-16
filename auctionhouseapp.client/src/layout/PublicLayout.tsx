@@ -15,17 +15,15 @@ export default function PublicLayout() {
   const isNavigating = Boolean(navigation.location);
 
   return (
-    <Container>
-      <nav style={navStyle}>
+    <main>
+      {/* <nav style={navStyle}>
         <NavLink to="/">
           首頁
         </NavLink>        
-      </nav>
-      <main>
-        {isNavigating && <GlobalSpinner />}
-        <Outlet />
-      </main>
-    </Container>
+      </nav> */}
+      {isNavigating && <GlobalSpinner />}
+      <Outlet />
+    </main>
   );
 }
 

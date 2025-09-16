@@ -1,21 +1,38 @@
+import type { FC } from 'react';
 import { NavLink } from 'react-router'
-import { Box, Container, Link, Typography } from "@mui/material";
+import { Box, Button, Container, Paper } from "@mui/material";
 
 export default function Home_AppForm() {
 
   return (
-    <Container>
-      <Typography variant='h3' gutterBottom>這是首頁</Typography>
-      <Box typography='body1'>這是所有人都可以進入的頁面。</Box>
-
-      <Box display='flex' gap={3}>
-        <Link component={NavLink} to="/rafflebuyer" underline="hover" >
-          抽獎券買家
-        </Link>
-        <Link component={NavLink} to="/stafflogin" underline="hover" >
-          工作人員(進入後台)
-        </Link>
-      </Box>
+    <>
+      <Jumbotron />
+      <Container>
+        <Box display='flex' flexWrap='wrap-reverse' justifyContent='space-around' gap={3} margin={3}>
+          <Button component={NavLink} to="/rafflebuyer"
+            variant='contained' size='large'
+            sx={theme => ({
+              background: `linear-gradient(45deg, ${theme.palette.primary.dark} 30%, ${theme.palette.primary.light} 90%)`,
+              color: theme.palette.primary.contrastText,
+              '&:hover': {
+                background: `linear-gradient(45deg, ${theme.palette.primary.main} 30%, ${theme.palette.primary.light} 90%)`,
+              },
+            })}>
+            抽獎券買家
+          </Button>
+          <Button component={NavLink} to="/stafflogin"
+            variant='contained' size='large'
+            sx={theme => ({
+              background: `linear-gradient(45deg, ${theme.palette.primary.dark} 30%, ${theme.palette.primary.light} 90%)`,
+              color: theme.palette.primary.contrastText,
+              '&:hover': {
+                background: `linear-gradient(45deg, ${theme.palette.primary.main} 30%, ${theme.palette.primary.light} 90%)`,
+              },
+            })}>
+            工作人員(進入後台)
+          </Button>
+        </Box>
+      </Container>
 
       {/* for debug       
       {import.meta.env.DEV &&
@@ -24,7 +41,18 @@ export default function Home_AppForm() {
           <pre>{JSON.stringify(import.meta.env, null, 2)}</pre>
         </Box>}      
       */}
-    </Container>
+    </>
   )
+}
 
+//-----------------
+const Jumbotron: FC = () => {
+  return (
+    <Paper elevation={3} sx={{ width: 'fit-content', height: 'fit-content', margin: 'auto' }}>
+      <Box component='img' src="/images/banner-tropical-nights.png" alt="banner"
+        sx={{ display: { xs: 'none', sm: 'block' }, maxWidth: '100%', maxHeight: '80vh' }}></Box>
+      <Box component='img' src="/images/D86C6185-0411-40DD-97F8-CB080EC03B70.jpg" alt="banner"
+        sx={{ display: { xs: 'block', sm: 'none' }, width: '100%' }}></Box>
+    </Paper>
+  );
 }
