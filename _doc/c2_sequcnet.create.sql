@@ -1,0 +1,11 @@
+USE [AuctionDB]
+GO
+
+CREATE SEQUENCE RaffleSaleSeq
+    START WITH 1
+    INCREMENT BY 1;
+
+CREATE SEQUENCE RaffleTicketSeq
+    START WITH 1
+    INCREMENT BY 1;
+	
