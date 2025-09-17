@@ -5,12 +5,11 @@ import { postData, ResponseError } from "../../tools/httpHelper"
 import { raffleSellAtom } from "./atom"
 
 export default function RaffleSell_Step2View() {
-  const [{ raffleOrder }, setFormState] = useAtom(raffleSellAtom);
+  const [{ raffleOrder, sales }, setFormState] = useAtom(raffleSellAtom);
   const [f_loading, setLoading] = useState<boolean>(false)
   const [errMsg, setErrMsg] = useState<string | null>(null)
 
   const [hasPaid, setHasPaid] = useState(false)
-  const [isConfirm, setIsConfirm] = useState(false)
 
   const handleSubmit = useEventCallback(async () => {
     try {
@@ -40,6 +39,10 @@ export default function RaffleSell_Step2View() {
     }
   });
 
+  const handlePrevious = useEventCallback(() => {
+    setFormState(prev => ({ ...prev, mode: 'Step1' }))
+  });
+
   if (!raffleOrder) {
     return <Alert severity='error' sx={{ m: 3, p: 3 }} >非預期狀態！</Alert>
   }
@@ -65,13 +68,13 @@ export default function RaffleSell_Step2View() {
             </TableRow>
             <TableRow>
               <TableCell component="th">
-                買家電郵地址
+                電郵地址
               </TableCell>
               <TableCell>{raffleOrder.buyerEmail}</TableCell>
             </TableRow>
             <TableRow>
               <TableCell component="th">
-                買家聯絡電話
+                聯絡電話
               </TableCell>
               <TableCell>{raffleOrder.buyerPhone}</TableCell>
             </TableRow>
@@ -89,9 +92,9 @@ export default function RaffleSell_Step2View() {
             </TableRow>
             <TableRow>
               <TableCell component="th">
-                業務ID
+                業務人員
               </TableCell>
-              <TableCell>{raffleOrder.salesId}</TableCell>
+              <TableCell>{sales?.nickname}</TableCell>
             </TableRow>
           </TableBody>
         </Table>
@@ -113,18 +116,19 @@ export default function RaffleSell_Step2View() {
               onChange={(_, chk) => setHasPaid(chk)} />}
           />
 
-          <FormControlLabel label="再確認" sx={{ flexGrow: 1 }}
-            control={<Checkbox
-              checked={isConfirm}
-              onChange={(_, chk) => setIsConfirm(chk)} />}
-          />
         </Stack>
 
-        <Button variant={hasPaid ? 'contained' : 'outlined'}
+        <Button variant={'contained'}
           color='primary'
-          loading={f_loading} disabled={!isConfirm}
+          loading={f_loading} disabled={!hasPaid}
           onClick={handleSubmit}
-        >{hasPaid ? '確認購買' : '未收款只能放棄'}</Button>
+        >確認購買</Button>
+
+        <Button
+          color='primary'
+          loading={f_loading}
+          onClick={handlePrevious}
+        >上一步</Button>
       </Stack>
 
       {/* for debug 
