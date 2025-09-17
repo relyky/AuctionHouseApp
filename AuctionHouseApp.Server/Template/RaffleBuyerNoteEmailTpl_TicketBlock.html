@@ -1,21 +1,19 @@
 <!-- Ticket Block -->
 <div class="ticket-card">
-  <table width="100%" cellpadding="0" cellspacing="0" border="0">
-    <tr>
-      <td valign="top">
-        <h3>拍賣活動抽獎券</h3>
-        <div class="ticket-no">NO. {{TICKET_NO}}</div>
-        <div class="ticket-holder-info">
-          票券擁有人<br>
-          😀 {{TICKET_HOLDER_NAME}}<br>
-          📧 {{TICKET_HOLDER_EMAIL}}<br>
-          📞 {{TICKET_HOLDER_PHONE}}
-        </div>
-      </td>
-      <td width="120" valign="middle" style="padding-left: 16px;">
-        <img src="{{TICKET_IMAGE_URL}}" alt="Raffle Image" width="120" style="border-radius: 4px;">
-      </td>
-    </tr>
-  </table>
+  <div class="ticket-left">
+    <div class="ticket-title">拍賣活動抽獎券</div>
+    <div class="ticket-number">NO. {{TICKET_NO}}</div>
+    <div class="ticket-holder-title">票券擁有人</div>
+    <div class="holder-info">
+      <div>😀 {{TICKET_HOLDER_NAME}}</div>
+      <div>📧 {{TICKET_HOLDER_EMAIL}}</div>
+      <div>📞 {{TICKET_HOLDER_PHONE}}</div>
+    </div>
+  </div>
+  <div class="ticket-right">
+    <div class="ticket-image">
+      <img src="{{TICKET_IMAGE_URL}}" alt="活動圖片">
+    </div>
+  </div>
 </div>
 <!-- {{RAFFLE_TICKETS_BLOCK}} -->

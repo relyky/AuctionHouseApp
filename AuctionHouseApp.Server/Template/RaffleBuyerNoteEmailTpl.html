@@ -5,160 +5,406 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>購買成功通知</title>
   <style>
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-      background-color: #f0f2f5;
+    /* Reset styles for email compatibility */
+    body, table, td, th, p, div, span {
       margin: 0;
-      padding: 20px;
-      color: #333;
-    }
-    .email-container {
-      max-width: 680px;
-      margin: 0 auto;
-      background-color: #ffffff;
-      border: 1px solid #e1e1e1;
-      border-radius: 8px;
-      overflow: hidden;
-    }
-    .header {
-      background-color: #4a90e2;
-      color: #ffffff;
-      padding: 24px;
-      text-align: center;
-    }
-    .header h1 {
-      margin: 0;
-      font-size: 28px;
-      font-weight: 600;
-    }
-    .content {
-      padding: 24px 32px;
-    }
-    .content p {
-      font-size: 16px;
-      line-height: 1.7;
-    }
-    .section-title {
-      font-size: 20px;
-      font-weight: 600;
-      margin-top: 28px;
-      margin-bottom: 16px;
-      border-bottom: 2px solid #eeeeee;
-      padding-bottom: 8px;
-    }
-    .order-details-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 15px;
-    }
-    .order-details-table td {
-      padding: 10px 4px;
-      border-bottom: 1px solid #f0f0f0;
-    }
-    .order-details-table .label {
-      font-weight: 600;
-      color: #555;
-    }
-    .order-details-table .value {
-      color: #111;
-    }
-    .ticket-section {
-      margin-top: 28px;
-    }
-    .ticket-card {
-      border: 1px solid #e1e1e1;
-      border-radius: 8px;
-      margin-bottom: 20px;
-      background-color: #f9f9f9;
-      padding: 16px;
-    }
-    .ticket-card h3 {
-      font-size: 18px;
-      font-weight: 600;
-      margin: 0 0 4px 0;
-    }
-    .ticket-card .ticket-no {
-      font-size: 16px;
-      font-weight: 500;
-      color: #4a90e2;
-      margin-bottom: 12px;
-    }
-    .ticket-holder-info {
-      font-size: 15px;
-      line-height: 1.8;
-      color: #444;
+      padding: 0;
     }
 
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Microsoft YaHei', Arial, sans-serif;
+      background-color: #f5f5f5;
+      margin: 0;
+      padding: 0;
+      color: #333;
+      -webkit-text-size-adjust: 100%;
+      -ms-text-size-adjust: 100%;
+    }
+
+    /* Main container */
+    .email-wrapper {
+      width: 100%;
+      background-color: #f5f5f5;
+      padding: 10px;
+    }
+
+    .email-container {
+      width: 100%;
+      max-width: 600px;
+      margin: 0 auto;
+      background-color: #ffffff;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    /* Header */
+    .header {
+      background-color: #BF4690;
+      color: #ffffff;
+      padding: 30px 20px;
+      text-align: center;
+    }
+
+      .header h1 {
+        margin: 0;
+        font-size: 24px;
+        font-weight: 600;
+        line-height: 1.2;
+      }
+
+    /* Content */
+    .content {
+      padding: 30px 20px;
+    }
+
+    .greeting {
+      font-size: 16px;
+      line-height: 1.6;
+      margin-bottom: 8px;
+      color: #333;
+    }
+
+    .intro-text {
+      font-size: 16px;
+      line-height: 1.6;
+      margin-bottom: 30px;
+      color: #666;
+    }
+
+    .section-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin: 30px 0 20px 0;
+      color: #333;
+      border-bottom: 1px solid #e0e0e0;
+      padding-bottom: 8px;
+    }
+
+      .section-title:first-of-type {
+        margin-top: 0;
+      }
+
+    /* Order info grid */
+    .order-info {
+      background-color: #f9f9f9;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .info-grid {
+      display: table;
+      width: 100%;
+    }
+
+    .info-row {
+      display: table-row;
+    }
+
+    .info-cell {
+      display: table-cell;
+      padding: 8px 0;
+      vertical-align: top;
+      width: 50%;
+    }
+
+    .info-label {
+      font-size: 14px;
+      color: #666;
+      font-weight: 600;
+      padding-right: 15px;
+    }
+
+    .info-value {
+      font-size: 14px;
+      color: #333;
+      font-weight: 400;
+    }
+
+    /* Ticket cards */
+    .ticket-section {
+      margin-top: 30px;
+    }
+
+    .ticket-card {
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      margin-bottom: 15px;
+      background-color: #ffffff;
+      padding: 20px;
+      display: table;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .ticket-left {
+      display: table-cell;
+      vertical-align: top;
+      width: 75%;
+      padding-right: 15px;
+    }
+
+    .ticket-right {
+      display: table-cell;
+      vertical-align: middle;
+      width: 25%;
+      text-align: right;
+    }
+
+    .ticket-title {
+      font-size: 16px;
+      font-weight: 600;
+      margin: 0 0 8px 0;
+      color: #333;
+    }
+
+    .ticket-number {
+      font-size: 14px;
+      color: #4a90e2;
+      font-weight: 500;
+      margin-bottom: 15px;
+    }
+
+    .ticket-holder-title {
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 8px;
+    }
+
+    .holder-info {
+      font-size: 14px;
+      line-height: 1.5;
+      color: #333;
+    }
+
+      .holder-info div {
+        margin-bottom: 4px;
+      }
+
+    .ticket-image img {
+      width: 280px;
+      height: 280px;
+      border-radius: 8px;
+      object-fit: cover;
+      max-width: 100%;
+      height: auto;
+    }
+
+    /* Footer message */
+    .closing-message {
+      margin-top: 30px;
+      font-size: 16px;
+      line-height: 1.6;
+      color: #333;
+    }
+
+    .signature {
+      margin-top: 20px;
+      font-size: 16px;
+      line-height: 1.6;
+      color: #333;
+    }
+
+    /* Footer */
     .footer {
       background-color: #f8f9fa;
-      color: #888888;
+      color: #999;
       padding: 20px;
       text-align: center;
       font-size: 12px;
+      line-height: 1.4;
+    }
+
+      .footer p {
+        margin: 0 0 8px 0;
+      }
+
+        .footer p:last-child {
+          margin: 0;
+        }
+
+    /* Mobile responsive */
+    @media only screen and (max-width: 600px) {
+      .email-wrapper {
+        padding: 5px;
+      }
+
+      .content {
+        padding: 20px 15px;
+      }
+
+      .header {
+        padding: 25px 15px;
+      }
+
+        .header h1 {
+          font-size: 20px;
+        }
+
+      .info-grid {
+        display: block;
+      }
+
+      .info-row {
+        display: block;
+        /* margin-bottom: 12px; */
+      }
+
+      .info-cell {
+        display: block;
+        width: 100%;
+        padding: 2px 0;
+        display: flex;
+        /* justify-content: space-between; */
+        gap: 8px;
+      }
+
+      .info-label {
+        padding-right: 0;
+        margin-bottom: 2px;
+      }
+
+      .ticket-card {
+        display: block;
+        padding: 15px;
+      }
+
+      .ticket-left, .ticket-right {
+        display: block;
+        width: 100%;
+        padding-right: 0;
+      }
+
+      .ticket-left {
+        text-align: center;
+      }
+
+      .ticket-title {
+        text-align: center;
+      }
+
+      .ticket-number {
+        text-align: center;
+      }
+
+      .ticket-holder-title {
+        text-align: center;
+      }
+
+      .holder-info {
+        text-align: center;
+      }
+
+      .ticket-right {
+        text-align: center;
+        margin-top: 15px;
+      }
+
+      .ticket-image img {
+        width: 80px;
+        height: 80px;
+      }
     }
   </style>
 </head>
 <body>
-  <div class="email-container">
-    <div class="header">
-      <h1>購買成功通知</h1>
-    </div>
-    <div class="content">
-      <p>親愛的 <strong>{{BUYER_NAME}}</strong>,</p>
-      <p>感謝您的購買！我們已收到您的訂單，以下是您的訂單與抽獎券詳細資訊。</p>
+  <table class="email-wrapper" cellpadding="0" cellspacing="0" border="0">
+    <tr>
+      <td>
+        <table class="email-container" cellpadding="0" cellspacing="0" border="0">
+          <!-- Header -->
+          <tr>
+            <td class="header">
+              <h1>購買成功通知</h1>
+            </td>
+          </tr>
 
-      <div class="section-title">購買訂單資訊</div>
-      <table class="order-details-table">
-        <tbody>
+          <!-- Content -->
           <tr>
-            <td class="label">訂單編號</td>
-            <td class="value colspan="3"">{{ORDER_NO}}</td>
-          </tr>
-          <tr>
-            <td class="label">買家名稱</td>
-            <td class="value" colspan="3">{{BUYER_NAME}}</td>
-          </tr>
-          <tr>
-            <td class="label">聯絡電話</td>
-            <td class="value">{{BUYER_PHONE}}</td>
-            <td class="label">電郵地址</td>
-            <td class="value">{{BUYER_EMAIL}}</td>
-          </tr>
-          <tr>
-            <td class="label">購買張數</td>
-            <td class="value">{{PURCHASE_COUNT}}</td>
-            <td class="label">購買金額</td>
-            <td class="value">{{PURCHASE_AMOUNT}}</td>
-          </tr>
-          <tr>
-            <td class="label">是否已付款</td>
-            <td class="value">{{HAS_PAID}}</td>
-            <td class="label">訂單狀態</td>
-            <td class="value">{{ORDER_STATUS}}</td>
-          </tr>
-          <tr>
-            <td class="label">負責業務</td>
-            <td class="value">{{SALES_ID}}</td>
-            <td class="label">賣出時間</td>
-            <td class="value">{{SOLD_DTM}}</td>
-          </tr>
-        </tbody>
-      </table>
+            <td class="content">
+              <div class="greeting">親愛的 <strong>{{BUYER_NAME}}</strong>,</div>
+              <div class="intro-text">感謝您的購買！我們已收到您的訂單，以下是您的訂單與抽獎券詳細資訊。</div>
 
-      <div class="ticket-section">
-        <div class="section-title">您的抽獎券 (共 {{TICKET_LIST_COUNT}} 張)</div>
-        
-        <!-- {{RAFFLE_TICKETS_BLOCK}} -->
+              <div class="section-title">購買訂單資訊</div>
+              <div class="order-info">
+                <div class="info-grid">
+                  <div class="info-row">
+                    <div class="info-cell">
+                      <div class="info-label">訂單編號</div>
+                      <div class="info-value">{{ORDER_NO}}</div>
+                    </div>
+                    <div class="info-cell">
+                      <div class="info-label">買家名稱</div>
+                      <div class="info-value">{{BUYER_NAME}}</div>
+                    </div>
+                  </div>
+                  <div class="info-row">
+                    <div class="info-cell">
+                      <div class="info-label">聯絡電話</div>
+                      <div class="info-value">{{BUYER_PHONE}}</div>
+                    </div>
+                    <div class="info-cell">
+                      <div class="info-label">電郵地址</div>
+                      <div class="info-value">{{BUYER_EMAIL}}</div>
+                    </div>
+                  </div>
+                  <div class="info-row">
+                    <div class="info-cell">
+                      <div class="info-label">購買張數</div>
+                      <div class="info-value">{{PURCHASE_COUNT}}</div>
+                    </div>
+                    <div class="info-cell">
+                      <div class="info-label">購買金額</div>
+                      <div class="info-value">{{PURCHASE_AMOUNT}}</div>
+                    </div>
+                  </div>
+                  <div class="info-row">
+                    <div class="info-cell">
+                      <div class="info-label">是否付款</div>
+                      <div class="info-value">{{HAS_PAID}}</div>
+                    </div>
+                    <div class="info-cell">
+                      <div class="info-label">訂單狀態</div>
+                      <div class="info-value">{{ORDER_STATUS}}</div>
+                    </div>
+                  </div>
+                  <div class="info-row">
+                    <div class="info-cell">
+                      <div class="info-label">負責業務</div>
+                      <div class="info-value">{{SALES_ID}}</div>
+                    </div>
+                    <div class="info-cell">
+                      <div class="info-label">賣出時間</div>
+                      <div class="info-value">{{SOLD_DTM}}</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
 
-      </div>
+              <div class="section-title">您的抽獎券 (共 {{TICKET_LIST_COUNT}} 張)</div>
+              <div class="ticket-section">
+                <!-- {{RAFFLE_TICKETS_BLOCK}} -->
+              </div>
 
-      <p>祝您好運！</p>
-      <p>誠摯地,<br>AuctionHouse 團隊</p>
-    </div>
-    <div class="footer">
-      <p>這是一封系統自動發送的郵件，請勿直接回覆。</p>
-      <p>&copy; 2025 AuctionHouse. All rights reserved.</p>
-    </div>
-  </div>
+              <div class="closing-message">祝您好運！</div>
+              <div class="signature">
+                誠摯地,<br>
+                AuctionHouse 團隊
+              </div>
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td class="footer">
+              <p>這是一封系統自動發送的郵件，請勿直接回覆。</p>
+              <p>&copy; 2025 AuctionHouse. All rights reserved.</p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
 </body>
 </html>

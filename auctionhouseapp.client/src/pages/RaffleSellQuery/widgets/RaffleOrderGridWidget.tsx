@@ -31,7 +31,7 @@ export default function RaffleOrderTableWidget(props: {
       setErrMsg(null)
 
       const result = await postData<ISendNoteEmailResult>(`/api/RaffleSell/SendNoteEmail/${order.raffleOrderNo}`)
-      await delayPromise(1600); // 增強UX
+      await delayPromise(800); // 增強UX
 
       // SUCCESS: 更新寄信次數
       setEmailTimes(result.emailTimes)
