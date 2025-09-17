@@ -55,7 +55,7 @@ export default function RaffleSellQuery_AppForm() {
 
   return (
     <Container maxWidth='sm'>
-      <Typography variant='h5' component="div" sx={{ mb: 2 }}>買家/抽獎券查詢</Typography>
+      <Typography variant='h5' component="div" sx={{ mb: 2 }}>業務/抽獎券查詢</Typography>
 
       <SearchWidget
         placeholder="請輸入買家 E-mail 地址"
