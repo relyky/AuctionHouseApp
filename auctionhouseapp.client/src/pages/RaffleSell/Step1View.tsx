@@ -97,7 +97,14 @@ export default function RaffleSell_Step1View() {
 
   // 依「購買張數」計算「購買金額」
   useEffect(() => {
-    setPurchaseAmount(raffleUnitPrice * Number(purchaseCount))
+    // 1 張100元。買 12 張優惠 1000 元。
+    const discountCount = 12; // 幾張開始有優惠
+    const discountPrice = 10 * raffleUnitPrice; // 優惠價
+    const count = Number(purchaseCount);
+    const sets = Math.floor(count / discountCount); // 幾組
+    const ones = count % discountCount; // 零頭
+    const total = sets * discountPrice + ones * raffleUnitPrice;
+    setPurchaseAmount(total)
   }, [purchaseCount])
 
   return (
