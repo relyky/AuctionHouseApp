@@ -1,7 +1,7 @@
 import { Box, Card, CardContent, CardMedia, Typography } from '@mui/material';
 //import { useTheme } from '@mui/material/styles';
 // resource
-import mediaImage from '../../../assets/images/live-from-space.jpg';
+import mediaImage from '../../../assets/images/D86C6185-0411-40DD-97F8-CB080EC03B70-280x280.jpg';
 
 /**
  * 專門顯示抽獎券
@@ -35,7 +35,11 @@ export default function RaffleTicketCardWidget(props: {
       </Box>
       <CardMedia
         component="img"
-        sx={{ width: { xs: 71, sm: 151 } }}
+        sx={{
+          width: { xs: 90, sm: 180 },
+          objectFit: 'cover',
+          objectPosition: { xs: 'left', sm: 'center' }
+        }}
         image={mediaImage}
         alt="album cover"
       />
