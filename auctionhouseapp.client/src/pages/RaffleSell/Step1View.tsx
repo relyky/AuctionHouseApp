@@ -137,10 +137,20 @@ export default function RaffleSell_Step1View() {
 
           <TextField name='buyerName' label='買家名稱' required
             value={buyerName} onChange={(e) => setBuyerName(e.target.value)}
+            slotProps={{
+              htmlInput: {
+                maxLength: 100,
+              }
+            }}
           />
 
           <TextField name='buyerEmail' label='買家電郵地址' type='email' required
             value={buyerEmail} onChange={(e) => setBuyerEmail(e.target.value)}
+            slotProps={{
+              htmlInput: {
+                maxLength: 100,
+              }
+            }}
           />
 
           {/* <TextField name='buyerEmail' label='買家電郵地址' type='email' required
@@ -159,12 +169,17 @@ export default function RaffleSell_Step1View() {
 
           <TextField name='buyerPhone' label='買家聯絡電話' type='tel' required
             value={buyerPhone} onChange={(e) => setBuyerPhone(e.target.value)}
+            slotProps={{
+              htmlInput: {
+                maxLength: 50,
+              }
+            }}
           />
 
           <TextField name='purchaseCount' label='購買張數' type='number' required
             value={purchaseCount} onChange={handlePurchaseCount}
             slotProps={{
-              htmlInput: { min: 1 },
+              htmlInput: { min: 1, max: 9999 },
               input: {
                 endAdornment: <InputAdornment position="end">
                   <IconButton onClick={decreasePurchaseCount}>
@@ -180,7 +195,7 @@ export default function RaffleSell_Step1View() {
 
           <TextField name='purchaseAmount' label='購買金額' type='number' required
             value={purchaseAmount} onChange={(e) => setPurchaseAmount(Number(e.target.value))}
-            slotProps={{ htmlInput: { min: 0 } }} />
+            slotProps={{ htmlInput: { min: 0, } }} />
 
           {errMsg &&
             <Alert severity="error" onClose={() => setErrMsg(null)}>
