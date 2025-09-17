@@ -16,6 +16,7 @@ export default function RaffleSell_Step3View() {
   return (
     <Container maxWidth='sm'>
       <Typography variant='h5' gutterBottom>寄送抽獎券({raffleOrder?.raffleOrderNo})</Typography>
+      <Box sx={{ mb: 2 }} >抽獎券張數：{raffleOrder?.purchaseCount}</Box>
 
       {/* raffleOrder && <RaffleOrderWidget raffleOrder={raffleOrder} /> */}
 
