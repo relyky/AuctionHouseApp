@@ -1,5 +1,5 @@
-import { Alert, Button, Container, IconButton, InputAdornment, Stack, TextField, Toolbar, Typography, useEventCallback } from "@mui/material";
-import { useAtomValue, useSetAtom } from 'jotai';
+import { Alert, Button, ButtonGroup, Container, IconButton, InputAdornment, Stack, TextField, Toolbar, Typography, useEventCallback } from "@mui/material";
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import type { ChangeEvent, FormEvent } from 'react';
 import { useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
@@ -8,8 +8,8 @@ import { raffleSellAtom, raffleUnitPriceAtom } from './atom';
 import type { IBuyerProfile } from "./dto/IBuyerProfile";
 import type { IStaffProfile } from "./dto/IStaffProfile";
 //icons
-import MailIcon from '@mui/icons-material/MailOutline';
-import CheckEmailIcon from '@mui/icons-material/MarkEmailRead';
+//import MailIcon from '@mui/icons-material/MailOutline';
+//import CheckEmailIcon from '@mui/icons-material/MarkEmailRead';
 import PlusIcon from '@mui/icons-material/Add';
 import MinusIcon from '@mui/icons-material/Remove';
 import PickBuyerDlg from "./PickBuyerDlg";
@@ -19,15 +19,16 @@ import PickBuyerDlg from "./PickBuyerDlg";
  * Traditional form submission with useState and fetch
  */
 export default function RaffleSell_Step1View() {
-  const setFormState = useSetAtom(raffleSellAtom)
+  const [{ raffleOrder }, setFormState] = useAtom(raffleSellAtom);
   const [f_loading, setLoading] = useState<boolean>(false)
   const [errMsg, setErrMsg] = useState<string | null>(null)
   const raffleUnitPrice = useAtomValue(raffleUnitPriceAtom) // 抽獎券單價 
-  const [purchaseCount, setPurchaseCount] = useState<string>('1'); // 控制:購買張數
-  const [purchaseAmount, setPurchaseAmount] = useState<number>(raffleUnitPrice); // 控制:購買金額
+  const [buyerName, setBuyerName] = useState<string>(''); // 控制:買家
   const [buyerEmail, setBuyerEmail] = useState<string>(''); // 控制:買家電郵地址
   const [buyerPhone, setBuyerPhone] = useState<string>(''); // 控制:買家
-  const [buyerName, setBuyerName] = useState<string>(''); // 控制:買家
+  const [purchaseCount, setPurchaseCount] = useState<string>('1'); // 控制:購買張數
+  const [purchaseAmount, setPurchaseAmount] = useState<number>(raffleUnitPrice); // 控制:購買金額
+
   const [hasCheckEmail, setHasCheckEmail] = useState<boolean>(false)
 
   const handleSubmit = useEventCallback(async (event: FormEvent<HTMLFormElement>) => {
@@ -95,6 +96,18 @@ export default function RaffleSell_Step1View() {
     setBuyerPhone(buyer.buyerPhone);
   });
 
+  // 若已填過單。可修改訂單內容。
+  useEffect(() => {
+    if (raffleOrder) {
+      setBuyerName(raffleOrder.buyerName)
+      setBuyerEmail(raffleOrder.buyerEmail)
+      setBuyerPhone(raffleOrder.buyerPhone)
+      setPurchaseCount(String(raffleOrder.purchaseCount))
+      setPurchaseAmount(raffleOrder.purchaseAmount)
+    }
+  }, [raffleOrder])
+
+
   // 依「購買張數」計算「購買金額」
   useEffect(() => {
     // 1 張100元。買 12 張優惠 1000 元。
@@ -120,6 +133,8 @@ export default function RaffleSell_Step1View() {
 
       <form onSubmit={handleSubmit}>
         <Stack spacing={2}>
+          <input type='hidden' name='raffleOrderNo' value={raffleOrder?.raffleOrderNo ?? 'NEW'} />
+
           <TextField name='buyerName' label='買家名稱' required
             value={buyerName} onChange={(e) => setBuyerName(e.target.value)}
           />
@@ -172,15 +187,16 @@ export default function RaffleSell_Step1View() {
               {errMsg}
             </Alert>}
 
-          {/*<FormControlLabel required control={<Checkbox name='hasPaid' required defaultChecked={true} />} label="已付款" />*/}
-          <Button type='submit' variant='contained' color='primary' loading={f_loading}>建立訂單</Button>
+          <Button type='submit' variant='contained' color='primary' loading={f_loading}>
+            {Boolean(raffleOrder) ? '更新訂單' : '建立訂單'}
+          </Button>
+
         </Stack>
-
-        <Alert severity='info' sx={{ my: 2 }}>
-          抽獎券單價：{raffleUnitPrice} 元
-        </Alert>
-
       </form>
+
+      <Alert severity='info' sx={{ my: 2 }}>
+        抽獎券單張 {raffleUnitPrice} 元。優惠活動 12 張 {raffleUnitPrice * 10} 元。
+      </Alert>
     </Container>
   )
 }

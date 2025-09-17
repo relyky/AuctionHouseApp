@@ -6,6 +6,7 @@ namespace AuctionHouseApp.Server.Controllers;
 [TsInterface(Namespace = "pages.RaffleSell.dto")]
 public record RaffleOrderCreateDto
 {
+  public required string RaffleOrderNo { get; init; }
   public required string BuyerName { get; init; }
   public required string BuyerEmail { get; init; }
   public required string BuyerPhone { get; init; }

@@ -1,8 +1,9 @@
 import { useState } from "react"
 import { useAtom } from "jotai"
-import { Alert, Button, Checkbox, Container, Divider, FormControlLabel, Paper, Stack, Table, TableBody, TableCell, TableContainer, TableRow, Typography, useEventCallback } from "@mui/material"
+import { Alert, Button, ButtonGroup, Checkbox, Container, Divider, FormControlLabel, Paper, Stack, Table, TableBody, TableCell, TableContainer, TableRow, Typography, useEventCallback } from "@mui/material"
 import { postData, ResponseError } from "../../tools/httpHelper"
 import { raffleSellAtom } from "./atom"
+import Swal from "sweetalert2"
 
 export default function RaffleSell_Step2View() {
   const [{ raffleOrder, sales }, setFormState] = useAtom(raffleSellAtom);
@@ -25,6 +26,28 @@ export default function RaffleSell_Step2View() {
       } else {
         setFormState(prev => ({ ...prev, mode: 'Finish', raffleOrder: data }))
       }
+    } catch (error) {
+      if (error instanceof ResponseError) {
+        console.error('handleSubmit ResponseError', error.message);
+        setErrMsg(error.message)
+      }
+      else {
+        console.error('handleSubmit error', { error });
+        setErrMsg("出現預期之外的錯誤請通知系統工程師。" + error);
+      }
+    } finally {
+      setLoading(false)
+    }
+  });
+
+  const handleRevoke = useEventCallback(async () => {
+    try {
+      setLoading(true);
+      setErrMsg(null); // 先清除錯誤訊息
+
+      const data = await postData<IRaffleOrder>(`/api/RaffleSell/RevokeRaffleOrder/${raffleOrder?.raffleOrderNo}`);
+      console.info('handleRevoke success', { data });
+      setFormState(prev => ({ ...prev, mode: 'Finish', raffleOrder: data }))
     } catch (error) {
       if (error instanceof ResponseError) {
         console.error('handleSubmit ResponseError', error.message);
@@ -124,11 +147,31 @@ export default function RaffleSell_Step2View() {
           onClick={handleSubmit}
         >確認購買</Button>
 
-        <Button
-          color='primary'
-          loading={f_loading}
-          onClick={handlePrevious}
-        >上一步</Button>
+        <ButtonGroup variant='text'>
+          <Button color='primary' sx={{ flexGrow: 1 }}
+            loading={f_loading}
+            onClick={handlePrevious}
+          >上一步</Button>
+          <Button color='warning' sx={{ flexGrow: 1 }}
+            loading={f_loading}
+            onClick={() => {
+              Swal.fire({
+                title: "Are you sure?",
+                text: "You won't be able to revert this!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes, give it up!"
+              }).then((result) => {
+                if (result.isConfirmed) {
+                  handleRevoke()
+                }
+              });
+            }}>
+            放棄訂單
+          </Button>
+        </ButtonGroup>
       </Stack>
 
       {/* for debug 

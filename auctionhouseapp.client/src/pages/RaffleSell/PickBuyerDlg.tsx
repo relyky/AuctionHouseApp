@@ -93,9 +93,9 @@ export default function PickBuyerDlg(props: {
           <Table stickyHeader>
             <TableHead>
               <TableRow>
-                <TableCell>客戶名稱</TableCell>
-                <TableCell>電郵地址</TableCell>
-                <TableCell>聯絡電話</TableCell>
+                <TableCell sx={{ textWrap: 'nowrap' }}>客戶名稱</TableCell>
+                <TableCell sx={{ textWrap: 'nowrap' }}>電郵地址</TableCell>
+                <TableCell sx={{ textWrap: 'nowrap' }}>聯絡電話</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>

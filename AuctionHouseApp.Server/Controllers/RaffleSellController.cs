@@ -28,8 +28,11 @@ public class RaffleSellController(
       //# 基本檢查…趕進度先跳過
       //return BadRequest("這是測試用錯誤訊息");
 
-      //# Access DB
-      string sql = """
+      if (dto.RaffleOrderNo == "NEW")
+      {
+        // 新增訂單
+        //# Access DB
+        string sql = """
 INSERT INTO [dbo].[RaffleOrder]
 ([RaffleOrderNo],
  [BuyerName],[BuyerEmail],[BuyerPhone],[PurchaseCount],[PurchaseAmount],[HasPaid],[SalesId],[Status])
@@ -39,24 +42,64 @@ VALUES
  @BuyerName, @BuyerEmail, @BuyerPhone, @PurchaseCount, @PurchaseAmount, @HasPaid, @SalesId, @Status)
 """;
 
-      var parameters = new
+        var parameters = new
+        {
+          dto.BuyerName,
+          dto.BuyerEmail,
+          dto.BuyerPhone,
+          dto.PurchaseCount,
+          dto.PurchaseAmount,
+          HasPaid = "N",
+          SalesId = HttpContext.User.Identity?.Name,
+          Status = "ForSale",
+        };
+
+        using var conn = DBHelper.AUCDB.Open();
+        using var txn = conn.BeginTransaction();
+        var newOrder = conn.QueryFirst<RaffleOrder>(sql, parameters, txn);
+        txn.Commit();
+
+        return Ok(newOrder);
+      }
+      else
       {
-        dto.BuyerName,
-        dto.BuyerEmail,
-        dto.BuyerPhone,
-        dto.PurchaseCount,
-        dto.PurchaseAmount,
-        HasPaid = "N",
-        SalesId = HttpContext.User.Identity?.Name,
-        Status = "ForSale",
-      };
+        // 更新訂單
 
-      using var conn = DBHelper.AUCDB.Open();
-      using var txn = conn.BeginTransaction();
-      var newOrder = conn.QueryFirst<RaffleOrder>(sql, parameters, txn);
-      txn.Commit();
+        //# Access DB
+        string sql = """
+UPDATE [dbo].[RaffleOrder]
+  SET [BuyerName] = @BuyerName
+     ,[BuyerEmail] = @BuyerEmail
+     ,[BuyerPhone] = @BuyerPhone
+     ,[PurchaseCount] = @PurchaseCount
+     ,[PurchaseAmount] = @PurchaseAmount
+     ,[HasPaid] = @HasPaid
+     ,[SalesId] = @SalesId
+     ,[Status] = @SalesId
+OUTPUT inserted.*
+WHERE [RaffleOrderNo] = @RaffleOrderNo
+""";
 
-      return Ok(newOrder);
+        var parameters = new
+        {
+          dto.RaffleOrderNo,
+          dto.BuyerName,
+          dto.BuyerEmail,
+          dto.BuyerPhone,
+          dto.PurchaseCount,
+          dto.PurchaseAmount,
+          HasPaid = "N",
+          SalesId = HttpContext.User.Identity?.Name,
+          Status = "ForSale",
+        };
+
+        using var conn = DBHelper.AUCDB.Open();
+        using var txn = conn.BeginTransaction();
+        var newOrder = conn.QueryFirst<RaffleOrder>(sql, parameters, txn);
+        txn.Commit();
+
+        return Ok(newOrder);
+      }
     }
     catch (Exception ex)
     {
@@ -131,6 +174,33 @@ WHERE RaffleOrderNo = @RaffleOrderNo
       txn.Commit();
       return Ok(updated);
     }
+  }
+
+  /// <summary>
+  /// 放棄訂單
+  /// </summary>
+  [HttpPost("[action]/{id}")]
+  public ActionResult<RaffleOrder> RevokeRaffleOrder(string id)
+  {
+    string updateInvalid = """
+UPDATE [dbo].[RaffleOrder]
+SET [HasPaid] = 'N', [Status] = 'Invalid', [SoldDtm] = NULL
+WHERE RaffleOrderNo = @RaffleOrderNo
+""";
+
+    using var conn = DBHelper.AUCDB.Open();
+    using var txn = conn.BeginTransaction();
+
+    int affected = conn.Execute(updateInvalid, new { RaffleOrderNo = id }, txn);
+    if (affected != 1)
+    {
+      txn.Rollback();
+      return BadRequest(new MsgObj("更新訂單執行失敗！", id));
+    }
+
+    var updated = conn.GetEx<RaffleOrder>(new { RaffleOrderNo = id }, txn);
+    txn.Commit();
+    return Ok(updated);
   }
 
   [NonAction]

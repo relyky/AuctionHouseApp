@@ -4,6 +4,7 @@
 
 export interface IRaffleOrderCreateDto
 {
+	raffleOrderNo: string;
 	buyerName: string;
 	buyerEmail: string;
 	buyerPhone: string;
