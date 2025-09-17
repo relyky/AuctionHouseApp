@@ -348,4 +348,19 @@ WHERE BuyerName LIKE @Keyword
     var buyerList = await conn.QueryAsync<BuyerProfile>(sql, new { Keyword = $"%{keyword}%" });
     return Ok(buyerList);
   }
+
+  [HttpPost("[action]/{id}")]
+  public async Task<ActionResult<StaffProfile>> GetStaffProfile(string id)
+  {
+    const string sql = """
+SELECT TOP 1 [UserId],[Nickname],[Phone]
+FROM [dbo].[Staff]
+WHERE UserId = @UserId
+""";
+
+    using var conn = await DBHelper.AUCDB.OpenAsync();
+    var info = await conn.QueryFirstAsync<StaffProfile>(sql, new { UserId = id });
+    return Ok(info);
+  }
+
 }

@@ -5,13 +5,14 @@ import { useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
 import { postData, postFormData, ResponseError } from '../../tools/httpHelper';
 import { raffleSellAtom, raffleUnitPriceAtom } from './atom';
+import type { IBuyerProfile } from "./dto/IBuyerProfile";
+import type { IStaffProfile } from "./dto/IStaffProfile";
 //icons
 import MailIcon from '@mui/icons-material/MailOutline';
 import CheckEmailIcon from '@mui/icons-material/MarkEmailRead';
 import PlusIcon from '@mui/icons-material/Add';
 import MinusIcon from '@mui/icons-material/Remove';
 import PickBuyerDlg from "./PickBuyerDlg";
-import type { IBuyerProfile } from "./dto/IBuyerProfile";
 
 /**
  * 業務-銷售抽獎券
@@ -36,9 +37,9 @@ export default function RaffleSell_Step1View() {
       setErrMsg(null); // 先清除錯誤訊息
       const formData = new FormData(event.currentTarget);
       const raffleOrder = await postFormData<IRaffleOrder>('/api/RaffleSell/Create', formData);
-      console.info('handleSubmit success', { raffleOrder });
-
-      setFormState(prev => ({ ...prev, mode: 'Step2', raffleOrder }))
+      const sales = await postData<IStaffProfile>(`/api/RaffleSell/GetStaffProfile/${raffleOrder.salesId}`);
+      console.info('handleSubmit success', { raffleOrder, sales });
+      setFormState(prev => ({ ...prev, mode: 'Step2', raffleOrder, sales }))
     } catch (error) {
       if (error instanceof ResponseError) {
         console.error('handleSubmit ResponseError', error.message);

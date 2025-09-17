@@ -1,4 +1,5 @@
 import { atom } from "jotai"
+import type { IStaffProfile } from "./dto/IStaffProfile"
 
 
 // ╰参把计┾贱ㄩ虫基
@@ -10,6 +11,7 @@ raffleUnitPriceAtom.debugLabel = 'raffleUnitPriceAtom'
 interface RaffleSell_BizState {
   mode: EditMode
   raffleOrder?: IRaffleOrder,
+  sales?: IStaffProfile,
 }
 
 const initialState: RaffleSell_BizState = {
