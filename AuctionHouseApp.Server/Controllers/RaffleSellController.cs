@@ -142,10 +142,11 @@ INSERT INTO [dbo].[RaffleTicket]
 ([RaffleTicketNo],
  [RaffleSoldNo],[BuyerName],[BuyerEmail],[BuyerPhone],[EmailTimes],[LastEmailDtm])
 VALUES
-(FORMAT(NEXT VALUE FOR RaffleTicketSeq,'RT00000'), 
+(FORMAT(NEXT VALUE FOR RaffleTicketSeq,'\A000000'), 
  @RaffleSoldNo, @BuyerName, @BuyerEmail, @BuyerPhone, 0, NULL)
 """;
 
+    // 產生抽獎券：編號 Annnnnn (含前置字元 A + 6碼序號)
     for (int i = 0; i < order.PurchaseCount; i++)
     {
       conn.Execute(sql, new
