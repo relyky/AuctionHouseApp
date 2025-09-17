@@ -3,6 +3,7 @@ import { useAtomValue } from "jotai";
 import { NavLink } from "react-router";
 import { selectIsAuthedStaff, staffAccountAtom } from "../../atoms/staffAccountAtom";
 import AuthorizeGuard from "../../layout/AuthorizeGuard";
+import type { FC } from "react";
 
 export default function BackendIndex_AppForm() {
   const isAuthedStaff = useAtomValue(selectIsAuthedStaff)
@@ -42,6 +43,34 @@ export default function BackendIndex_AppForm() {
       <Typography variant='h6' gutterBottom>前台</Typography>
       <Button component={NavLink} to='/'>前台首頁</Button>
 
+      <Footer />
     </Container>
   )
 }
+
+
+//-------------------------------------
+const appVersion = import.meta.env.VITE_APP_VERSION;
+
+const Footer: FC = () => (
+  <Box
+    component="footer"
+    sx={{
+      mt: 1,
+      py: .25,
+      textAlign: 'center',
+      borderTop: '1px solid #ddd',
+      position: 'fixed',
+      bottom: 0,
+      left: '3rem',
+      right: '3rem',
+    }}
+  >
+    {/* <Typography variant="body2" color="text.secondary">
+      ©2025 慈善拍賣系統 保留所有權利。
+    </Typography> */}
+    <Typography variant="caption" color="text.disabled">
+      版本：{appVersion}
+    </Typography>
+  </Box>
+);
