@@ -1,11 +1,14 @@
-import { useEventCallback, Box, Alert, Container, LinearProgress, Stack, Typography } from "@mui/material";
+import { useEventCallback, Box, Alert, Container, LinearProgress, Stack, Typography, Toolbar, Divider } from "@mui/material";
 import { useState } from "react";
 import { postData, ResponseError } from "../../tools/httpHelper";
-import SearchWidget from "../../widgets/SearchWidget";
 import RaffleTicketCardWidget from "../RaffleSell/widgets/RaffleTicketCardWidget";
 import type { IQryRaffleOrderArgs } from "./dto/IQryRaffleOrderArgs";
 import RaffleOrderTableWidget from "./widgets/RaffleOrderTableWidget";
 import RaffleOrderGridWidget from "./widgets/RaffleOrderGridWidget";
+import PickBuyerDlg from "../RaffleSell/PickBuyerDlg";
+import type { IBuyerProfile } from "../RaffleSell/dto/IBuyerProfile";
+import BuyerProfileTableWidget from "./widgets/BuyerProfileTableWidget";
+//import SearchWidget from "../../widgets/SearchWidget";
 
 /**
  * 業務-協助買家查詢賣出訂單/抽獎券
@@ -17,6 +20,8 @@ export default function RaffleSellQuery_AppForm() {
   const [errMsg, setErrMsg] = useState<string | null>(null)
   const [orderList, setOrderList] = useState<IRaffleOrder[]>([]); // TODO: Define proper type
   const [ticketList, setTicketList] = useState<IRaffleTicket[]>([]); // TODO: Define proper type
+  //
+  const [pickedBuyer, setPickedBuyer] = useState<IBuyerProfile | null>(null)
 
   const handleSearch = useEventCallback(async (value: string) => {
     try {
@@ -53,16 +58,22 @@ export default function RaffleSellQuery_AppForm() {
     }
   });
 
+  const handlePickBuyer = useEventCallback((buyer: IBuyerProfile) => {
+    console.info('handlePickBuyer', { buyer })
+    setPickedBuyer(buyer)
+    handleSearch(buyer.buyerEmail);
+  });
+
   return (
     <Container maxWidth='sm'>
-      <Typography variant='h5' component="div" sx={{ mb: 2 }}>業務/抽獎券查詢</Typography>
+      <Typography variant='h5'>業務/銷售查詢</Typography>
+      <Toolbar>
+        <PickBuyerDlg label='選取買家' onPick={handlePickBuyer} />
+      </Toolbar>
 
-      <SearchWidget
-        placeholder="請輸入買家 E-mail 地址"
-        helpText={helpContent}
-        onSearch={handleSearch}
-      />
-      <Box sx={{ mb: 2 }}></Box>
+      {pickedBuyer && <BuyerProfileTableWidget buyer={pickedBuyer} />}
+
+      <Divider sx={{ my: 2 }} />
 
       {f_loading && <LinearProgress color='info' sx={{ m: 1 }} />}
 
@@ -71,7 +82,7 @@ export default function RaffleSellQuery_AppForm() {
       {/* TODO: Display search results here */}
 
       {orderList.map((order) => (
-          <RaffleOrderGridWidget key={order.raffleOrderNo} order={order} />
+        <RaffleOrderGridWidget key={order.raffleOrderNo} order={order} />
       ))}
 
       {/* orderList.map((order) => (

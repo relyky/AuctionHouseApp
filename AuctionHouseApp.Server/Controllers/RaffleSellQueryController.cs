@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Identity.Client;
 using Vista.DB;
 using Vista.DB.Schema;
 
@@ -73,4 +74,26 @@ ORDER BY RaffleTicketNo ASC
     }
   }
 
+  /// <summary>
+  /// 業務：取得訂單已寄出次數
+  /// </summary>
+  [HttpPost("[action]/{id}")]
+  public async Task<ActionResult<SendNoteEmailResult>> GetRaffleOrderEmailTimes(string id)
+  {
+    const string sql = """
+SELECT ISNULL((SELECT TOP 1 EmailTimes
+ FROM RaffleTicket (NOLOCK)
+ WHERE [RaffleSoldNo] = @RaffleOrderNo),0)
+""";
+
+    // GO
+    using var conn = await DBHelper.AUCDB.OpenAsync();
+    int emailTimes = await conn.ExecuteScalarAsync<int>(sql, new { RaffleOrderNo = id });
+
+    return Ok(new SendNoteEmailResult
+    {
+      RaffleOrderNo = id,
+      EmailTimes = emailTimes
+    });
+  }
 }
