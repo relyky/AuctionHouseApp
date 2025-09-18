@@ -78,44 +78,51 @@ export default function RaffleSell_Step2View() {
         <Table>
           <TableBody>
             <TableRow>
+              {/* 訂單編號 */}
               <TableCell component="th">
-                訂單編號
+                Order No.
               </TableCell>
               <TableCell>{raffleOrder.raffleOrderNo}</TableCell>
             </TableRow>
             <TableRow>
+              {/* 買家名稱 */}
               <TableCell component="th">
-                買家名稱
+                Buyer Name
               </TableCell>
               <TableCell>{raffleOrder.buyerName}</TableCell>
             </TableRow>
             <TableRow>
+              {/* 電郵地址 */}
               <TableCell component="th">
-                電郵地址
+                Email Address
               </TableCell>
               <TableCell>{raffleOrder.buyerEmail}</TableCell>
             </TableRow>
             <TableRow>
+              {/* 聯絡電話 */}
               <TableCell component="th">
-                聯絡電話
+                Phone Number
               </TableCell>
               <TableCell>{raffleOrder.buyerPhone}</TableCell>
             </TableRow>
             <TableRow>
+              {/* 購買張數 */}
               <TableCell component="th">
-                購買張數
+                Quantity
               </TableCell>
               <TableCell>{raffleOrder.purchaseCount}</TableCell>
             </TableRow>
             <TableRow>
+              {/* 購買金額 */}
               <TableCell component="th">
-                購買金額
+                Total Amount
               </TableCell>
               <TableCell>{raffleOrder.purchaseAmount}</TableCell>
             </TableRow>
             <TableRow>
+              {/* 業務人員 */}
               <TableCell component="th">
-                業務人員
+                Sales
               </TableCell>
               <TableCell>{sales?.nickname}</TableCell>
             </TableRow>
@@ -133,7 +140,8 @@ export default function RaffleSell_Step2View() {
           </Alert>}
 
         <Stack direction='row'>
-          <FormControlLabel label="已收款才勾選" sx={{ flexGrow: 1 }}
+          {/* 已收款才勾選 */}
+          <FormControlLabel label="Check only after payment received" sx={{ flexGrow: 1 }}
             control={<Checkbox
               checked={hasPaid}
               onChange={(_, chk) => setHasPaid(chk)} />}
@@ -141,35 +149,40 @@ export default function RaffleSell_Step2View() {
 
         </Stack>
 
+        {/* 確認購買 */}
         <Button variant={'contained'}
           color='primary'
           loading={f_loading} disabled={!hasPaid}
           onClick={handleSubmit}
-        >確認購買</Button>
+        >Payment received </Button>
 
         <ButtonGroup variant='text'>
+          {/* 上一步 */}
           <Button color='primary' sx={{ flexGrow: 1 }}
             loading={f_loading}
             onClick={handlePrevious}
-          >上一步</Button>
+          >Previous Step</Button>
+
+          {/* 放棄訂單 */}
           <Button color='warning' sx={{ flexGrow: 1 }}
             loading={f_loading}
             onClick={() => {
               Swal.fire({
                 title: "Are you sure?",
-                text: "You won't be able to revert this!",
+                text: "This action cannot be undone.",
                 icon: "warning",
                 showCancelButton: true,
                 confirmButtonColor: "#3085d6",
+                confirmButtonText: "Yes, cancel it",
                 cancelButtonColor: "#d33",
-                confirmButtonText: "Yes, give it up!"
+                cancelButtonText: "No, keep it"
               }).then((result) => {
                 if (result.isConfirmed) {
                   handleRevoke()
                 }
               });
             }}>
-            放棄訂單
+            Cancel Order
           </Button>
         </ButtonGroup>
       </Stack>

@@ -15,8 +15,14 @@ export default function RaffleSell_Step3View() {
 
   return (
     <Container maxWidth='sm'>
-      <Typography variant='h5' gutterBottom>寄送抽獎券({raffleOrder?.raffleOrderNo})</Typography>
-      <Box sx={{ mb: 2 }} >抽獎券張數：{raffleOrder?.purchaseCount}</Box>
+      {/* xxxxxx */}
+      {/* 寄送抽獎券 */}
+      <Typography variant='h5'>Send Raffle Tickets</Typography>
+
+      <Typography variant='h6'>Order No. {raffleOrder?.raffleOrderNo}</Typography>
+      <Box typography='body2' color='text.secondary' sx={{ mb: 1 }}>Reminder: Please scroll down and send the e-ticket by email to the buyer to complete the order.</Box>
+      {/* 抽獎券張數 */}
+      <Box typography='body1' color='text.primay' sx={{ mb: 1 }}>Total Tickets: {raffleOrder?.purchaseCount}</Box>
 
       {/* raffleOrder && <RaffleOrderWidget raffleOrder={raffleOrder} /> */}
 
@@ -25,9 +31,10 @@ export default function RaffleSell_Step3View() {
           afterSendEmail={setEmailTimes}
         />}
 
+      {/* 完成 */}
       <Button variant={emailTimes > 0 ? 'contained' : 'outlined'}
         fullWidth sx={{ mb: 2 }}
-        onClick={handleFinish}>完成</Button>
+        onClick={handleFinish}>Complete Order</Button>
 
     </Container>
   )

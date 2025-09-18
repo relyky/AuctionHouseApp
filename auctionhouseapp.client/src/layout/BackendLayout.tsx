@@ -80,8 +80,9 @@ export default function HideAppBar(props: Props) {
             >
               <HomeIcon />
             </IconButton>
+            {/* 慈善拍賣後台 */}
             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-              慈善拍賣後台
+              Staff Panel
             </Typography>
             {isAuthedStaff && (
               <div>
@@ -121,7 +122,7 @@ export default function HideAppBar(props: Props) {
                     <ListItemIcon>
                       <LogoutIcon color='primary' />
                     </ListItemIcon>
-                    登出
+                    Log Out
                   </MenuItem>
                 </Menu>
               </div>

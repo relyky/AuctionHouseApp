@@ -101,8 +101,9 @@ async function doLoginAsync(args: ILoginArgs): Promise<ILoginUserInfo> {
     return loginUser
   }
   catch (err: unknown) {
+    //登入失敗！
     if (err instanceof ResponseError)
-      Swal.fire("登入失敗！", `${err.status} ${err.statusText}`, 'error');
+      Swal.fire("Login Failed!", `${err.status} ${err.statusText}`, 'error');
     throw err; //※一定要 throw 否則將判定為成功。
   }
 }

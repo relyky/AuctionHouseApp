@@ -30,12 +30,15 @@ export default function RaffleLayout() {
 
       <Paper sx={{ position: 'fixed', bottom: 0, left: 0, right: 0 }} elevation={3}>
         <BottomNavigation showLabels>
-          <BottomNavigationAction label="後台首頁" icon={<HomeIcon color='primary' />}
+          {/* 後台首頁 */}
+          <BottomNavigationAction label="Staff Panel" icon={<HomeIcon color='primary' />}
             component={Link} to='/backend' />
-          <BottomNavigationAction label="抽獎券銷售" icon={<MoneyIcon color='primary' />}
+          {/* 銷售抽獎券 */}
+          <BottomNavigationAction label="Sell Raffle Tickets" icon={<MoneyIcon color='primary' />}
             component={Link} to='/raffle/sell'
           />
-          <BottomNavigationAction label="抽獎券查詢" icon={<SearchIcon color='primary' />}
+          {/* 銷售查詢 */}
+          <BottomNavigationAction label="Sales Records" icon={<SearchIcon color='primary' />}
             component={Link} to='/raffle/sellquery'
           />
         </BottomNavigation>

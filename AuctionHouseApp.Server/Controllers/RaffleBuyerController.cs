@@ -29,9 +29,9 @@ WHERE BuyerEmail = @BuyerEmail
 AND Status = 'HasSold'
 ORDER BY RaffleOrderNo ASC
 """;
-      // Validate
+      // Validate - 必須提供買家電郵地址！
       if (String.IsNullOrWhiteSpace(args.BuyerEmail))
-        return BadRequest("必須提供買家電郵地址！");
+        return BadRequest("Please enter your email address.");
 
       // GO
       using var conn = await DBHelper.AUCDB.OpenAsync();
@@ -57,7 +57,8 @@ ORDER BY RaffleTicketNo ASC
 """;
       // Validate
       if (String.IsNullOrWhiteSpace(args.BuyerEmail))
-        return BadRequest("必須提供買家電郵地址！");
+        return BadRequest("Please enter your email address.");
+        //return BadRequest("必須提供買家電郵地址！");
 
       // GO
       using var conn = await DBHelper.AUCDB.OpenAsync();
@@ -66,7 +67,7 @@ ORDER BY RaffleTicketNo ASC
     }
     catch (Exception ex)
     {
-      return BadRequest("出現例外！" + ex.Message);
+      return BadRequest("Exception! " + ex.Message);
     }
   }
 }

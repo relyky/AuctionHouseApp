@@ -80,11 +80,12 @@ export default function RaffleTickeEmailWidget(props: {
         ))}
       </Stack>
 
+      {/* 寄出抽獎券(已寄出{emailTimes}次) */}
       {ticketList.length > 0 &&
         <Button variant={emailTimes > 0 ? 'outlined' : 'contained'} fullWidth sx={{ my: 2 }}
           loading={f_loading}
           onClick={handleSendNoteEmail}>
-          寄出抽獎券<small>(已寄出{emailTimes}次)</small></Button>
+          Send Raffle Ticket Stub<small style={{ textTransform: 'lowercase' }}>({emailTimes} times sent)</small></Button>
       }
 
       {/* import.meta.env.DEV &&

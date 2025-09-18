@@ -122,9 +122,11 @@ export default function RaffleSell_Step1View() {
 
   return (
     <Container maxWidth='xs'>
-      <Typography variant='h5' gutterBottom>銷售抽獎券</Typography>
-      <Toolbar>
-        <PickBuyerDlg label='老客戶' onPick={handlePickBuyer} />
+      {/* 銷售抽獎券 */}
+      <Typography variant='h5'>Sell Raffle Tickets</Typography>
+      <Toolbar variant='regular' disableGutters>
+        {/* 老客戶 */}
+        <PickBuyerDlg label='Returning Customer' onPick={handlePickBuyer} />
 
         {import.meta.env.DEV && /* 正式版先藏起來 */
           <Button onClick={() => alert('自貴賓清單查詢帶出')}>貴賓</Button>
@@ -133,9 +135,8 @@ export default function RaffleSell_Step1View() {
 
       <form onSubmit={handleSubmit}>
         <Stack spacing={2}>
-          <input type='hidden' name='raffleOrderNo' value={raffleOrder?.raffleOrderNo ?? 'NEW'} />
-
-          <TextField name='buyerName' label='買家名稱' required
+          {/* 買家名稱 */}
+          <TextField name='buyerName' label='Buyer Name' required
             value={buyerName} onChange={(e) => setBuyerName(e.target.value)}
             slotProps={{
               htmlInput: {
@@ -144,7 +145,8 @@ export default function RaffleSell_Step1View() {
             }}
           />
 
-          <TextField name='buyerEmail' label='買家電郵地址' type='email' required
+          {/* 買家電郵地址 */}
+          <TextField name='buyerEmail' label='Buyer Email Address' type='email' required
             value={buyerEmail} onChange={(e) => setBuyerEmail(e.target.value)}
             slotProps={{
               htmlInput: {
@@ -167,7 +169,8 @@ export default function RaffleSell_Step1View() {
             }}
           /> */}
 
-          <TextField name='buyerPhone' label='買家聯絡電話' type='tel' required
+          {/* 買家聯絡電話 */}
+          <TextField name='buyerPhone' label='Buyer Phone Number' type='tel' required
             value={buyerPhone} onChange={(e) => setBuyerPhone(e.target.value)}
             slotProps={{
               htmlInput: {
@@ -176,7 +179,8 @@ export default function RaffleSell_Step1View() {
             }}
           />
 
-          <TextField name='purchaseCount' label='購買張數' type='number' required
+          {/* 購買張數 */}
+          <TextField name='purchaseCount' label='Quantity' type='number' required
             value={purchaseCount} onChange={handlePurchaseCount}
             slotProps={{
               htmlInput: { min: 1, max: 9999 },
@@ -193,9 +197,12 @@ export default function RaffleSell_Step1View() {
             }}
           />
 
-          <TextField name='purchaseAmount' label='購買金額' type='number' required
+          {/* 購買金額 */}
+          <TextField name='purchaseAmount' label='Total Amount' type='number' required
             value={purchaseAmount} onChange={(e) => setPurchaseAmount(Number(e.target.value))}
             slotProps={{ htmlInput: { min: 0, } }} />
+
+          <input type='hidden' name='raffleOrderNo' value={raffleOrder?.raffleOrderNo ?? 'NEW'} />
 
           {errMsg &&
             <Alert severity="error" onClose={() => setErrMsg(null)}>
@@ -203,14 +210,15 @@ export default function RaffleSell_Step1View() {
             </Alert>}
 
           <Button type='submit' variant='contained' color='primary' loading={f_loading}>
-            {Boolean(raffleOrder) ? '更新訂單' : '建立訂單'}
+            {Boolean(raffleOrder) ? 'Submit Changes' : 'Create Order'}
           </Button>
 
         </Stack>
       </form>
 
+      {/* 抽獎券單張 100 元。優惠活動 12 張 1000 元。*/}
       <Alert severity='info' sx={{ my: 2 }}>
-        抽獎券單張 {raffleUnitPrice} 元。優惠活動 12 張 {raffleUnitPrice * 10} 元。
+        Each raffle ticket NT${raffleUnitPrice}.<br/> Promotion: 12 tickets for NT${raffleUnitPrice * 10}.
       </Alert>
     </Container>
   )

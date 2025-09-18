@@ -17,15 +17,17 @@ export default function RaffleTicketCardWidget(props: {
     <Card sx={{ display: 'flex' }}>
       <Box sx={{ display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
         <CardContent sx={{ flex: '1 0 auto' }}>
+          {/* 拍賣活動抽獎券 */}
           <Typography component="div" variant="h6">
-            拍賣活動抽獎券
+            Raffle Ticket
           </Typography>
           <Typography variant="subtitle1" sx={{ color: 'text.primary' }}>
             NO. {ticket.raffleTicketNo}
           </Typography>
           <Box>
+            {/* 票券擁有人 */}
             <Typography variant="subtitle2" sx={{ color: 'text.secondary' }}>
-              票券擁有人
+              Ticket Holder
             </Typography>
             <Box typography='body2' color='text.secondary' sx={{ overflowWrap: 'anywhere', wordBreak: 'break-all' }}>😀 {ticket.buyerName}</Box>
             <Box typography='body2' color='text.secondary' sx={{ overflowWrap: 'anywhere', wordBreak: 'break-all' }}>📧 {ticket.buyerEmail}</Box>

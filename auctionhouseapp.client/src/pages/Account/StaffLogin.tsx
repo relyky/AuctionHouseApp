@@ -56,7 +56,7 @@ export default function SignIn() {
 
     if (!userId.value || !/\S+/.test(userId.value)) {
       setUserIdError(true);
-      setUserIdErrorMessage('Please enter a valid userId.');
+      setUserIdErrorMessage('Please enter a valid user name.');
       isValid = false;
     } else {
       setUserIdError(false);
@@ -65,7 +65,7 @@ export default function SignIn() {
 
     if (!password.value || password.value.length < 4) {
       setPasswordError(true);
-      setPasswordErrorMessage('Password must be at least 4 characters long.');
+      setPasswordErrorMessage('Enter as least 4 characters.');
       isValid = false;
     } else {
       setPasswordError(false);
@@ -88,8 +88,9 @@ export default function SignIn() {
   return (
     <SignInContainer direction="column" justifyContent="space-between">
       <Card variant="outlined">
+        {/* 工作人員登入 */}
         <Typography component="h1" variant="h5">
-          工作人員登入
+          Staff Login
         </Typography>
         <Box
           component="form"
@@ -103,14 +104,14 @@ export default function SignIn() {
           }}
         >
           <FormControl>
-            <FormLabel htmlFor="userId">User Id</FormLabel>
+            <FormLabel htmlFor="userId">User name</FormLabel>
             <TextField
               error={userIdError}
               helperText={userIdErrorMessage}
               id="userId"
               type="text"
               name="userId"
-              placeholder="userId"
+              placeholder="User name"
               autoComplete="userId"
               autoFocus
               required
@@ -148,13 +149,13 @@ export default function SignIn() {
             loading={isAuthing}
             disabled={isAuthed || isAuthing}
           >
-            登入
+            Log in
           </Button>
           <Link
             component="button"
             type="button"
             variant="body2"
-            sx={{ alignSelf: 'center' }}
+            sx={{ alignSelf: 'center', display: 'none' }}
           >
             Forgot your password?
           </Link>

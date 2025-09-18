@@ -30,7 +30,8 @@ export default function RaffleBuyer_AppForm() {
       const args: IQryRaffleOrderArgs = { buyerEmail: value };
       const orderListTmp = await postData<IRaffleOrder[]>('/api/RaffleBuyer/QryRaffleOrder', args);
       if (orderListTmp.length === 0) {
-        setErrMsg("查無訂單資料，請確認輸入的E-mail地址是否正確。")
+        // 查無訂單資料，請確認輸入的E-mail地址是否正確。
+        setErrMsg("No order information found. Please check whether the email address you entered is correct.")
         return;
       };
 
@@ -54,10 +55,11 @@ export default function RaffleBuyer_AppForm() {
 
   return (
     <Container maxWidth='sm'>
-      <Typography variant='h5' component="div" sx={{ mb: 2 }}>買家/抽獎券查詢</Typography>
+      {/* 買家/抽獎券查詢 */}
+      <Typography variant='h5' component="div" sx={{ mb: 2 }}>Search Tickets</Typography>
 
       <SearchWidget
-        placeholder="請輸入買家 E-mail 地址"
+        placeholder="Please enter your email address"
         helpText={helpContent}
         onSearch={handleSearch}
       />
@@ -89,7 +91,10 @@ export default function RaffleBuyer_AppForm() {
 //-----------------
 const helpContent = (
   <>
+    <Typography sx={{ mb: 1 }}>Need help? Please contact us at tropicalnights@communitycenter.org.tw</Typography>
+    {/*
     <Typography sx={{ mb: 1 }}>請在此輸入您的電郵地址以查詢您擁有的抽獎券。</Typography>
-    <Typography>如果您有其他疑問請聯繫客服尋求協助。</Typography>
+    <Typography>如果您有其他疑問請聯繫客服尋求協助。</Typography> 
+    */}
   </>
 );

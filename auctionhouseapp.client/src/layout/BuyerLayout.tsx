@@ -56,8 +56,9 @@ export default function HideAppBar(props: Props) {
             >
               <HomeIcon />
             </IconButton>
+            {/* 慈善拍賣買家前台 */}
             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-              慈善拍賣買家前台
+              My Tickets
             </Typography>
           </Toolbar>
         </AppBar>
