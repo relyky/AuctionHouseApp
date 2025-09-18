@@ -275,6 +275,12 @@ SELECT TOP 1 EmailTimes
  WHERE [RaffleSoldNo] = @RaffleOrderNo;
 """;
 
+    const string selectSales = """
+SELECT TOP 1 [UserId],[Nickname],[Phone]
+FROM [dbo].[Staff] (NOLOCK)
+WHERE UserId = @UserId
+""";
+
     try
     {
       if (String.IsNullOrWhiteSpace(id))
@@ -290,9 +296,10 @@ SELECT TOP 1 EmailTimes
       var param = new { RaffleOrderNo = id };
       var order = conn.QueryFirst<RaffleOrder>(selectOrderSql, param, txn);
       var ticketList = conn.Query<RaffleTicket>(selectTicketSql, param, txn).ToArray();
+      var sales = conn.QueryFirst<StaffProfile>(selectSales, new { UserId = order.SalesId }, txn);
 
       // 填入主檔範本
-      htmlTpl = DoFillTemplateTpl(htmlTpl, order);
+      htmlTpl = DoFillTemplateTpl(htmlTpl, order, sales);
       htmlTpl = htmlTpl.Replace("{{TICKET_LIST_COUNT}}", $"{ticketList.Length}");
 
       // 填入TICKET BLOCK
@@ -341,7 +348,7 @@ SELECT TOP 1 EmailTimes
   /// helper: 填入主檔範本
   /// </summary>
   [NonAction]
-  private StringBuilder DoFillTemplateTpl(StringBuilder htmlTpl, RaffleOrder order)
+  private StringBuilder DoFillTemplateTpl(StringBuilder htmlTpl, RaffleOrder order, StaffProfile sales)
   {
     htmlTpl = htmlTpl.Replace("{{BUYER_NAME}}", order.BuyerName);
     htmlTpl = htmlTpl.Replace("{{ORDER_NO}}", order.RaffleOrderNo);
@@ -351,7 +358,7 @@ SELECT TOP 1 EmailTimes
     htmlTpl = htmlTpl.Replace("{{PURCHASE_AMOUNT}}", $"{order.PurchaseAmount:N0}");
     htmlTpl = htmlTpl.Replace("{{HAS_PAID}}", order.HasPaid == "Y" ? "是" : "否");
     htmlTpl = htmlTpl.Replace("{{ORDER_STATUS}}", order.Status);
-    htmlTpl = htmlTpl.Replace("{{SALES_ID}}", order.SalesId);
+    htmlTpl = htmlTpl.Replace("{{SALES_ID}}", sales.Nickname);
     htmlTpl = htmlTpl.Replace("{{SOLD_DTM}}", $"{order.SoldDtm:yyyy-MM-dd HH:mm}");
     return htmlTpl;
   }
@@ -425,7 +432,7 @@ WHERE BuyerName LIKE @Keyword
   {
     const string sql = """
 SELECT TOP 1 [UserId],[Nickname],[Phone]
-FROM [dbo].[Staff]
+FROM [dbo].[Staff] (NOLOCK)
 WHERE UserId = @UserId
 """;
 
