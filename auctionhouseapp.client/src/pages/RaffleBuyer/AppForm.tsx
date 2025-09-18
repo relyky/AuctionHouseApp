@@ -1,11 +1,11 @@
-import { Alert, Container, LinearProgress, Stack, Typography } from "@mui/material";
+import { Alert, Box, Container, LinearProgress, Stack, Typography } from "@mui/material";
 import { useState } from "react";
 import { useEventCallback } from "usehooks-ts";
 import { postData, ResponseError } from "../../tools/httpHelper";
 import SearchWidget from "../../widgets/SearchWidget";
 import RaffleTicketCardWidget from "../RaffleSell/widgets/RaffleTicketCardWidget";
 import type { IQryRaffleOrderArgs } from "../RaffleSellQuery/dto/IQryRaffleOrderArgs";
-import RaffleOrderTableWidget from "../RaffleSellQuery/widgets/RaffleOrderTableWidget";
+import RaffleOrderGridWidget from "./widgets/RaffleOrderGridWidget";
 
 /**
  * 抽將券買家查詢
@@ -63,6 +63,7 @@ export default function RaffleBuyer_AppForm() {
         helpText={helpContent}
         onSearch={handleSearch}
       />
+      <Box sx={{ mb: 2 }}>{/* gutter */}</Box>
 
       {f_loading && <LinearProgress color='info' sx={{ m: 1 }} />}
 
@@ -71,19 +72,19 @@ export default function RaffleBuyer_AppForm() {
       {/* TODO: Display search results here */}
 
       {orderList.map((order) => (
-        <RaffleOrderTableWidget key={order.raffleOrderNo} order={order} />
+        <RaffleOrderGridWidget key={order.raffleOrderNo} order={order} />
       ))}
 
-      <Stack gap={2}>
+      <Stack gap={2} sx={{ mb: 2}}>
         {ticketList.map((ticket) => (
           <RaffleTicketCardWidget key={ticket.raffleTicketNo} ticket={ticket} />
         ))}
       </Stack>
 
-      {import.meta.env.DEV && false &&
+      {/* import.meta.env.DEV &&
         <pre>orderList: {JSON.stringify(orderList, null, 2)}<br />
           ticketList: {JSON.stringify(ticketList, null, 2)}</pre>
-      }
+      */}
     </Container>
   )
 }
