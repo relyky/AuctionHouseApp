@@ -309,7 +309,8 @@ WHERE UserId = @UserId
       // 組織 Email 內容
       MailMessage mail = new();
       mail.To.Add(new MailAddress(order.BuyerEmail, order.BuyerName));
-      mail.Subject = $"{_emlSvc.EmailProps.SubjectPrefix} 感謝您購買本次抽獎券，您的訂單編號 {order.RaffleOrderNo} 已成立";
+      //mail.Subject = $"{_emlSvc.EmailProps.SubjectPrefix} 感謝您購買本次抽獎券，您的訂單編號 {order.RaffleOrderNo} 已成立";
+      mail.Subject = $"{_emlSvc.EmailProps.SubjectPrefix} Order {order.RaffleOrderNo} confirmed.";
       mail.Body = htmlTpl.ToString();
       mail.IsBodyHtml = true;
 

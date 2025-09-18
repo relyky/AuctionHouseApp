@@ -82,7 +82,7 @@ const Footer: FC = () => (
       ©2025 慈善拍賣系統 保留所有權利。
     </Typography> */}
     <Typography variant="caption" color="text.disabled">
-      版本：{appVersion}
+      Version {appVersion}
     </Typography>
   </Box>
 );

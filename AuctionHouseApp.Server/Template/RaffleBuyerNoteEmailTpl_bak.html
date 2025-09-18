@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Purchase Confirmation</title>
+  <title>購買成功通知</title>
   <style>
     /* Reset styles for email compatibility */
     body, table, td, th, p, div, span {
@@ -320,92 +320,92 @@
           <!-- Header -->
           <tr>
             <td class="header">
-              <h1>Purchase Confirmation</h1>
+              <h1>購買成功通知</h1>
             </td>
           </tr>
 
           <!-- Content -->
           <tr>
             <td class="content">
-              <div class="greeting">Dear <strong>{{BUYER_NAME}}</strong>,</div>
-              <div class="intro-text">
-                Thank you for supporting The Center!<br />
-                Your payment has been confirmed and your order is completed.<br />
-                Below are the details of your raffle tickets.
-              </div>
+              <div class="greeting">親愛的 <strong>{{BUYER_NAME}}</strong>,</div>
+              <div class="intro-text">感謝您的購買！我們已收到您的訂單，以下是您的訂單與抽獎券詳細資訊。</div>
 
-              <div class="section-title">Order Information</div>
+              <div class="section-title">購買訂單資訊</div>
               <div class="order-info">
                 <div class="info-grid">
                   <div class="info-row">
                     <div class="info-cell">
-                      <div class="info-label">Order Number</div>
+                      <div class="info-label">訂單編號</div>
                       <div class="info-value">{{ORDER_NO}}</div>
                     </div>
                     <div class="info-cell">
-                      <div class="info-label">Buyer Name</div>
+                      <div class="info-label">買家名稱</div>
                       <div class="info-value">{{BUYER_NAME}}</div>
                     </div>
                   </div>
                   <div class="info-row">
                     <div class="info-cell">
-                      <div class="info-label">Contact Number</div>
+                      <div class="info-label">聯絡電話</div>
                       <div class="info-value">{{BUYER_PHONE}}</div>
                     </div>
                     <div class="info-cell">
-                      <div class="info-label">Email Address</div>
+                      <div class="info-label">電郵地址</div>
                       <div class="info-value">{{BUYER_EMAIL}}</div>
                     </div>
                   </div>
                   <div class="info-row">
                     <div class="info-cell">
-                      <div class="info-label">Quantity Purchased</div>
+                      <div class="info-label">購買張數</div>
                       <div class="info-value">{{PURCHASE_COUNT}}</div>
                     </div>
                     <div class="info-cell">
-                      <div class="info-label">Total Amount</div>
+                      <div class="info-label">購買金額</div>
                       <div class="info-value">{{PURCHASE_AMOUNT}}</div>
                     </div>
                   </div>
                   <div class="info-row">
                     <div class="info-cell">
-                      <div class="info-label">Sales Staff</div>
+                      <div class="info-label">是否付款</div>
+                      <div class="info-value">{{HAS_PAID}}</div>
+                    </div>
+                    <div class="info-cell">
+                      <div class="info-label">訂單狀態</div>
+                      <div class="info-value">{{ORDER_STATUS}}</div>
+                    </div>
+                  </div>
+                  <div class="info-row">
+                    <div class="info-cell">
+                      <div class="info-label">負責業務</div>
                       <div class="info-value">{{SALES_ID}}</div>
                     </div>
                     <div class="info-cell">
-                      <div class="info-label">Sale Time</div>
+                      <div class="info-label">賣出時間</div>
                       <div class="info-value">{{SOLD_DTM}}</div>
                     </div>
                   </div>
                 </div>
               </div>
 
-              <div class="section-title">Your Raffle Tickets ({{TICKET_LIST_COUNT}} in total)</div>
+              <div class="section-title">您的抽獎券 (共 {{TICKET_LIST_COUNT}} 張)</div>
               <div class="ticket-section">
                 <!-- {{RAFFLE_TICKETS_BLOCK}} -->
               </div>
 
-              <div class="closing-message">
-                Wishing you the best of luck!<br />
-                The raffle winners will be announced on November 18, 2025 (Tuesday) on The Center's official website: https://communitycenter.org.tw/ <br />
-                Winners can pick up their prizes at The Center:<br/>
-                📍 2F/6F., No. 238, Section 6, Zhongshan North Rd., Shilin District, Taipei City 111032, Taiwan (R.O.C.)
-              </div>
-              <!-- signature
+              <div class="closing-message">祝您好運！</div>
               <div class="signature">
                 誠摯地,<br>
                 AuctionHouse 團隊
-              </div>   -->
+              </div>
             </td>
           </tr>
 
-          <!-- Footer
+          <!-- Footer -->
           <tr>
             <td class="footer">
               <p>這是一封系統自動發送的郵件，請勿直接回覆。</p>
               <p>&copy; 2025 AuctionHouse. All rights reserved.</p>
             </td>
-          </tr> -->
+          </tr>
         </table>
       </td>
     </tr>

@@ -9,7 +9,7 @@ export default function Home_AppForm() {
       <Jumbotron />
       <Container>
         <Box display='flex' flexWrap='wrap-reverse' justifyContent='space-around' gap={3} margin={3}>
-          { }
+          {/* 買家/查詢購買抽獎券 */}
           <Button component={NavLink} to="/rafflebuyer"
             variant='contained' size='large'
             sx={theme => ({
@@ -19,8 +19,9 @@ export default function Home_AppForm() {
                 background: `linear-gradient(45deg, ${theme.palette.primary.main} 30%, ${theme.palette.primary.light} 90%)`,
               },
             })}>
-            Buyer
+            View My Tickets
           </Button>
+
           {/* 工作人員(進入後台) */}
           <Button component={NavLink} to="/stafflogin"
             variant='contained' size='large'
