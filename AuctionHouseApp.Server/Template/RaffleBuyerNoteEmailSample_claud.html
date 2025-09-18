@@ -254,14 +254,18 @@
       .info-cell {
         display: block;
         width: 100%;
-        padding: 2px 0;
-        display: flex;
-        /* justify-content: space-between; */
-        gap: 8px;
+        padding: 4px 0;
+      }
+
+      .info-label,
+      .info-value {
+        display: inline-block;
+        vertical-align: top;
       }
 
       .info-label {
-        padding-right: 0;
+        width: 90px; /* Fixed width for alignment */
+        padding-right: 8px; /* 8px gap */
         margin-bottom: 2px;
       }
 
