@@ -36,7 +36,8 @@ export default function RaffleSellQuery_AppForm() {
       const args: IQryRaffleOrderArgs = { buyerEmail: value };
       const orderListTmp = await postData<IRaffleOrder[]>('/api/RaffleSellQuery/QryRaffleOrder', args);
       if (orderListTmp.length === 0) {
-        setErrMsg("查無訂單資料，請確認輸入的E-mail地址是否正確。")
+        // 查無訂單資料，請確認輸入的E-mail地址是否正確。
+        setErrMsg("No order record found. Please check that the email address you entered is correct.")
         return;
       };
 
@@ -66,9 +67,11 @@ export default function RaffleSellQuery_AppForm() {
 
   return (
     <Container maxWidth='sm'>
-      <Typography variant='h5'>業務/銷售查詢</Typography>
+      {/* 業務/銷售查詢 */}
+      <Typography variant='h5'>Sales Records</Typography>
       <Toolbar>
-        <PickBuyerDlg label='選取買家' onPick={handlePickBuyer} />
+        {/* 選取買家 */}
+        <PickBuyerDlg label='Select Buyer' onPick={handlePickBuyer} />
       </Toolbar>
 
       {pickedBuyer && <BuyerProfileTableWidget buyer={pickedBuyer} />}

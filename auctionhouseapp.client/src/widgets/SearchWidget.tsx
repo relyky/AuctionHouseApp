@@ -41,7 +41,7 @@ import HelpIcon from '@mui/icons-material/HelpOutline';
 interface SearchWidgetProps {
   placeholder?: string;
   helpTitle?: string;
-  helpText: React.ReactNode;
+  helpText?: React.ReactNode;
   onSearch: (value: string) => void;
 }
 
@@ -92,9 +92,10 @@ export default function SearchWidget({ placeholder, helpTitle, helpText, onSearc
             <IconButton size="large" onClick={handleSearchClick}>
               <SearchIcon color='primary' />
             </IconButton>
-            <IconButton size="small" onClick={handleHelpClick}>
-              <HelpIcon color='disabled' />
-            </IconButton>
+            {Boolean(helpText) &&
+              <IconButton size="small" onClick={handleHelpClick}>
+                <HelpIcon color='disabled' />
+              </IconButton>}
           </InputAdornment>
         }
       />

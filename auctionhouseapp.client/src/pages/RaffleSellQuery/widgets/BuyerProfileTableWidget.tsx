@@ -11,15 +11,18 @@ export default function BuyerProfileTableWidget(props: {
       <Table size='small'  >
         <TableBody>
           <TableRow>
-            <TableCell component="th" scope="row">買家名稱</TableCell>
+            {/* 買家名稱 */}
+            <TableCell component="th" scope="row">Buyer Name</TableCell>
             <TableCell>{buyer.buyerName}</TableCell>
           </TableRow>
           <TableRow>
-            <TableCell component="th" scope="row">電郵地址</TableCell>
+            {/* 電郵地址 */}
+            <TableCell component="th" scope="row">Email Address</TableCell>
             <TableCell>{buyer.buyerEmail}</TableCell>
           </TableRow>
           <TableRow>
-            <TableCell component="th" scope="row">聯絡電話</TableCell>
+            {/* 聯絡電話 */}
+            <TableCell component="th" scope="row">Phone Number</TableCell>
             <TableCell>{buyer.buyerPhone}</TableCell>
           </TableRow>
         </TableBody>

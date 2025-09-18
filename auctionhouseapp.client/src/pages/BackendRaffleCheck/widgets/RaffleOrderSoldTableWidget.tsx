@@ -39,12 +39,18 @@ export default function RaffleOrderSoldTableWidget(props: {
       <Table size='small'>
         <TableHead>
           <TableRow>
-            <StyledTableCell>訂單編號</StyledTableCell>
-            <StyledTableCell>負責業務</StyledTableCell>
-            <StyledTableCell align="right">賣出張數</StyledTableCell>
-            <StyledTableCell align="right">賣出金額</StyledTableCell>
-            <StyledTableCell align="center">賣出時間</StyledTableCell>
-            <StyledTableCell>已付款</StyledTableCell>
+            {/* 訂單編號 */}
+            <StyledTableCell>Order No.</StyledTableCell>
+            {/* 負責業務 */}
+            <StyledTableCell>Sales Staff</StyledTableCell>
+            {/* 賣出張數 */}
+            <StyledTableCell align="right">Tickets Sold</StyledTableCell>
+            {/* 賣出金額 */}
+            <StyledTableCell align="right">Amount</StyledTableCell>
+            {/* 賣出時間 */}
+            <StyledTableCell align="center">Sales Time</StyledTableCell>
+            {/* 已付款 */}
+            <StyledTableCell>Paid</StyledTableCell>
           </TableRow>
         </TableHead>
         <TableBody>

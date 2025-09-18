@@ -15,27 +15,33 @@ export default function StatisticsTable(props: {
       <Table size='medium'>
         <TableBody>
           <TableRow>
-            <TableCell>售出訂單數</TableCell>
-            <TableCell align='right'>{result.soldOrderCount}</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell>售出總張數</TableCell>
+            {/* 售出總張數 */}
+            <TableCell>Total Tickets Sold:</TableCell>
             <TableCell align='right'>{result.soldTicketCount}</TableCell>
           </TableRow>
           <TableRow>
-            <TableCell>售出總金額</TableCell>
+            {/* 售出訂單數 */}
+            <TableCell>Number of Orders:</TableCell>
+            <TableCell align='right'>{result.soldOrderCount}</TableCell>
+          </TableRow>
+          <TableRow>
+            {/* 售出總金額 */}
+            <TableCell>Total Sales Amount:</TableCell>
             <TableCell align='right'>{result.totalSoldAmount}</TableCell>
           </TableRow>
           <TableRow>
-            <TableCell>已查驗訂單</TableCell>
+            {/* 已查驗訂單 */}
+            <TableCell>Verified Orders:</TableCell>
             <TableCell align='right'>{result.checkedOrderCount}</TableCell>
           </TableRow>
           <TableRow>
-            <TableCell>已查驗金額</TableCell>
+            {/* 已查驗金額 */}
+            <TableCell>Verified Amount:</TableCell>
             <TableCell align='right'>{result.checkedSoldAmount}</TableCell>
           </TableRow>
           <TableRow>
-            <TableCell>購買人數</TableCell>
+            {/* 購買人數 */}
+            <TableCell>Number of Buyers:</TableCell>
             <TableCell align='right'>{result.buyerCount}</TableCell>
           </TableRow>
         </TableBody>

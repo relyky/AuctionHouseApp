@@ -1,4 +1,4 @@
-import { Alert, Box, Button, Container, Link, Typography } from "@mui/material";
+import { Alert, Box, Button, Container, Link, Stack, Typography } from "@mui/material";
 import { useAtomValue } from "jotai";
 import { NavLink } from "react-router";
 import { selectIsAuthedStaff, staffAccountAtom } from "../../atoms/staffAccountAtom";
@@ -32,22 +32,22 @@ export default function BackendIndex_AppForm() {
 
       {/* 業務 */}
       <Typography variant='h6' gutterBottom>Sales</Typography>
-      <Box display='flex' gap={2} sx={{ mb: 2 }}>
+      <Stack gap={2} sx={{ mb: 2 }}>
         {/* 銷售抽獎券 */}
-        <Button component={NavLink} variant='contained' to='/raffle/sell'>Sell Raffle Tickets</Button>
+        <Button component={NavLink} variant='text' to='/raffle/sell'>Sell Raffle Tickets</Button>
         {/* 銷售查詢 */}
-        <Button component={NavLink} variant='contained' to='/raffle/sellquery'>Sales Records</Button>
-      </Box>
+        <Button component={NavLink} variant='text' to='/raffle/sellquery'>Sales Records</Button>
+      </Stack>
 
       <AuthorizeGuard role='Manager'>
         {/* 後台 */}
         <Typography variant='h6' gutterBottom>Admin</Typography>
-        <Box display='flex' gap={2} sx={{ mb: 2 }}>
+        <Stack gap={2} sx={{ mb: 2 }}>
           {/* 抽獎券銷售查驗 */}
-          <Button component={NavLink} variant='contained' to='/backend/rafflecheck'>Verify Ticket Sales</Button>
+          <Button component={NavLink} variant='text' to='/backend/rafflecheck'>Verify Ticket Sales</Button>
           {/* 抽獎券銷售統計 */}
-          <Button component={NavLink} variant='contained' to='/backend/rafflequery'>Sales Statistics</Button>
-        </Box>
+          <Button component={NavLink} variant='text' to='/backend/rafflequery'>Sales Statistics</Button>
+        </Stack>
       </AuthorizeGuard>
 
       {/*

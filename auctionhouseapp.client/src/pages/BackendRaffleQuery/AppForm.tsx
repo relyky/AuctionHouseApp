@@ -36,7 +36,8 @@ export default function RaffleSellQuery_AppForm() {
 
   return (
     <Container maxWidth='xs'>
-      <Typography variant='h4' gutterBottom>抽獎券銷售統計</Typography>
+      {/* 抽獎券銷售統計 */}
+      <Typography variant='h5' gutterBottom>Raffle Ticket Sales Statistics</Typography>
 
       {f_loading && <LinearProgress color='info' />}
 

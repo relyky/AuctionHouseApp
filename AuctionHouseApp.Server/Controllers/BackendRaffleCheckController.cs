@@ -88,16 +88,18 @@ WHERE [RaffleOrderNo] = @RaffleOrderNo
         if (affectedRows != 1)
         {
           txn.Rollback();
-          return Ok(new MsgObj($"訂單 {orderNo} 查驗失敗，請重新整理後再試！", Severity: "error"));
+          // 訂單 {orderNo} 查驗失敗，請重新整理後再試！ 
+          return Ok(new MsgObj($"Order {orderNo} verification failed. Please refresh and try again.", Severity: "error"));
         }
       }
 
       txn.Commit();
-      return Ok(new MsgObj("成功完成查驗。", Severity: "success"));
+      // 成功完成查驗。
+      return Ok(new MsgObj("Verification completed successfully.", Severity: "success"));
     }
     catch (Exception ex)
     {
-      return BadRequest("出現例外！" + ex.Message);
+      return BadRequest("Exception！" + ex.Message);
     }
   }
 }

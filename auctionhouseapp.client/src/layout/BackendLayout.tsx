@@ -138,7 +138,7 @@ export default function HideAppBar(props: Props) {
           {/* <Outlet /> */}
         </main>
 
-        {import.meta.env.DEV && <pre>account: {JSON.stringify(acct, null, 2)}</pre>}
+        {/* import.meta.env.DEV && <pre>account: {JSON.stringify(acct, null, 2)}</pre> */}
       </Box>
       <Overlay />
     </>
@@ -171,9 +171,10 @@ const NotAuthorized: FC = () => {
   return (
     <Container>
       {/* <Typography variant='h1'>401 NotAuthorized</Typography> */}
+      {/* 未登入請先登入。工作人員登入 */}
       <Alert severity='error' sx={{ fontSize: '1.5em', m: 3 }}>
-        未登入請先登入。
-        <MuiLink href='/stafflogin'>工作人員登入</MuiLink>
+        Not logged in. 
+        <MuiLink href='/stafflogin'> Staff login</MuiLink>
       </Alert>
     </Container>
   )

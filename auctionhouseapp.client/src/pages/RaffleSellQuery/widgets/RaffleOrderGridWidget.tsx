@@ -59,8 +59,8 @@ export default function RaffleOrderTableWidget(props: {
   return (
     <Paper sx={{ mb: 2, p: 2 }}>
       <Box display='flex'>
-        <Box typography='subtitle2' flexGrow={1}>訂單 {order.raffleOrderNo}</Box>
-        <Button variant='outlined' size='small' onClick={handleSendNoteEmail} loading={f_loading}>重寄({emailTimes})</Button>
+        <Box typography='subtitle2' flexGrow={1}>Order No. {order.raffleOrderNo}</Box>
+        <Button variant='outlined' size='small' onClick={handleSendNoteEmail} loading={f_loading}>Resend({emailTimes})</Button>
       </Box>
 
       {f_loading && <LinearProgress color='info' />}
@@ -68,15 +68,25 @@ export default function RaffleOrderTableWidget(props: {
 
       <Grid container spacing={1}>
         {/* <AStaticField label="訂單編號" value={order.raffleOrderNo} size={6} /> */}
-        <AStaticField label="買家名稱" value={order.buyerName} size={6} />
-        <AStaticField label="聯絡電話" value={order.buyerPhone} size={6} />
-        <AStaticField label="電郵地址" value={order.buyerEmail} size={12} />
-        <AStaticField label="購買張數" value={order.purchaseCount} size={6} />
-        <AStaticField label="購買金額" value={order.purchaseAmount} size={6} />
+
+        {/* 買家名稱 */}
+        <AStaticField label="Buyer Name" value={order.buyerName} size={6} />
+        {/* 聯絡電話 */}
+        <AStaticField label="Phone Number" value={order.buyerPhone} size={6} />
+        {/* 電郵地址 */}
+        <AStaticField label="Email Address" value={order.buyerEmail} size={12} />
+        {/* 購買張數 */}
+        <AStaticField label="Quantity" value={order.purchaseCount} size={6} />
+        {/* 購買金額 */}
+        <AStaticField label="Total Amount" value={order.purchaseAmount} size={6} />
+
         {/* <AStaticField label="是否已付款" value={order.hasPaid === 'Y' ? '是' : '否'} size={6} />
       <AStaticField label="訂單狀態" value={order.status} size={6} /> */}
-        <AStaticField label="負責業務" value={order.salesId} size={6} />
-        <AStaticField label="賣出時間" value={formatDateString(order.soldDtm)} size={6} />
+
+        {/* 負責業務 */}
+        <AStaticField label="Sales" value={order.salesId} size={6} />
+        {/* 賣出時間 */}
+        <AStaticField label="Sales Time" value={formatDateString(order.soldDtm)} size={6} />
       </Grid>
 
     </Paper>

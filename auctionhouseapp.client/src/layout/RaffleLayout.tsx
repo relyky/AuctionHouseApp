@@ -34,7 +34,8 @@ export default function RaffleLayout() {
           <BottomNavigationAction label="Staff Panel" icon={<HomeIcon color='primary' />}
             component={Link} to='/backend' />
           {/* 銷售抽獎券 */}
-          <BottomNavigationAction label="Sell Raffle Tickets" icon={<MoneyIcon color='primary' />}
+          <BottomNavigationAction label="Sell Raffle Tickets" sx={{ whiteSpace: 'nowrap' }}
+            icon={<MoneyIcon color='primary' />}
             component={Link} to='/raffle/sell'
           />
           {/* 銷售查詢 */}

@@ -51,7 +51,7 @@ export function formatDateString(isoDateStr: string) {
   try {
     if (!isoDateStr) return ''
     if (typeof isoDateStr === 'string')
-      return format(parseISO(isoDateStr), 'yyyy-MM-dd HH:mm');
+      return format(parseISO(isoDateStr), 'yyyy/MM/dd HH:mm');
     return 'invalid date'
   }
   catch {

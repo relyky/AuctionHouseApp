@@ -53,25 +53,30 @@ export default function RaffleOrderSoldSummaryWidget(props: {
 
   // sx={{ minWidth: 700 }}
   return (
-    <TableContainer component={Paper}>
+    <TableContainer component={Paper} sx={{ mb: 2 }}>
       <Table size='small'>
         <TableBody>
           <TableRow>
-            <TableCell component='th'>負責業務</TableCell>
+            {/* 負責業務 */}
+            <TableCell component='th'>Sales Staff:</TableCell>
             <TableCell colSpan={3}>{summary.salesId}</TableCell>
           </TableRow>
           <TableRow>
-            <TableCell component='th'>售出日期</TableCell>
+            {/* 售出日期 */}
+            <TableCell component='th'>Sales Date:</TableCell>
             <TableCell colSpan={3}>{summary.soldDtBgn} ~ {summary.soldDtEnd}</TableCell>
           </TableRow>
           <TableRow>
-            <TableCell component='th'>賣出張數</TableCell>
+            {/* 賣出張數 */}
+            <TableCell component='th'>Tickets Sold:</TableCell>
             <TableCell>{summary.ticketCount}</TableCell>
-            <TableCell component='th'>訂單筆數</TableCell>
+            {/* 訂單筆數 */}
+            <TableCell component='th'>Orders:</TableCell>
             <TableCell>{summary.orderCount}</TableCell>
           </TableRow>
           <TableRow>
-            <TableCell component='th'>賣出金額</TableCell>
+            {/* 賣出金額 */}
+            <TableCell component='th'>Total Amount:</TableCell>
             <TableCell>{summary.ticketAmount}</TableCell>
             <TableCell></TableCell>
             <TableCell></TableCell>

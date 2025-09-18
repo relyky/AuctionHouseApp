@@ -72,7 +72,8 @@ export default function RaffleSell_Step2View() {
 
   return (
     <Container maxWidth='xs'>
-      <Typography variant='h5' gutterBottom>抽獎券訂單</Typography>
+      {/* 抽獎券訂單 */}
+      <Typography variant='h5' gutterBottom>Raffle Tickets Order</Typography>
 
       <TableContainer component={Paper}>
         <Table>

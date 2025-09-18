@@ -54,8 +54,10 @@ export default function StaffLogin_AppForm() {
 
   return (
     <Container maxWidth='sm'>
-      <Typography variant='h4' gutterBottom>抽獎券銷售查驗</Typography>
-      <Box>業務把收到的錢交給經理後，經理打勾確認。</Box>
+      {/* 抽獎券銷售查驗 */}
+      <Typography variant='h5' gutterBottom>Raffle Ticket Sales Verification</Typography>
+      {/* 業務把收到的錢交給經理後，經理打勾確認。 */}
+      <Box>The finance staff will verify and confirm the amount.</Box>
 
       {/* 選取業務 */}
       <SalesAutocomplete onChange={(sales) => {
@@ -77,17 +79,20 @@ export default function StaffLogin_AppForm() {
       {/* CommandBar */}
       {!isSuccessDone && Array.isArray(orderList) && orderList.length > 0 &&
         <Stack spacing={2} alignItems='center'>
-          <FormControlLabel label="已查驗才勾選" sx={{ flexGrow: 1 }}
+
+          {/* 已查驗才勾選 */}
+          <FormControlLabel label="Verified and Confirmed" sx={{ flexGrow: 1 }}
             control={<Checkbox
               checked={isConfirm}
               onChange={(_, chk) => setIsConfirm(chk)} />}
           />
 
+          {/* 查驗確認 */}
           <Button variant='contained'
             color='primary'
             loading={f_loading} disabled={!isConfirm}
             onClick={handleSubmit}
-          >查驗確認</Button>
+          >Confirm</Button>
         </Stack>
       }
 
@@ -99,6 +104,9 @@ export default function StaffLogin_AppForm() {
       {/* errMsg && <Alert severity='error' sx={{ m: 3 }}>{errMsg}</Alert> */}
 
       {/* import.meta.env.DEV && <pre>sales: {JSON.stringify(sales)}</pre> */}
+
+      {/* tail */}
+      <Box sx={{ pb: 3 }}></Box>
     </Container>
   )
 }
@@ -112,7 +120,7 @@ const RaffleOrderList: FC<{
   const { orderList, setOrderList } = props
   const [f_loading, setLoading] = useState(false);
   const [errMsg, setErrMsg] = useState<string | null>(null)
-  const [f_showDetail, toggleShowDetail] = useReducer(f => !f, false)
+  const [f_showDetail, toggleShowDetail] = useReducer(f => !f, true)
 
   const handleLoadSalesSoldRaffleOrder = useEventCallback(() => {
     if (!props.sales) {
@@ -144,15 +152,18 @@ const RaffleOrderList: FC<{
   }, [props.sales])
 
   //# to render 
+  {/*  未選擇負責業務。 */ }
   if (!props.sales) {
-    return <Alert severity="info">
-      未選擇負責業務。
-    </Alert>
+    return <></>
+    // return <Alert severity="info">
+    //  未選擇負責業務。
+    // </Alert>
   }
 
+  {/* 無訂單資料 */ }
   if (!orderList || orderList.length === 0) {
     return <Alert severity="info">
-      無訂單資料。
+      No new data.
     </Alert>
   }
 
@@ -162,8 +173,8 @@ const RaffleOrderList: FC<{
       {errMsg && <Alert severity='error'>{errMsg}</Alert>}
 
       <RaffleOrderSoldSummaryWidget orderList={orderList} />
-      <Button sx={{ my: 1 }}
-        onClick={toggleShowDetail}>{f_showDetail ? '隱藏訂單' : '顯示訂單'}</Button>
+      {/* <Button sx={{ my: 1 }}
+        onClick={toggleShowDetail}>{f_showDetail ? '隱藏訂單' : '顯示訂單'}</Button> */}
       <Collapse in={f_showDetail}>
         <RaffleOrderSoldTableWidget orderList={orderList} />
       </Collapse>

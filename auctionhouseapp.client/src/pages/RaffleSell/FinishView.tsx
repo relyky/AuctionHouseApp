@@ -15,21 +15,19 @@ export default function RaffleSell_FinishView() {
 
   return (
     <Container maxWidth='xs'>
-      <Typography variant='h5' gutterBottom>完成銷售</Typography>
-      {raffleOrder.status === 'HasSold' &&
-        <Alert severity="success">
-          抽獎券銷售完成！感謝您的使用。
-        </Alert>
-      }
-      {raffleOrder.status === 'Invalid' &&
-        <Alert severity="info">
-          已放棄！感謝您的使用。
-        </Alert>
-      }
 
+      {/* 抽獎券銷售完成！感謝您的使用。 */}
+      {raffleOrder.status === 'HasSold' &&
+        <Typography variant='h5' gutterBottom sx={{ my: 3, textAlign: 'center' }}>Sale Completed</Typography>}
+
+      {/* 已放棄！感謝您的使用。 */}
+      {raffleOrder.status === 'Invalid' &&
+        <Typography variant='h5' gutterBottom sx={{ my: 3, textAlign: 'center' }}>Order cancellation completed</Typography>}
+
+      {/* 啟動下一輪銷售 */}
       <Button variant="contained" size='large' fullWidth sx={{ mt: 3 }} endIcon={<NextIcon />}
         onClick={() => navigate(0)}>
-        啟動下一輪銷售
+        Start Next Sale
       </Button>
     </Container>
   )

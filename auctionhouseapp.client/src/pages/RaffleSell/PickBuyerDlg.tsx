@@ -78,9 +78,9 @@ export default function PickBuyerDlg(props: {
         onClose={handleClose}
       >
         <DialogTitle>
+          {/* 買家名稱/聯絡電話/電郵信箱 */}
           <SearchWidget
-            placeholder="買家名稱/聯絡電話/電郵信箱"
-            helpText={helpContent}
+            placeholder="Buyer Name/Email/Phone Number"
             onSearch={handleSearch}
           />
         </DialogTitle>
@@ -93,9 +93,12 @@ export default function PickBuyerDlg(props: {
           <Table stickyHeader>
             <TableHead>
               <TableRow>
-                <TableCell sx={{ whiteSpace: 'nowrap', textWrap: 'nowrap' }}>客戶名稱</TableCell>
-                <TableCell sx={{ whiteSpace: 'nowrap', textWrap: 'nowrap' }}>電郵地址</TableCell>
-                <TableCell sx={{ whiteSpace: 'nowrap', textWrap: 'nowrap' }}>聯絡電話</TableCell>
+                {/* 客戶名稱 */}
+                <TableCell sx={{ whiteSpace: 'nowrap', textWrap: 'nowrap' }}>Buyer Name</TableCell>
+                {/* 電郵地址 */}
+                <TableCell sx={{ whiteSpace: 'nowrap', textWrap: 'nowrap' }}>Email Address</TableCell>
+                {/* 聯絡電話 */}
+                <TableCell sx={{ whiteSpace: 'nowrap', textWrap: 'nowrap' }}>Phone Number</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -114,7 +117,7 @@ export default function PickBuyerDlg(props: {
           {/* <pre>{JSON.stringify(buyerList, null, 1)}</pre> */}
         </DialogContent>
         <DialogActions sx={{ justifyContent: 'center' }} >
-          <Button onClick={handleClose}>取消</Button>
+          <Button onClick={handleClose}>Cancel</Button>
         </DialogActions>
       </Dialog>
     </>
