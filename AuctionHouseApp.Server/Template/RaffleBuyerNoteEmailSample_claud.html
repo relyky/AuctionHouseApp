@@ -132,25 +132,24 @@
       border-radius: 8px;
       margin-bottom: 15px;
       background-color: #ffffff;
-      padding: 0;
+      padding: 20px;
       display: table;
       width: 100%;
       box-sizing: border-box;
-      overflow: hidden;
-      position: relative;
     }
 
     .ticket-left {
       display: table-cell;
       vertical-align: top;
-      width: 70%;
-      padding: 20px 15px 20px 20px;
+      width: 75%;
+      padding-right: 15px;
     }
 
     .ticket-right {
       display: table-cell;
       vertical-align: middle;
-      width: 30%;
+      width: 25%;
+      text-align: right;
     }
 
     .ticket-title {
@@ -183,22 +182,14 @@
         margin-bottom: 4px;
       }
 
-    .ticket-image {
-      position: absolute;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      width: 30%;
+    .ticket-image img {
+      width: 280px;
+      height: 280px;
+      border-radius: 8px;
+      object-fit: cover;
+      max-width: 100%;
+      height: auto;
     }
-
-      .ticket-image img {
-        display: block;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        object-position: center;
-        border-radius: 0 8px 8px 0;
-      }
 
     /* Footer message */
     .closing-message {
@@ -275,37 +266,45 @@
       }
 
       .ticket-card {
-        display: table;
-        padding: 0;
+        display: block;
+        padding: 15px;
       }
 
       .ticket-left, .ticket-right {
-        display: table-cell;
-        padding: 0;
-        vertical-align: top;
+        display: block;
+        width: 100%;
+        padding-right: 0;
       }
 
       .ticket-left {
-        width: 80%;
-        padding: 20px 15px 20px 20px;
+        text-align: center;
+      }
+
+      .ticket-title {
+        text-align: center;
+      }
+
+      .ticket-number {
+        text-align: center;
+      }
+
+      .ticket-holder-title {
+        text-align: center;
+      }
+
+      .holder-info {
+        text-align: center;
       }
 
       .ticket-right {
-        width: 20%;
+        text-align: center;
+        margin-top: 15px;
       }
 
-      .ticket-image {
-        width: 20%;
+      .ticket-image img {
+        width: 80px;
+        height: 80px;
       }
-
-        .ticket-image img {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          object-position: left;
-          border-radius: 0 8px 8px 0;
-          margin: 0;
-        }
     }
   </style>
 </head>
@@ -320,7 +319,7 @@
               <h1>購買成功通知</h1>
             </td>
           </tr>
-
+          
           <!-- Content -->
           <tr>
             <td class="content">
@@ -385,7 +384,7 @@
 
               <div class="section-title">您的抽獎券 (共 3 張)</div>
               <div class="ticket-section">
-
+                
                 <!-- Ticket 1 -->
                 <div class="ticket-card">
                   <div class="ticket-left">
@@ -404,7 +403,7 @@
                     </div>
                   </div>
                 </div>
-
+                
                 <!-- Ticket 2 -->
                 <div class="ticket-card">
                   <div class="ticket-left">
@@ -423,7 +422,7 @@
                     </div>
                   </div>
                 </div>
-
+                
                 <!-- Ticket 3 -->
                 <div class="ticket-card">
                   <div class="ticket-left">
@@ -442,7 +441,7 @@
                     </div>
                   </div>
                 </div>
-
+                
                 <!-- {{RAFFLE_TICKETS_BLOCK}} -->
               </div>
 
@@ -453,7 +452,7 @@
               </div>
             </td>
           </tr>
-
+          
           <!-- Footer -->
           <tr>
             <td class="footer">
