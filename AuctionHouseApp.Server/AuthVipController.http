@@ -1,0 +1,15 @@
+@AuctionHouseApp.Server_HostAddress = https://localhost:60026
+
+### VIP登入測試
+POST {{AuctionHouseApp.Server_HostAddress}}/api/auth/vip/login
+Accept: application/json
+Content-Type: application/json
+
+{
+	"name": "smart",
+	"email": "smart@mail.server"
+}
+
+### 通訊測試
+POST {{AuctionHouseApp.Server_HostAddress}}/api/WeatherForecast/QryDataList
+Accept: application/json
