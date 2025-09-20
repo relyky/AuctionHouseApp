@@ -12,10 +12,14 @@ Content-Type: application/json
 }
 
 ### 通訊測試 (需攜帶 Token)
-POST {{AuctionHouseApp.Server_HostAddress}}/api/WeatherForecast/QryDataList
+POST {{AuctionHouseApp.Server_HostAddress}}/api/auth/vip/authstatus
 Accept: application/json
 Authorization: Bearer {{loginRequest.response.body.$.data.token}}
 
+### 通訊測試 (需攜帶 Token)
+POST {{AuctionHouseApp.Server_HostAddress}}/api/WeatherForecast/QryDataList
+Accept: application/json
+Authorization: Bearer {{loginRequest.response.body.$.data.token}}
 
 ### 通訊測試 (無 Token)
 POST {{AuctionHouseApp.Server_HostAddress}}/api/WeatherForecast/QryDataList

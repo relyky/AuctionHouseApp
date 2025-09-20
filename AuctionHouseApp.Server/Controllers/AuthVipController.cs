@@ -1,4 +1,5 @@
 ﻿using AuctionHouseApp.Server.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -30,11 +31,11 @@ public class AuthVipController(
         UserName = args.Name,
         AuthGuid = Guid.NewGuid(),
         IssuedUtc = DateTimeOffset.UtcNow,
-        ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(600d), // 18小時
+        ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(600d), // 10小時,活動時長不會超過10小時
         Roles = new string[] { "VIP" }
       };
 
-      (string token, DateTimeOffset expiresUtc) = this.GenerateJwtToken(auth, 600d);// 18小時
+      (string token, DateTimeOffset expiresUtc) = this.GenerateJwtToken(auth, 600d);// 10小時,活動時長不會超過10小時
       //string token = "sims-token";
 
       // SUCCESS
@@ -49,15 +50,41 @@ public class AuthVipController(
       _logger.LogError(ex, "出現例外！{message}", ex.Message);
       return Ok(new AuthVipLoginResult(false, null));
     }
+  }
 
+  /// <summary>
+  /// 授權狀態
+  /// </summary>
+  [Authorize(AuthenticationSchemes = "Bearer")]
+  [HttpPost("[action]")]
+  public ActionResult<AuthVipStatusResult> AuthStatus()
+  {
+    try
+    {
+      ClaimsIdentity userIdentity = (ClaimsIdentity)HttpContext.User.Identity!;
 
+      var userId = userIdentity.FindFirst(ClaimTypes.Name)?.Value;
+      var userName = userIdentity.FindFirst(ClaimTypes.GivenName)?.Value;
+      var authGuid = userIdentity.FindFirst(ClaimTypes.Sid)?.Value;
+      var roles = userIdentity.FindAll(ClaimTypes.Role).Select(c => c.Value).ToArray();
+
+      var result = new AuthVipStatusResult(userId!, userName!, Guid.Parse(authGuid!), roles);
+
+      return Ok(result);
+    }
+    catch (Exception ex)
+    {
+      string errMsg = $"出現例外！{ex.Message}";
+      _logger.LogError(ex, errMsg);
+      return BadRequest(errMsg);
+    }
   }
 
   /// <summary>
   /// 依授權資料生成權杖
   /// </summary>
   [NonAction]
-  private (string JwtToken, DateTimeOffset expiresUtc) GenerateJwtToken(AuthUser auth, double expiresMinutes = 20d)
+  private (string JwtToken, DateTimeOffset expiresUtc) GenerateJwtToken(AuthUser auth, double expiresMinutes)
   {
     var jwtTool = new JwtAuthenticationTool(_config);
 
@@ -68,7 +95,7 @@ public class AuthVipController(
     userIdentity.AddClaim(new Claim(ClaimTypes.Sid, auth.AuthGuid.ToString()));
     userIdentity.AddClaims(auth.Roles.Select(role => new Claim(ClaimTypes.Role, role)));
 
-    DateTimeOffset expiresUtc = DateTimeOffset.UtcNow.AddMinutes(20d);
+    DateTimeOffset expiresUtc = DateTimeOffset.UtcNow.AddMinutes(expiresMinutes);
     string jwtToken = jwtTool.MakeToken(userIdentity, expiresUtc);
 
     return (jwtToken, expiresUtc);

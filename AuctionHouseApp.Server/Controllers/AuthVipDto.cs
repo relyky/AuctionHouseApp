@@ -46,3 +46,11 @@ public record AuthVipLoginResult_Guest(
   string Email,
   string TableNumber
  );
+
+[TsInterface(Namespace = "dto.authVip")]
+public record AuthVipStatusResult(
+  string UserId,
+  string UserName,
+  Guid AuthGuid,
+  string[] Roles
+);
