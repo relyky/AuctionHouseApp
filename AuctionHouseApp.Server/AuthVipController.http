@@ -1,6 +1,7 @@
 @AuctionHouseApp.Server_HostAddress = https://localhost:60026
 
-### VIP登入測試
+### VIP登入測試 (取得 Token)
+# @name loginRequest
 POST {{AuctionHouseApp.Server_HostAddress}}/api/auth/vip/login
 Accept: application/json
 Content-Type: application/json
@@ -10,6 +11,12 @@ Content-Type: application/json
 	"email": "smart@mail.server"
 }
 
-### 通訊測試
+### 通訊測試 (需攜帶 Token)
+POST {{AuctionHouseApp.Server_HostAddress}}/api/WeatherForecast/QryDataList
+Accept: application/json
+Authorization: Bearer {{loginRequest.response.body.$.data.token}}
+
+
+### 通訊測試 (無 Token)
 POST {{AuctionHouseApp.Server_HostAddress}}/api/WeatherForecast/QryDataList
 Accept: application/json

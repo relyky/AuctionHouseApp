@@ -2,6 +2,7 @@ using AuctionHouseApp.Server.Controllers;
 using AuctionHouseApp.Server.DTO;
 using AuctionHouseApp.Server.Models;
 using AuctionHouseApp.Server.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.SqlServer.Server;
 using System.Net.Mail;
@@ -14,6 +15,7 @@ using Vista.Models;
 
 namespace AuctionHouseApp.Server.Controllers;
 
+[Authorize(AuthenticationSchemes = "Bearer")]
 [ApiController]
 [Route("api/[controller]")]
 public class WeatherForecastController(

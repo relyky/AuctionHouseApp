@@ -49,6 +49,9 @@ try
   #region §§ Add services to the container. -----------------------------------
 
   //## for Authentication & Authorization
+  // for JwtBearer Auth
+  var jwtTokenValidationParameters = JwtAuthenticationTool.GenerateTokenValidationParameters(config);
+
   builder.Services.Configure<CookiePolicyOptions>(options =>
   {
     options.MinimumSameSitePolicy = SameSiteMode.Lax; // SameSiteMode.Strict;
@@ -62,7 +65,15 @@ try
     {
       cfg.LoginPath = "/"; // default: /Accout/Login
       cfg.Cookie.Name = ".AuctionHouseApp.Server.Cookies"; //default:.AspNetCore.Cookies
+    })
+    .AddJwtBearer(option =>
+    {
+      option.RequireHttpsMetadata = false;
+      option.SaveToken = true;
+      option.TokenValidationParameters = jwtTokenValidationParameters;
     });
+
+  builder.Services.AddSingleton(jwtTokenValidationParameters);
 
   //§ for Anit-Forgery
   builder.Services.AddScoped<ValidateXsrfTokenFilter>();

@@ -40,7 +40,7 @@
 ## 開發環境設置與指令 (Development Setup & Commands)
 
 - 在操作此前，請確保已安裝 .NET 8 SDK 和 Node.js (LTS 版本)。
-- 本專案檔的文字編碼一律使用 UTF-8。
+- 程式碼檔一律使用 UTF-8 文字編碼。
 
 ### 後端 (ASP.NET Core)
 
