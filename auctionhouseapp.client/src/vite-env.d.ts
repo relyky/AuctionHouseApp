@@ -19,6 +19,14 @@ type StepEnum =
   'Step4_CheckBid' |
   'Step5_Hammer';
 
+type StageEnum =
+  'RaffleTicket' |
+  'GiftToWin' |
+  'LiveAuction' |
+  'SilentAuction' |
+  'OpenAsk' |
+  'Donation';
+
 interface ILabelCode {
   label: string
   code: string

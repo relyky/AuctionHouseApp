@@ -20,6 +20,9 @@ import RaffleBuyer from './pages/RaffleBuyer/AppForm'
 import RaffleIndex from './pages/RaffleIndex/AppForm'
 import RaffleSell from './pages/RaffleSell/AppForm'
 import RaffleSellQuery from './pages/RaffleSellQuery/AppForm'
+import SiteIndex from './pages/SiteIndex'
+import AskInput from "./pages/AskInput"
+import AuctionInput from "./pages/AuctionInput"
 
 //---下面測試用功能
 import ACU1010 from './pages/AUC1010/AppForm'
@@ -96,6 +99,15 @@ const router = createBrowserRouter([
       { index: true, element: <BackendIndex /> },
       { path: "rafflecheck", element: <BackendRaffleCheck /> },
       { path: "rafflequery", element: <BackendRaffleQuery /> },
+    ]
+  },
+  {
+    path: "site",
+    element: <BackendLayout />,
+    children: [
+      { index: true, element: <SiteIndex /> },
+      { path: "ask", element: <AskInput /> },
+      { path: "auction", element: <AuctionInput /> },
     ]
   },
   {

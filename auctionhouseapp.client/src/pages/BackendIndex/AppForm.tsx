@@ -1,9 +1,10 @@
-import { Alert, Box, Button, Container, Link, Stack, Typography } from "@mui/material";
+import { Alert, Box, Button, Container, Link, Stack, Typography, Divider } from "@mui/material";
 import { useAtomValue } from "jotai";
 import { NavLink } from "react-router";
 import { selectIsAuthedStaff, staffAccountAtom } from "../../atoms/staffAccountAtom";
 import AuthorizeGuard from "../../layout/AuthorizeGuard";
 import type { FC } from "react";
+import LiveEventsPanel from "./LiveEventsPanel";
 
 export default function BackendIndex_AppForm() {
   const isAuthedStaff = useAtomValue(selectIsAuthedStaff)
@@ -31,13 +32,18 @@ export default function BackendIndex_AppForm() {
       </Box>
 
       {/* 業務 */}
-      <Typography variant='h6' gutterBottom>Sales</Typography>
-      <Stack gap={2} sx={{ mb: 2 }}>
-        {/* 銷售抽獎券 */}
-        <Button component={NavLink} variant='text' to='/raffle/sell'>Sell Raffle Tickets</Button>
-        {/* 銷售查詢 */}
-        <Button component={NavLink} variant='text' to='/raffle/sellquery'>Sales Records</Button>
-      </Stack>
+      <AuthorizeGuard role='Sales'>
+        <Typography variant='h6' gutterBottom>Sales</Typography>
+        <Stack gap={2} sx={{ mb: 2 }}>
+          {/* 銷售抽獎券 */}
+          <Button component={NavLink} variant='text' to='/raffle/sell'>Sell Raffle Tickets</Button>
+          {/* 銷售查詢 */}
+          <Button component={NavLink} variant='text' to='/raffle/sellquery'>Sales Records</Button>
+
+          {/* 銷售福袋 */}
+          <Button component={NavLink} variant='text' to='/raffle/sell'>銷售福袋</Button>
+        </Stack>
+      </AuthorizeGuard>
 
       <AuthorizeGuard role='Manager'>
         {/* 後台 */}
@@ -50,11 +56,15 @@ export default function BackendIndex_AppForm() {
         </Stack>
       </AuthorizeGuard>
 
+      {/* 現場活動 */}
+      <LiveEventsPanel />
+
       {/*
       <Typography variant='h6' gutterBottom>前台</Typography>
       <Button component={NavLink} to='/'>前台首頁</Button>        
       */}
 
+      <Box sx={{ height: 50  }} ></Box>
       <Footer />
     </Container>
   )
