@@ -47,7 +47,7 @@ const StageSwitch: FC<{
   value: StageEnum
   onChange: (stage: StageEnum) => void
 }> = (props) => (
-  <Button size='large' sx={{ flexGrow: 1 }}
+  <Button size='large' sx={{ flexGrow: 1, textTransform: 'none' }}
     variant={props.value === props.stage ? 'contained' : 'outlined'}
     onClick={() => props.onChange(props.stage)}
   >

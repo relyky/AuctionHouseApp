@@ -19,6 +19,7 @@ import StartIcon from '@mui/icons-material/NotStarted';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import UsePostDataLab from './UsePostDataLab';
 import TestSendEmail from './TestSendEmail';
+import PalettePanel from './PalettePanel';
 
 export default function Demo01_AppForm() {
   const counterValue = useAtomValue(counterAtom)
@@ -33,6 +34,9 @@ export default function Demo01_AppForm() {
       <Typography variant='h3'>counterAtom: {counterValue}</Typography>
       <Divider />
       <TestSendEmail />
+
+      <Divider />
+      <PalettePanel />
 
       <Divider />
       <UsePostDataLab />

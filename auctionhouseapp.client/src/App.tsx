@@ -41,7 +41,7 @@ const customTheme = createTheme(
     },
     palette: {
       primary: { main: '#BF4690' },
-      secondary: { main: '#CA87B0' },
+      secondary: { main: '#E7C058' }, // '#E7C058' #CA87B0
       background: {
         paper: '#fafafa',
         default: '#fff'

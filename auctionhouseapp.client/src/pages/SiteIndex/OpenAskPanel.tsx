@@ -1,4 +1,4 @@
-import { Paper, Typography } from "@mui/material";
+import { Box, Paper, Typography } from "@mui/material";
 
 export default function OpenAskPanel(props: {
   stage: StageEnum
@@ -10,7 +10,7 @@ export default function OpenAskPanel(props: {
   return (
     <Paper sx={{ pt: 1, px: 2, pb: 2 }}>
       <Typography variant='h6' borderBottom='solid 1px' >5. Open Ask 控制平板</Typography>
-      <p>啟動抽獎</p>
+      <Box color='text.secondary'>📃 啟動新一輪 Opan Ask</Box>
     </Paper>
   )
 }
