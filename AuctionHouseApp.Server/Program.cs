@@ -99,6 +99,8 @@ try
   builder.Services.AddScoped<AesHelperService>();
   builder.Services.AddScoped<EmailProxyService>();
 
+  builder.Services.AddCors(); // for 開放跨源
+
   #endregion
 
   var app = builder.Build();
@@ -114,6 +116,12 @@ try
     app.UseSwagger();
     app.UseSwaggerUI();
   }
+
+  // for 開放跨源: 完全開放
+  app.UseCors(p => p
+      .AllowAnyOrigin()
+      .AllowAnyMethod()
+      .AllowAnyHeader());
 
   app.UseHttpsRedirection();
 
