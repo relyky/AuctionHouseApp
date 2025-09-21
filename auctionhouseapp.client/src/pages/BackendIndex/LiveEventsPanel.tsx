@@ -9,7 +9,7 @@ export default function LiveEventsView() {
         <Typography variant='h6' gutterBottom>現場活動</Typography>
         <Stack gap={2} sx={{ mb: 2 }}>
           {/* 抽獎券銷售查驗 */}
-          <Button component={NavLink} variant='text' to='/site'>大螢幕切換</Button>
+          <Button component={NavLink} variant='text' to='/site'>活動主控台(大螢幕切換)</Button>
           {/* 抽獎券銷售查驗 */}
           <Button component={NavLink} variant='text' to='/site/ask'>Open Ask 捐贈輸入</Button>
           {/* 抽獎券銷售統計 */}

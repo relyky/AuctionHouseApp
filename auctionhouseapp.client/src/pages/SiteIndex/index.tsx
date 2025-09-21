@@ -1,15 +1,21 @@
 import { useState } from "react";
 import type { FC, ReactNode } from "react";
 import { Button, Container, Typography, Box } from "@mui/material";
+import RaffleTicketPanel from "./RaffleTicketPanel";
+import GiftToWinPanel from "./GiftToWinPanel";
+import LiveAuctionPanel from "./LiveAuctionPanel";
+import SilentAuctionPanel from "./SilentAuctionPanel";
+import OpenAskPanel from "./OpenAskPanel";
+import DonationPanel from "./DonationPanel";
 
 export default function SiteIndex() {
   const [stage, setStage] = useState<StageEnum>('SilentAuction')
 
   return (
     <Container maxWidth='md'>
-      <Typography variant='h5' gutterBottom>大螢幕切換</Typography>
+      <Typography variant='h5' gutterBottom>活動主控台(大螢幕切換)</Typography>
 
-      <Box display='flex' gap={2} flexWrap='wrap' justifyContent='center' >
+      <Box display='flex' gap={2} flexWrap='wrap' justifyContent='center' mb={2} >
         <StageSwitch value={stage} onChange={setStage} stage='RaffleTicket'
           label={<span>1. Raffle Ticket <br />(彩券抽獎)</span>} />
         <StageSwitch value={stage} onChange={setStage} stage='GiftToWin'
@@ -21,10 +27,15 @@ export default function SiteIndex() {
         <StageSwitch value={stage} onChange={setStage} stage='OpenAsk'
           label={<span>5. Open Ask <br />(募款活動)</span>} />
         <StageSwitch value={stage} onChange={setStage} stage='Donation'
-          label={<span>6. Donation <br />(捐款功能)</span>} />
+          label={<span>6. Donation <br />(愛心捐款)</span>} />
       </Box>
 
-      <pre>{stage}</pre>
+      <RaffleTicketPanel stage={stage} />
+      <GiftToWinPanel stage={stage} />
+      <LiveAuctionPanel stage={stage} />
+      <SilentAuctionPanel stage={stage} />
+      <OpenAskPanel stage={stage} />
+      <DonationPanel stage={stage} />
     </Container>
   )
 }
