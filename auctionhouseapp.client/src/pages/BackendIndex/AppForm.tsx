@@ -35,13 +35,16 @@ export default function BackendIndex_AppForm() {
       <AuthorizeGuard role='Sales'>
         <Typography variant='h6' gutterBottom>Sales</Typography>
         <Stack gap={2} sx={{ mb: 2 }}>
-          {/* 銷售抽獎券 */}
-          <Button component={NavLink} variant='text' to='/raffle/sell'>Sell Raffle Tickets</Button>
+          {/* 銷售抽獎券(需重刷畫面) */}
+          <Button variant='text' href='/raffle/sell'>Sell Raffle Tickets</Button>
+
           {/* 銷售查詢 */}
           <Button component={NavLink} variant='text' to='/raffle/sellquery'>Sales Records</Button>
 
-          {/* 銷售福袋 */}
-          <Button component={NavLink} variant='text' to='/raffle/sell'>銷售福袋</Button>
+          {/* 銷售福袋(需重刷畫面) */}
+          {import.meta.env.DEV &&
+            <Button variant='text' href='/raffle/sell'>銷售福袋</Button>}
+
         </Stack>
       </AuthorizeGuard>
 
@@ -57,14 +60,14 @@ export default function BackendIndex_AppForm() {
       </AuthorizeGuard>
 
       {/* 現場活動 */}
-      <LiveEventsPanel />
+      {import.meta.env.DEV && <LiveEventsPanel />}
 
       {/*
       <Typography variant='h6' gutterBottom>前台</Typography>
       <Button component={NavLink} to='/'>前台首頁</Button>        
       */}
 
-      <Box sx={{ height: 50  }} ></Box>
+      <Box sx={{ height: 50 }} ></Box>
       <Footer />
     </Container>
   )

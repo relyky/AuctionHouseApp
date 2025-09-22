@@ -32,8 +32,8 @@ export default function RaffleSell_Step3View() {
         />}
 
       {/* 完成 */}
-      <Button variant={emailTimes > 0 ? 'contained' : 'outlined'}
-        fullWidth sx={{ mb: 2 }}
+      <Button variant='contained'
+        fullWidth sx={{ mb: 3 }}
         onClick={handleFinish}>Complete Order</Button>
 
     </Container>
