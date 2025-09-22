@@ -1,11 +1,11 @@
 import { Paper, Typography } from "@mui/material";
 
 export default function LiveAuctionPanel(props: {
-  stage: StageEnum
+  activity: ActivityEnum
 }) {
 
   // hidden
-  if (props.stage !== 'LiveAuction') return (<></>)
+  if (props.activity !== 'liveAuction') return (<></>)
   // show
   return (
     <Paper sx={{ pt: 1, px: 2, pb: 2 }}>

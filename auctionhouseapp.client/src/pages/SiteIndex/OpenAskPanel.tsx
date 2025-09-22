@@ -1,11 +1,11 @@
 import { Box, Paper, Typography } from "@mui/material";
 
 export default function OpenAskPanel(props: {
-  stage: StageEnum
+  activity: ActivityEnum
 }) {
 
   // hidden
-  if (props.stage !== 'OpenAsk') return (<></>)
+  if (props.activity !== 'openAsk') return (<></>)
   // show
   return (
     <Paper sx={{ pt: 1, px: 2, pb: 2 }}>

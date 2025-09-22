@@ -1,11 +1,11 @@
 import { Paper, Typography } from "@mui/material";
 
 export default function SilentAuctionPanel(props: {
-  stage: StageEnum
+  activity: ActivityEnum
 }) {
 
   // hidden
-  if (props.stage !== 'SilentAuction') return (<></>)
+  if (props.activity !== 'silentAuction') return (<></>)
   // show
   return (
     <Paper sx={{ pt: 1, px: 2, pb: 2 }}>
