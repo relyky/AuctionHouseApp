@@ -97,7 +97,7 @@ Staging:
   "data": {
     "activities": [
       {
-        "type": "raffle" | "gift" | "liveAuction" | "silentAuction" | "openAsk" | "donation",  //活動ID
+        "type": "raffle" | "give" | "liveAuction" | "silentAuction" | "openAsk" | "donation",  //活動ID
         "name": "Raffle Ticket",  //活動名稱
         "status": "active" | "upcoming" | "ended",  //活動狀態
       }
@@ -118,7 +118,7 @@ Staging:
 4. **Raffle Ticket - 單一獎品展示** (`raffle-ticket-prize-display`) - 抽獎前獎品預覽頁面
 5. **Raffle Ticket - 得獎名單輪播** (`raffle-ticket-winners-carousel`) - 所有得獎者名單展示
 6. **Silent Auction** (`silent-auction`) - 靜態拍賣商品輪播與倒數計時
-7. **Gift to Win** (`gift-to-win`) - 福袋抽獎動畫與結果顯示
+7. **Give to Win** (`give-to-win`) - 福袋抽獎動畫與結果顯示
 8. **Donation** (`donation`) - 捐款功能頁面（新增）
 
 ### 4.1 大螢幕狀態查詢
@@ -142,7 +142,7 @@ Staging:
 **Request Body:**
 ```json
 {
-  "currentMode": "liveAuction" | "openAsk" | "raffleTicketDrawing" | "raffleTicketPrizeDisplay" | "raffleTicketWinnersCarousel" | "silentAuction" | "giftToWin" | "donation", //當前顯示模式
+  "currentMode": "liveAuction" | "openAsk" | "raffleTicketDrawing" | "raffleTicketPrizeDisplay" | "raffleTicketWinnersCarousel" | "silentAuction" | "giveToWin" | "donation", //當前顯示模式
   "isActive": boolean, //大螢幕是否啟動
   "currentItemId": "string" //當前顯示項目的唯一識別碼
 }
@@ -324,10 +324,10 @@ Staging:
 }
 ```
 
-## 6. Gift to Win API
+## 6. Give to Win API
 
 ### 6.1 取得福袋清單
-**GET** `api/gifttowin/gifts`
+**GET** `api/givetowin/gifts`
 
 **標示：大螢幕可沿用**
 
@@ -350,7 +350,7 @@ Staging:
 ```
 
 ### 6.2 取得我的福袋
-**GET** `api/gifttowin/mytickets/{giftId}`
+**GET** `api/givetowin/mytickets/{giftId}`
 
 **Headers:**
 - `Authorization: Bearer {token}`
@@ -373,7 +373,7 @@ Staging:
 ```
 
 ### 6.3 取得福袋中獎結果
-**GET** `api/gifttowin/result/{giftId}`
+**GET** `api/givetowin/result/{giftId}`
 
 **標示：大螢幕沿用**
 
@@ -752,7 +752,7 @@ Staging:
     "transactions": [
       {
         "transactionId": "string",  //交易識別碼
-        "type": "raffle" | "gift" | "liveAuction" | "silentAuction" | "openAsk" | "donation",  //活動ID
+        "type": "raffle" | "give" | "liveAuction" | "silentAuction" | "openAsk" | "donation",  //活動ID
         "description": "string",  //描述
         "amount": number,  //消費金額
         "quantity": number,  //消費數量

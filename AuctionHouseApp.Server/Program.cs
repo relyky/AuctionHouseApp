@@ -79,8 +79,6 @@ try
   builder.Services.AddScoped<ValidateXsrfTokenFilter>();
 
   // Add services to the container.
-  builder.Services.AddSingleton<LiveAuctionStatusService>();
-
   builder.Services.AddControllers()
         .AddJsonOptions(options =>
         {
