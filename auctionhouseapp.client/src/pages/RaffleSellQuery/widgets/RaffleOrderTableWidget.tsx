@@ -1,57 +1,59 @@
-import { Paper, Table, TableBody, TableCell, TableContainer, TableRow } from '@mui/material'
-import { formatDateString } from '../../../tools/utils'
+// 待刪除
+//
+//import { Paper, Table, TableBody, TableCell, TableContainer, TableRow } from '@mui/material'
+//import { formatDateString } from '../../../tools/utils'
 
-/**
- * A component to display the details of a raffle order in a table.
- * @param props The props for the component.
- * @returns A TableContainer component.
- */
-export default function RaffleOrderTableWidget(props: {
-  order: IRaffleOrder
-}) {
+///**
+// * A component to display the details of a raffle order in a table.
+// * @param props The props for the component.
+// * @returns A TableContainer component.
+// */
+//export default function RaffleOrderTableWidget(props: {
+//  order: IRaffleOrder
+//}) {
 
-  const { order } = props;
+//  const { order } = props;
 
-  return (
-    <TableContainer component={Paper} sx={{ mb: 2 }}>
-      <Table size='small'  >
-        <TableBody>
-          <TableRow>
-            <TableCell component="th" scope="row">訂單編號</TableCell>
-            <TableCell colSpan={3}>{order.raffleOrderNo}</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell component="th" scope="row" >買家名稱</TableCell>
-            <TableCell colSpan={3}>{order.buyerName}</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell component="th" scope="row" >聯絡電話</TableCell>
-            <TableCell>{order.buyerPhone}</TableCell>
-            <TableCell component="th" scope="row" >電郵地址</TableCell>
-            <TableCell>{order.buyerEmail}</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell component="th" scope="row" >購買張數</TableCell>
-            <TableCell>{order.purchaseCount}</TableCell>
-            <TableCell component="th" scope="row" >購買金額</TableCell>
-            <TableCell>{order.purchaseAmount}</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell component="th" scope="row" >是否已付款</TableCell>
-            <TableCell>{order.hasPaid === 'Y' ? '是' : '否'}</TableCell>
-            <TableCell component="th" scope="row" >訂單狀態</TableCell>
-            <TableCell>{order.status}</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell component="th" scope="row" >負責業務</TableCell>
-            <TableCell>{order.salesId}</TableCell>
-            <TableCell component="th" scope="row" >賣出時間</TableCell>
-            <TableCell>
-              {formatDateString(order.soldDtm)}<br />
-            </TableCell>
-          </TableRow>
-        </TableBody>
-      </Table>
-    </TableContainer>
-  )
-}
+//  return (
+//    <TableContainer component={Paper} sx={{ mb: 2 }}>
+//      <Table size='small'  >
+//        <TableBody>
+//          <TableRow>
+//            <TableCell component="th" scope="row">訂單編號</TableCell>
+//            <TableCell colSpan={3}>{order.raffleOrderNo}</TableCell>
+//          </TableRow>
+//          <TableRow>
+//            <TableCell component="th" scope="row" >買家名稱</TableCell>
+//            <TableCell colSpan={3}>{order.buyerName}</TableCell>
+//          </TableRow>
+//          <TableRow>
+//            <TableCell component="th" scope="row" >聯絡電話</TableCell>
+//            <TableCell>{order.buyerPhone}</TableCell>
+//            <TableCell component="th" scope="row" >電郵地址</TableCell>
+//            <TableCell>{order.buyerEmail}</TableCell>
+//          </TableRow>
+//          <TableRow>
+//            <TableCell component="th" scope="row" >購買張數</TableCell>
+//            <TableCell>{order.purchaseCount}</TableCell>
+//            <TableCell component="th" scope="row" >購買金額</TableCell>
+//            <TableCell>{order.purchaseAmount}</TableCell>
+//          </TableRow>
+//          <TableRow>
+//            <TableCell component="th" scope="row" >是否已付款</TableCell>
+//            <TableCell>{order.hasPaid === 'Y' ? '是' : '否'}</TableCell>
+//            <TableCell component="th" scope="row" >訂單狀態</TableCell>
+//            <TableCell>{order.status}</TableCell>
+//          </TableRow>
+//          <TableRow>
+//            <TableCell component="th" scope="row" >負責業務</TableCell>
+//            <TableCell>{order.salesId}</TableCell>
+//            <TableCell component="th" scope="row" >賣出時間</TableCell>
+//            <TableCell>
+//              {formatDateString(order.soldDtm)}<br />
+//            </TableCell>
+//          </TableRow>
+//        </TableBody>
+//      </Table>
+//    </TableContainer>
+//  )
+//}

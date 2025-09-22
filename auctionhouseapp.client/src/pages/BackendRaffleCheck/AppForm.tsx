@@ -120,7 +120,6 @@ const RaffleOrderList: FC<{
   const { orderList, setOrderList } = props
   const [f_loading, setLoading] = useState(false);
   const [errMsg, setErrMsg] = useState<string | null>(null)
-  const [f_showDetail, toggleShowDetail] = useReducer(f => !f, true)
 
   const handleLoadSalesSoldRaffleOrder = useEventCallback(() => {
     if (!props.sales) {
@@ -173,11 +172,8 @@ const RaffleOrderList: FC<{
       {errMsg && <Alert severity='error'>{errMsg}</Alert>}
 
       <RaffleOrderSoldSummaryWidget orderList={orderList} />
-      {/* <Button sx={{ my: 1 }}
-        onClick={toggleShowDetail}>{f_showDetail ? '隱藏訂單' : '顯示訂單'}</Button> */}
-      <Collapse in={f_showDetail}>
-        <RaffleOrderSoldTableWidget orderList={orderList} />
-      </Collapse>
+
+      <RaffleOrderSoldTableWidget orderList={orderList} />
     </>
   )
 }

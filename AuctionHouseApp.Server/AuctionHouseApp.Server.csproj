@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
-    <VersionPrefix>0.3.4</VersionPrefix>
+    <VersionPrefix>0.3.5</VersionPrefix>
     <VersionSuffix>beta</VersionSuffix>	
     <ImplicitUsings>enable</ImplicitUsings>
     <SpaRoot>..\auctionhousetpl.client</SpaRoot>
