@@ -14,7 +14,7 @@ interface RaffleSell_BizState {
   sales?: IStaffProfile,
 }
 
-const initialState: RaffleSell_BizState = {
+export const initialState: RaffleSell_BizState = {
   mode: 'Init',
   raffleOrder: undefined,
 }

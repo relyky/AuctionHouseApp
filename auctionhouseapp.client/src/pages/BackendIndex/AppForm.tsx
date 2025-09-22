@@ -1,9 +1,9 @@
-import { Alert, Box, Button, Container, Link, Stack, Typography, Divider } from "@mui/material";
+import { Alert, Box, Button, Container, Link, Stack, Typography } from "@mui/material";
 import { useAtomValue } from "jotai";
+import type { FC } from "react";
 import { NavLink } from "react-router";
 import { selectIsAuthedStaff, staffAccountAtom } from "../../atoms/staffAccountAtom";
 import AuthorizeGuard from "../../layout/AuthorizeGuard";
-import type { FC } from "react";
 import LiveEventsPanel from "./LiveEventsPanel";
 
 export default function BackendIndex_AppForm() {
@@ -35,8 +35,8 @@ export default function BackendIndex_AppForm() {
       <AuthorizeGuard role='Sales'>
         <Typography variant='h6' gutterBottom>Sales</Typography>
         <Stack gap={2} sx={{ mb: 2 }}>
-          {/* 銷售抽獎券(需重刷畫面) */}
-          <Button variant='text' href='/raffle/sell'>Sell Raffle Tickets</Button>
+          {/* 銷售抽獎券 */}
+          <Button component={NavLink} variant='text' to='/raffle/sell'>Sell Raffle Tickets</Button>
 
           {/* 銷售查詢 */}
           <Button component={NavLink} variant='text' to='/raffle/sellquery'>Sales Records</Button>

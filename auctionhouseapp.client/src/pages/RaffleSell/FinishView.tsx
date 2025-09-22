@@ -1,13 +1,13 @@
-import { useAtomValue } from 'jotai'
-import { Container, Typography, Alert, Button } from '@mui/material'
-import { raffleSellAtom } from './atom'
-import { useNavigate } from 'react-router'
+import { Alert, Button, Container, Typography } from '@mui/material';
+import { useAtom } from 'jotai';
+import { initialState, raffleSellAtom } from './atom';
+//import { useNavigate } from 'react-router'
 // icons
 import NextIcon from '@mui/icons-material/ArrowForwardIos';
 
 export default function RaffleSell_FinishView() {
-  const navigate = useNavigate()
-  const { raffleOrder } = useAtomValue(raffleSellAtom)
+  //const navigate = useNavigate()
+  const [{ raffleOrder }, setFormStatus] = useAtom(raffleSellAtom);
 
   if (!raffleOrder) {
     return <Alert severity='error' sx={{ m: 3, p: 3 }} >非預期狀態！</Alert>
@@ -26,7 +26,7 @@ export default function RaffleSell_FinishView() {
 
       {/* 啟動下一輪銷售 */}
       <Button variant="contained" size='large' fullWidth sx={{ mt: 3 }} endIcon={<NextIcon />}
-        onClick={() => navigate(0)}>
+        onClick={() => setFormStatus({ ...initialState, mode: 'Step1' })}>
         Start Next Sale
       </Button>
     </Container>

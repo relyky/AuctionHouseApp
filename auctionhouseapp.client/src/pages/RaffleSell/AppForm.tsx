@@ -1,12 +1,12 @@
-import { useEffect } from 'react';
+import { LinearProgress } from '@mui/material';
 import { useAtom, useSetAtom } from 'jotai';
-import { raffleSellAtom, raffleUnitPriceAtom } from './atom';
+import { useEffect } from 'react';
+import { postData } from '../../tools/httpHelper';
+import { initialState, raffleSellAtom, raffleUnitPriceAtom } from './atom';
+import FinishView from './FinishView';
 import Step1View from './Step1View';
 import Step2View from './Step2View';
 import Step3View from "./Step3View";
-import FinishView from './FinishView';
-import { postData } from '../../tools/httpHelper';
-import { LinearProgress } from '@mui/material';
 
 /**
  * 業務-銷售抽獎券
@@ -18,7 +18,8 @@ export default function RaffleSell_AppForm() {
 
   /// 取系統參數：抽獎券單價
   useEffect(() => {
-    setFormStatus(prev => ({ ...prev, mode: 'Init' }))
+    setFormStatus(initialState) // 自 Init 開始。
+    // Init: 自後端 DB 取參數
     postData('/api/RaffleSell/GetRaffleUnitPrice')
       .then(({ raffleUnitPrice }: any) => { // 只是傳回一個數值且只用一次，懶得開 interface。
         setRaffleUnitPrice(raffleUnitPrice);
