@@ -32,7 +32,7 @@ export default function Home_AppForm() {
                 background: `linear-gradient(45deg, ${theme.palette.primary.main} 30%, ${theme.palette.primary.light} 90%)`,
               },
             })}>
-            Staff Login            
+            Seller Login
           </Button>
         </Box>
       </Container>

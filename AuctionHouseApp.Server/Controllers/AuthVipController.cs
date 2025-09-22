@@ -27,7 +27,7 @@ public class AuthVipController(
       // 模擬已存在的貴賓
       var auth = new AuthUser
       {
-        UserId = $"vip:{guest.Id}",
+        UserId = $"vip:{guest.PaddleNum}",
         UserName = args.Name,
         AuthGuid = Guid.NewGuid(),
         IssuedUtc = DateTimeOffset.UtcNow,
@@ -42,7 +42,7 @@ public class AuthVipController(
       var result = new AuthVipLoginResult(true,
         new AuthVipLoginResult_Data(token, guest));
 
-      _logger.LogInformation("AuthVip/Login SUCCESS. {guestName} {guestName}", guest.Id, guest.Name);
+      _logger.LogInformation("AuthVip/Login SUCCESS. {guestName} {guestName}", guest.PaddleNum, guest.Name);
       return Ok(result);
     }
     catch (Exception ex)

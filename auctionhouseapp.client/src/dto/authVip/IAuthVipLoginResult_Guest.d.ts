@@ -4,7 +4,7 @@
 
 export interface IAuthVipLoginResult_Guest
 {
-	id: string;
+	paddleNum: string;
 	name: string;
 	email: string;
 	tableNumber: string;

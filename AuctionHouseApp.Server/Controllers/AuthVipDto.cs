@@ -41,10 +41,10 @@ public record AuthVipLoginResult_Data(
 
 [TsInterface(Namespace = "dto.authVip")]
 public record AuthVipLoginResult_Guest(
-  string Id,
+  string PaddleNum,
   string Name,
   string Email,
-  string TableNumber
+  string TableNumber // 賓客桌號
  );
 
 [TsInterface(Namespace = "dto.authVip")]

@@ -90,7 +90,7 @@ export default function SignIn() {
       <Card variant="outlined">
         {/* 工作人員登入 */}
         <Typography component="h1" variant="h5">
-          Staff Login
+          Seller Login
         </Typography>
         <Box
           component="form"
