@@ -136,7 +136,7 @@ export default function RaffleSell_Step1View() {
       <form onSubmit={handleSubmit}>
         <Stack spacing={2}>
           {/* 買家名稱 */}
-          <TextField name='buyerName' label='Buyer Name' required
+          <TextField name='buyerName' label='Buyer Full Name' required
             value={buyerName} onChange={(e) => setBuyerName(e.target.value)}
             slotProps={{
               htmlInput: {
@@ -170,7 +170,7 @@ export default function RaffleSell_Step1View() {
           /> */}
 
           {/* 買家聯絡電話 */}
-          <TextField name='buyerPhone' label='Buyer Phone Number' type='tel' required
+          <TextField name='buyerPhone' label='Buyer Mobile Number' type='tel' required
             value={buyerPhone} onChange={(e) => setBuyerPhone(e.target.value)}
             slotProps={{
               htmlInput: {

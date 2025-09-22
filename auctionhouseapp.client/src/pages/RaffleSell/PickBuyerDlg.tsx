@@ -80,7 +80,7 @@ export default function PickBuyerDlg(props: {
         <DialogTitle>
           {/* 買家名稱/聯絡電話/電郵信箱 */}
           <SearchWidget
-            placeholder="Buyer Name/Email/Phone Number"
+            placeholder="Buyer Name/Email/Mobile Number"
             onSearch={handleSearch}
           />
         </DialogTitle>
@@ -98,7 +98,7 @@ export default function PickBuyerDlg(props: {
                 {/* 電郵地址 */}
                 <TableCell sx={{ whiteSpace: 'nowrap', textWrap: 'nowrap' }}>Email Address</TableCell>
                 {/* 聯絡電話 */}
-                <TableCell sx={{ whiteSpace: 'nowrap', textWrap: 'nowrap' }}>Phone Number</TableCell>
+                <TableCell sx={{ whiteSpace: 'nowrap', textWrap: 'nowrap' }}>Mobile Number</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>

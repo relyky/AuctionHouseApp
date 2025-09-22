@@ -102,7 +102,7 @@ export default function RaffleSell_Step2View() {
             <TableRow>
               {/* 聯絡電話 */}
               <TableCell component="th">
-                Phone Number
+                Mobile Number
               </TableCell>
               <TableCell>{raffleOrder.buyerPhone}</TableCell>
             </TableRow>
