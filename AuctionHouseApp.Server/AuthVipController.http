@@ -1,6 +1,6 @@
 @AuctionHouseApp.Server_HostAddress = https://localhost:60026
 
-### VIP登入測試 (取得 Token)
+### 2.1 賓客登入 (取得 Token)
 # @name loginRequest
 POST {{AuctionHouseApp.Server_HostAddress}}/api/auth/vip/login
 Accept: application/json
@@ -29,4 +29,13 @@ Accept: application/json
 POST {{AuctionHouseApp.Server_HostAddress}}/api/WeatherForecast/QryDataList
 Accept: application/json
 Authorization: Bearer abcdefghijklmnopqrstuvwxyz
+
+###------------------------------------
+### 3.1 取得所有活動狀態
+GET {{AuctionHouseApp.Server_HostAddress}}/api/activities/status
+Accept: application/json
+
+### 4.1 大螢幕狀態查詢
+GET {{AuctionHouseApp.Server_HostAddress}}/api/display/status
+Accept: application/json
 
