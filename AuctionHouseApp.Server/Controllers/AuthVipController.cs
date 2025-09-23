@@ -3,6 +3,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using Vista.DB;
+using Vista.DB.Schema;
+using Vista.DbPanda;
 
 namespace AuctionHouseApp.Server.Controllers;
 
@@ -18,16 +21,19 @@ public class AuthVipController(
   {
     try
     {
-      bool isValid = (args.Name == "smart" && args.Email == "smart@mail.server");
-      if (!isValid) return Ok(new AuthVipLoginResult(false, null));
+      // 取 VIP 資料
+      using var conn = DBHelper.AUCDB.Open();
+      var vip = conn.GetEx<Vip>(new { VipName = args.Name, VipEmail = args.Email });
+      if(vip is null)
+        return Ok(new AuthVipLoginResult(false, null, "Login validation fail!"));
 
       // 取得貴賓資料
-      var guest = new AuthVipLoginResult_Guest("001", args.Name, args.Email, "A1");
+      var guest = new AuthVipLoginResult_Guest(vip.PaddleNum, vip.VipName, vip.VipEmail, vip.TableNumber);
 
       // 模擬已存在的貴賓
       var auth = new AuthUser
       {
-        UserId = $"vip:{guest.PaddleNum}",
+        UserId = $"paddle#{guest.PaddleNum}",
         UserName = args.Name,
         AuthGuid = Guid.NewGuid(),
         IssuedUtc = DateTimeOffset.UtcNow,
@@ -40,15 +46,17 @@ public class AuthVipController(
 
       // SUCCESS
       var result = new AuthVipLoginResult(true,
-        new AuthVipLoginResult_Data(token, guest));
+        new AuthVipLoginResult_Data(token, guest),
+        null);
 
       _logger.LogInformation("AuthVip/Login SUCCESS. {guestName} {guestName}", guest.PaddleNum, guest.Name);
       return Ok(result);
     }
     catch (Exception ex)
     {
-      _logger.LogError(ex, "出現例外！{message}", ex.Message);
-      return Ok(new AuthVipLoginResult(false, null));
+      string errMsg = string.Format("Exception！{message}", ex.Message);
+      _logger.LogError(ex, errMsg);
+      return Ok(new AuthVipLoginResult(false, null, errMsg));
     }
   }
 
@@ -74,9 +82,9 @@ public class AuthVipController(
     }
     catch (Exception ex)
     {
-      string errMsg = $"出現例外！{ex.Message}";
+      string errMsg = string.Format("Exception！{message}", ex.Message);
       _logger.LogError(ex, errMsg);
-      return BadRequest(errMsg);
+      return Ok(new AuthVipLoginResult(false, null, errMsg));
     }
   }
 

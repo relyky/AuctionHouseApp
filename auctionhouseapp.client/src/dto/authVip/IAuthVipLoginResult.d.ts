@@ -8,4 +8,5 @@ export interface IAuthVipLoginResult
 {
 	success: boolean;
 	data: IAuthVipLoginResult_Data;
+	message: string;
 }

@@ -30,7 +30,8 @@ public record AuthVipLoginArgs(string Name, string Email);
 [TsInterface(Namespace = "dto.authVip")]
 public record AuthVipLoginResult(
   Boolean Success,
-  AuthVipLoginResult_Data? Data
+  AuthVipLoginResult_Data? Data,
+  string? Message
 );
 
 [TsInterface(Namespace = "dto.authVip")]
