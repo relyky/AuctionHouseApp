@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Vista.DB;
+using Vista.DB.Schema;
 
 namespace AuctionHouseApp.Server.Controllers;
 
@@ -47,4 +48,44 @@ UPDATE [LiveSession] SET StringValue = @itemId WHERE StateName = 'DisplayCurrent
     }
   }
 
+  [HttpPost("[action]/{onOff}")]
+  public ActionResult<MsgObj> DonationSwitch(string onOff)
+  {
+    try
+    {
+      string sql = """
+UPDATE LiveSession
+ SET StringValue = @onOff
+ OUTPUT inserted.*
+ WHERE StateName = 'DonationSwitch'
+""";
+
+      if (onOff != "on") onOff = "off";
+
+      using var conn = DBHelper.AUCDB.Open();
+      using var txn = conn.BeginTransaction();
+      var info = conn.QueryFirst<LiveSession>(sql, new { onOff }, txn);
+      txn.Commit();
+
+      return Ok(new MsgObj(info.StringValue));
+    }
+    catch (Exception ex)
+    {
+      return BadRequest("Exception！" + ex.Message);
+    }
+  }
+
+  [HttpPost("[action]")]
+  public async Task<ActionResult<MsgObj>> GetDonationSwitch()
+  {
+    string sql = """
+SELECT TOP 1 * 
+FROM LiveSession (NOLOCK)
+WHERE StateName = 'DonationSwitch'
+""";
+
+    using var conn = await DBHelper.AUCDB.OpenAsync();
+    var info = await conn.QueryFirstAsync<LiveSession>(sql);
+    return Ok(new MsgObj(info.StringValue));
+  }
 }
