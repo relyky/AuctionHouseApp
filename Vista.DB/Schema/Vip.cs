@@ -36,6 +36,26 @@ public class Vip
   /// </summary>
   [Display(Name = "桌號")]
   public string TableNumber { get; set; } = default!;
+  /// <summary>
+  /// 座位號碼
+  /// </summary>
+  [Display(Name = "座位號碼")]
+  public string SeatNumber { get; set; } = default!;
+  /// <summary>
+  /// 是否企業
+  /// </summary>
+  [Display(Name = "是否企業")]
+  public string IsEnterprise { get; set; } = default!;
+  /// <summary>
+  /// 收據抬頭(個人姓名)
+  /// </summary>
+  [Display(Name = "收據抬頭(個人姓名)")]
+  public string ReceiptHeader { get; set; } = default!;
+  /// <summary>
+  /// 統編(身分證號)
+  /// </summary>
+  [Display(Name = "統編(身分證號)")]
+  public string TaxNum { get; set; } = default!;
 
   public void Copy(Vip src)
   {
@@ -44,6 +64,10 @@ public class Vip
     this.VipEmail = src.VipEmail;
     this.VipPhone = src.VipPhone;
     this.TableNumber = src.TableNumber;
+    this.SeatNumber = src.SeatNumber;
+    this.IsEnterprise = src.IsEnterprise;
+    this.ReceiptHeader = src.ReceiptHeader;
+    this.TaxNum = src.TaxNum;
   }
 
   public Vip Clone()
@@ -54,6 +78,10 @@ public class Vip
       VipEmail = this.VipEmail,
       VipPhone = this.VipPhone,
       TableNumber = this.TableNumber,
+      SeatNumber = this.SeatNumber,
+      IsEnterprise = this.IsEnterprise,
+      ReceiptHeader = this.ReceiptHeader,
+      TaxNum = this.TaxNum,
     };
   }
 }
