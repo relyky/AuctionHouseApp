@@ -39,3 +39,4 @@ Accept: application/json
 GET {{AuctionHouseApp.Server_HostAddress}}/api/display/status
 Accept: application/json
 
+###------------------------------------

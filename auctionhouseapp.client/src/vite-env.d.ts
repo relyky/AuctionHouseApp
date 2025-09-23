@@ -27,6 +27,16 @@ type ActivityEnum =
   'openAsk' |
   'donation';
 
+type DisplayMode =
+  'raffleDrawing' |
+  'rafflePrizeDisplay' |
+  'raffleWinnersCarousel' |
+  'give' |
+  'liveAuction' |
+  'silentAuction' |
+  'openAsk' |
+  'donation';
+
 interface ILabelCode {
   label: string
   code: string

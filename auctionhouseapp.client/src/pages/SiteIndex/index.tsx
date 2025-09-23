@@ -1,32 +1,42 @@
 import { useState } from "react";
 import type { FC, ReactNode } from "react";
-import { Button, Container, Typography, Box } from "@mui/material";
+import { Button, Container, Typography, Box, useEventCallback } from "@mui/material";
 import RaffleTicketPanel from "./RaffleTicketPanel";
 import GiveToWinPanel from "./GiveToWinPanel";
 import LiveAuctionPanel from "./LiveAuctionPanel";
 import SilentAuctionPanel from "./SilentAuctionPanel";
 import OpenAskPanel from "./OpenAskPanel";
 import DonationPanel from "./DonationPanel";
+import { postData } from "../../tools/httpHelper";
 
 export default function SiteIndex() {
   const [activity, setActivity] = useState<ActivityEnum>('silentAuction')
+
+  const handleActivity = useEventCallback((activity: ActivityEnum) => {
+    postData(`/api/Site/SwitchDisplay/${activity}`)
+      .then((msg) => {
+        console.log(msg)
+        setActivity(activity)
+      })
+      .catch(console.log)
+  })
 
   return (
     <Container maxWidth='md'>
       <Typography variant='h5' gutterBottom>活動主控台(大螢幕切換)</Typography>
 
       <Box display='flex' gap={2} flexWrap='wrap' justifyContent='center' mb={2} >
-        <ActivitySwitch value={activity} onChange={setActivity} activity='raffle'
+        <ActivitySwitch value={activity} onChange={handleActivity} activity='raffle'
           label={<span>1. Raffle Ticket <br />(彩券抽獎)</span>} />
-        <ActivitySwitch value={activity} onChange={setActivity} activity='give'
+        <ActivitySwitch value={activity} onChange={handleActivity} activity='give'
           label={<span>2. Give to Win <br />(福袋抽獎)</span>} />
-        <ActivitySwitch value={activity} onChange={setActivity} activity='liveAuction'
+        <ActivitySwitch value={activity} onChange={handleActivity} activity='liveAuction'
           label={<span>3. Live Auction <br />(現場拍賣)</span>} />
-        <ActivitySwitch value={activity} onChange={setActivity} activity='silentAuction'
+        <ActivitySwitch value={activity} onChange={handleActivity} activity='silentAuction'
           label={<span>4. Silent Auction <br />(靜態拍賣)</span>} />
-        <ActivitySwitch value={activity} onChange={setActivity} activity='openAsk'
+        <ActivitySwitch value={activity} onChange={handleActivity} activity='openAsk'
           label={<span>5. Open Ask <br />(募款活動)</span>} />
-        <ActivitySwitch value={activity} onChange={setActivity} activity='donation'
+        <ActivitySwitch value={activity} onChange={handleActivity} activity='donation'
           label={<span>6. Donation <br />(愛心捐款)</span>} />
       </Box>
 

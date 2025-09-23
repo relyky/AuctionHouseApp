@@ -60,7 +60,7 @@ public class ActivitiesController(
     {
       string errMsg = string.Format("Exception！{message}", ex.Message);
       _logger.LogError(ex, errMsg);
-      return Ok(new AuthVipLoginResult(false, null, errMsg));
+      return Ok(new CommonResult<dynamic>(false, null, errMsg));
     }
   }
 }
