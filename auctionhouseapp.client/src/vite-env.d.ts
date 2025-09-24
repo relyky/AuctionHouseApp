@@ -181,4 +181,12 @@ interface IGiveTicket {
   paddleNum: string;
 }
 
+interface IGivePrize {
+  giftId: string;
+  name: string;
+  description: string;
+  image: string;
+  value: number;
+}
+
 //#endregion
