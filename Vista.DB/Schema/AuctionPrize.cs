@@ -41,6 +41,10 @@ public class AuctionPrize
   /// </summary>
   [Display(Name = "底價")]
   public Decimal? ReservePrice { get; set; }
+  public string Status { get; set; } = default!;
+  public DateTime? CreatedAt { get; set; }
+  public DateTime? UpdatedAt { get; set; }
+  public string CreatedBy { get; set; } = default!;
 
   public void Copy(AuctionPrize src)
   {
@@ -50,6 +54,10 @@ public class AuctionPrize
     this.Image = src.Image;
     this.StartPrice = src.StartPrice;
     this.ReservePrice = src.ReservePrice;
+    this.Status = src.Status;
+    this.CreatedAt = src.CreatedAt;
+    this.UpdatedAt = src.UpdatedAt;
+    this.CreatedBy = src.CreatedBy;
   }
 
   public AuctionPrize Clone()
@@ -61,6 +69,10 @@ public class AuctionPrize
       Image = this.Image,
       StartPrice = this.StartPrice,
       ReservePrice = this.ReservePrice,
+      Status = this.Status,
+      CreatedAt = this.CreatedAt,
+      UpdatedAt = this.UpdatedAt,
+      CreatedBy = this.CreatedBy,
     };
   }
 }

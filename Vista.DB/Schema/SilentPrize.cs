@@ -45,7 +45,17 @@ public class SilentPrize
   /// 結標時間: HH:MM
   /// </summary>
   [Display(Name = "結標時間")]
+  public string StartTime { get; set; } = default!;
+  /// <summary>
+  /// 結標時間: HH:MM
+  /// </summary>
+  [Display(Name = "結標時間")]
   public string EndTime { get; set; } = default!;
+  public string Status { get; set; } = default!;
+  public int? DisplayOrder { get; set; }
+  public DateTime? CreatedAt { get; set; }
+  public DateTime? UpdatedAt { get; set; }
+  public string CreatedBy { get; set; } = default!;
 
   public void Copy(SilentPrize src)
   {
@@ -55,7 +65,13 @@ public class SilentPrize
     this.Image = src.Image;
     this.StartPrice = src.StartPrice;
     this.MinIncrement = src.MinIncrement;
+    this.StartTime = src.StartTime;
     this.EndTime = src.EndTime;
+    this.Status = src.Status;
+    this.DisplayOrder = src.DisplayOrder;
+    this.CreatedAt = src.CreatedAt;
+    this.UpdatedAt = src.UpdatedAt;
+    this.CreatedBy = src.CreatedBy;
   }
 
   public SilentPrize Clone()
@@ -67,7 +83,13 @@ public class SilentPrize
       Image = this.Image,
       StartPrice = this.StartPrice,
       MinIncrement = this.MinIncrement,
+      StartTime = this.StartTime,
       EndTime = this.EndTime,
+      Status = this.Status,
+      DisplayOrder = this.DisplayOrder,
+      CreatedAt = this.CreatedAt,
+      UpdatedAt = this.UpdatedAt,
+      CreatedBy = this.CreatedBy,
     };
   }
 }
