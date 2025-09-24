@@ -26,12 +26,18 @@ public class GiveTicket
   /// </summary>
   [Display(Name = "貴賓編號")]
   public string PaddleNum { get; set; } = default!;
+  /// <summary>
+  /// 票券所有人名稱: 驗證效果比較大
+  /// </summary>
+  [Display(Name = "票券所有人名稱")]
+  public string HolderName { get; set; } = default!;
 
   public void Copy(GiveTicket src)
   {
     this.GiveTicketNo = src.GiveTicketNo;
     this.GiveOrderNo = src.GiveOrderNo;
     this.PaddleNum = src.PaddleNum;
+    this.HolderName = src.HolderName;
   }
 
   public GiveTicket Clone()
@@ -40,6 +46,7 @@ public class GiveTicket
       GiveTicketNo = this.GiveTicketNo,
       GiveOrderNo = this.GiveOrderNo,
       PaddleNum = this.PaddleNum,
+      HolderName = this.HolderName,
     };
   }
 }
