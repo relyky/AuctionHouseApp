@@ -8,9 +8,10 @@ import AuctionLayout from "./layout/AuctionLayout"
 import BackendLayout from './layout/BackendLayout'
 import BidderLayout from "./layout/BidderLayout"
 import BuyerLayout from './layout/BuyerLayout'
-import MainLayout from "./layout/MainLayout"
+//import MainLayout from "./layout/MainLayout"
 import PublicLayout from "./layout/PublicLayout"
 import RaffleLayout from './layout/RaffleLayout'
+import GiveLayout from './layout/GiveLayout'
 import StaffLogin from './pages/Account/StaffLogin'
 import BackendIndex from './pages/BackendIndex/AppForm'
 import BackendRaffleCheck from './pages/BackendRaffleCheck/AppForm'
@@ -127,7 +128,7 @@ const router = createBrowserRouter([
   },
   {
     path: "give",
-    element: <RaffleLayout />,
+    element: <GiveLayout />,
     children: [
       { path: "sell", element: <GiveSell /> },
       { path: "sellquery", element: <GiveSellQuery /> },
