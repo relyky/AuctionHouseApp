@@ -6,7 +6,7 @@
     <VersionPrefix>0.3.6</VersionPrefix>
     <VersionSuffix>beta</VersionSuffix>	
     <ImplicitUsings>enable</ImplicitUsings>
-    <SpaRoot>..\auctionhousetpl.client</SpaRoot>
+    <SpaRoot>..\auctionhouseapp.client</SpaRoot>
     <SpaProxyLaunchCommand>npm run dev</SpaProxyLaunchCommand>
     <SpaProxyServerUrl>https://localhost:60026</SpaProxyServerUrl>
   </PropertyGroup>
