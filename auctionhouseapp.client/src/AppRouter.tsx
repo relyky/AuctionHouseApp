@@ -15,11 +15,15 @@ import StaffLogin from './pages/Account/StaffLogin'
 import BackendIndex from './pages/BackendIndex/AppForm'
 import BackendRaffleCheck from './pages/BackendRaffleCheck/AppForm'
 import BackendRaffleQuery from './pages/BackendRaffleQuery/AppForm'
+import BackendGiveCheck from './pages/BackendGiveCheck'
+import BackendGiveQuery from './pages/BackendGiveQuery'
 import Home from './pages/home/AppForm'
 import RaffleBuyer from './pages/RaffleBuyer/AppForm'
-import RaffleIndex from './pages/RaffleIndex/AppForm'
+//import RaffleIndex from './pages/RaffleIndex/AppForm'
 import RaffleSell from './pages/RaffleSell/AppForm'
 import RaffleSellQuery from './pages/RaffleSellQuery/AppForm'
+import GiveSell from './pages/GiveSell'
+import GiveSellQuery from './pages/GiveSellQuery'
 import SiteIndex from './pages/SiteIndex'
 import AskInput from "./pages/AskInput"
 import AuctionInput from "./pages/AuctionInput"
@@ -99,6 +103,8 @@ const router = createBrowserRouter([
       { index: true, element: <BackendIndex /> },
       { path: "rafflecheck", element: <BackendRaffleCheck /> },
       { path: "rafflequery", element: <BackendRaffleQuery /> },
+      { path: "givecheck", element: <BackendGiveCheck /> },
+      { path: "givequery", element: <BackendGiveQuery /> },
     ]
   },
   {
@@ -114,9 +120,17 @@ const router = createBrowserRouter([
     path: "raffle",
     element: <RaffleLayout />,
     children: [
-      { index: true, element: <RaffleIndex /> },
+      //{ index: true, element: <RaffleIndex /> },
       { path: "sell", element: <RaffleSell /> },
       { path: "sellquery", element: <RaffleSellQuery /> },
+    ]
+  },
+  {
+    path: "give",
+    element: <RaffleLayout />,
+    children: [
+      { path: "sell", element: <GiveSell /> },
+      { path: "sellquery", element: <GiveSellQuery /> },
     ]
   },
   //--------------------

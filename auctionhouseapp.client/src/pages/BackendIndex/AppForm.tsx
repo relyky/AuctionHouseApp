@@ -41,9 +41,13 @@ export default function BackendIndex_AppForm() {
           {/* 銷售查詢 */}
           <Button component={NavLink} variant='text' to='/raffle/sellquery'>Sales Records</Button>
 
-          {/* 銷售福袋(需重刷畫面) */}
+          {/* 銷售福袋 */}
           {import.meta.env.DEV &&
-            <Button variant='text' href='/raffle/sell'>銷售福袋</Button>}
+            <Button component={NavLink} variant='text' to='/give/sell'>銷售福袋</Button>}
+
+          {/* 銷售福袋紀錄 */}
+          {import.meta.env.DEV &&
+            <Button component={NavLink} variant='text' to='/give/sellquery'>銷售福袋紀錄</Button>}
 
         </Stack>
       </AuthorizeGuard>
@@ -56,6 +60,15 @@ export default function BackendIndex_AppForm() {
           <Button component={NavLink} variant='text' to='/backend/rafflecheck'>Verify Ticket Sales</Button>
           {/* 抽獎券銷售統計 */}
           <Button component={NavLink} variant='text' to='/backend/rafflequery'>Sales Statistics</Button>
+
+          {/* 銷售福袋 */}
+          {import.meta.env.DEV &&
+            <Button component={NavLink} variant='text' to='/backend/givecheck'>查驗福袋銷售</Button>}
+
+          {/* 銷售福袋紀錄 */}
+          {import.meta.env.DEV &&
+            <Button component={NavLink} variant='text' to='/backend/givequery'>福袋銷售統計</Button>}
+
         </Stack>
       </AuthorizeGuard>
 
