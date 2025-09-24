@@ -1,9 +1,9 @@
 /// <reference types="vite/client" />
 
 type EditMode = 'Init' |  'List' | 'Add' | 'Edit' | 'Step1' | 'Step2' | 'Step3' | 'Step4' | 'Step5' | 'Finish';
-// Init µe­±ªì©l¤Æ¡G¦p¸ü¤JÀô¹Ò³]©w¡B¨t²Î°Ñ¼Æµ¥
+// Init ç•«é¢åˆå§‹åŒ–ï¼šå¦‚è¼‰å…¥ç’°å¢ƒè¨­å®šã€ç³»çµ±åƒæ•¸ç­‰
 
-// ¦¹±M®×ªº³q¥Î«¬°T®§ª«¥ó
+// æ­¤å°ˆæ¡ˆçš„é€šç”¨å‹è¨Šæ¯ç‰©ä»¶
 interface MsgObj {
   message: string,
   formNo?: string,
@@ -53,7 +53,7 @@ interface IBidder {
 type IAccountState = IBidder
 
 /**
- * ©ç«~¸ê°T profile
+ * æ‹å“è³‡è¨Š profile
  */
 interface ILotProfile {
   lotNo: string
@@ -61,7 +61,7 @@ interface ILotProfile {
 }
 
 /**
- * ©ç«~¸ê°T
+ * æ‹å“è³‡è¨Š
  */
 //interface ILot {
 //  lotNo: string
@@ -77,7 +77,7 @@ interface ILotProfile {
 //
 //interface ILiveAuctionStatus {
 //  /**
-//   * ¨t²Îª©¦¸¡C³o­ÓÄæ¦ì¬O¥Î¨Ó§PÂ_¬O§_¦³§ó·s
+//   * ç³»çµ±ç‰ˆæ¬¡ã€‚é€™å€‹æ¬„ä½æ˜¯ç”¨ä¾†åˆ¤æ–·æ˜¯å¦æœ‰æ›´æ–°
 //   */
 //  rowversion: number
 //  step: StepEnum
@@ -90,7 +90,7 @@ interface ILotProfile {
 //  bidOpenSn: number
 //  thisBidOpenTime?: string
 //  thisBidCloseTime?: string
-//  lastBiddingEventUpdDtm?: string // ISO 8601 ®æ¦¡ªº®É¶¡¦r¦ê
+//  lastBiddingEventUpdDtm?: string // ISO 8601 æ ¼å¼çš„æ™‚é–“å­—ä¸²
 //}
 //
 //interface IBidMsg {
@@ -107,7 +107,7 @@ interface ILotProfile {
 //  bidPrice: number
 //  isValid: 'Y' | 'N'
 //  bidOpenSn: number
-//  bidTimestamp: string // ISO 8601 ®æ¦¡ªº®É¶¡¦r¦ê
+//  bidTimestamp: string // ISO 8601 æ ¼å¼çš„æ™‚é–“å­—ä¸²
 //}
 //
 //interface IHammeredRecord {
@@ -116,10 +116,10 @@ interface ILotProfile {
 //  winnerNo: string
 //  hammerPrice: number
 //  biddingSn: number
-//  hammerTime: string // ISO 8601 ®æ¦¡ªº®É¶¡¦r¦ê
+//  hammerTime: string // ISO 8601 æ ¼å¼çš„æ™‚é–“å­—ä¸²
 //}
 
-//#region »P DB Schema ¹ïÀ³ªº¸ê®Æªí¤¶­±©w¸q
+//#region èˆ‡ DB Schema å°æ‡‰çš„è³‡æ–™è¡¨ä»‹é¢å®šç¾©
 interface IVip {
   paddleNum: string;
   vipName: string;

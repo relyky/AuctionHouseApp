@@ -1,5 +1,6 @@
 import { atom } from "jotai"
 import type { IStaffProfile } from "../RaffleSell/dto/IStaffProfile"
+import type { IVipProfile } from "../../dto/IVipProfile"
 
 // 系統參數：抽獎券單價
 export const giveUnitPriceAtom = atom(0)
@@ -11,7 +12,7 @@ interface GiveSell_BizState {
   mode: EditMode
   giveOrder?: IGiveOrder,
   sales?: IStaffProfile,
-  vip?: IVip,
+  vip?: IVipProfile,
 }
 
 export const initialState: GiveSell_BizState = {
