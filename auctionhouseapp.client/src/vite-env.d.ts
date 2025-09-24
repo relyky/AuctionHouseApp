@@ -162,6 +162,7 @@ interface IRaffleTicket {
 interface IGiveOrder {
   giveOrderNo: string;
   paddleNum: string;
+  vipName: string;
   giftId: string;
   purchaseCount: number;
   purchaseAmount: number;

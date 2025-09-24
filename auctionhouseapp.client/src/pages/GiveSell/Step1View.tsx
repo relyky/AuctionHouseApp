@@ -14,7 +14,7 @@ import { postData, postFormData, ResponseError } from "../../tools/httpHelper";
 import type { IStaffProfile } from "../RaffleSell/dto/IStaffProfile";
 
 function Step1View() {
-  const [{ giveOrder, vip }, setFormState] = useAtom(giveSellAtom); //
+  const [{ giveOrder }, setFormState] = useAtom(giveSellAtom); //
   const [f_loading, setLoading] = useState<boolean>(false)
   const [errMsg, setErrMsg] = useState<string | null>(null)
   const giveUnitPrice = useAtomValue(giveUnitPriceAtom) // 抽獎券單價
@@ -59,11 +59,9 @@ function Step1View() {
 
   const handleSelect = useEventCallback((vip: IVipProfile | null) => {
     if (vip) {
-      setFormState(prev => ({ ...prev, vip }))
       setPaddleNum(vip.paddleNum);
       setVipName(vip.vipName);
     } else {
-      setFormState(prev => ({ ...prev, vip: undefined }))
       setPaddleNum('');
       setVipName('');
     }
@@ -82,6 +80,16 @@ function Step1View() {
     setPurchaseCount(prev => String(Number(prev) + 1));
   });
 
+  // 若已填過單。可修改訂單內容。
+  useEffect(() => {
+    if (giveOrder) {
+      setPaddleNum(giveOrder.paddleNum)
+      setVipName(giveOrder.vipName)
+      setGiftId(giveOrder.giftId)
+      setPurchaseCount(String(giveOrder.purchaseCount))
+      setPurchaseAmount(giveOrder.purchaseAmount)
+    }
+  }, [giveOrder])
 
   // 依「購買張數」計算「購買金額」
   useEffect(() => {
@@ -93,30 +101,21 @@ function Step1View() {
   return (
     <Container maxWidth='xs' sx={{ outline: 'red dashed 1px' }}>
       {/* 銷售福袋抽獎券 */}
-      <Typography variant='h5'>銷售福袋抽獎券</Typography>
+      <Typography variant='h5' gutterBottom>銷售福袋抽獎券</Typography>
 
-      <Toolbar variant='regular' disableGutters sx={{ mb: 2 }}>
-        {/* 自貴賓清單查詢帶出 */}
-        <SelectVipWidget onSelect={handleSelect} placeholder='Paddle No/Full name' />
-      </Toolbar>
+      {!Boolean(giveOrder) &&
+        <Toolbar variant='regular' disableGutters sx={{ mb: 2 }}>
+          {/* 自貴賓清單查詢帶出 */}
+          <SelectVipWidget onSelect={handleSelect} placeholder='Paddle No/Full name' />
+        </Toolbar>}
 
       <form onSubmit={handleSubmit}>
         <Stack spacing={2}>
-          {/* 貴賓編號:唯讀 */}
-          {/*<TextField name='paddleNum' label='貴賓編號' required*/}
-          {/*  value={paddleNum}*/}
-          {/*  slotProps={{*/}
-          {/*    htmlInput: { readOnly: true }*/}
-          {/*  }}*/}
-          {/*/>*/}
-
-          {/* 貴賓名稱:唯讀 */}
-          {/*<TextField name='vipName' label='貴賓名稱' required*/}
-          {/*  value={vipName}*/}
-          {/*  slotProps={{*/}
-          {/*    htmlInput: { readOnly: true }*/}
-          {/*  }}*/}
-          {/*/>*/}
+          {Boolean(giveOrder) &&
+            <TextField variant='filled' fullWidth
+              label={'貴賓'} value={`${giveOrder?.paddleNum}.${giveOrder?.vipName}`}
+              slotProps={{ input: { readOnly: true } }}
+            />}
 
           <SelectGiftField name='giftId' label='福袋獎品' required
             value={giftId}

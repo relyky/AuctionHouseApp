@@ -1,11 +1,12 @@
-import { Alert, Button, Checkbox, Container, Divider, FormControlLabel, Paper, Stack, Table, TableBody, TableCell, TableContainer, TableRow, Typography, useEventCallback } from "@mui/material";
+import { Alert, Button, ButtonGroup, Checkbox, Container, Divider, FormControlLabel, Paper, Stack, Table, TableBody, TableCell, TableContainer, TableRow, Typography, useEventCallback } from "@mui/material";
 import { useAtom } from "jotai";
 import { useState } from "react";
 import { postData, ResponseError } from "../../tools/httpHelper";
 import { giveSellAtom } from "./atom";
+import Swal from "sweetalert2";
 
 export default function GiveSell_Step2View() {
-  const [{ giveOrder, sales, vip, prize }, setFormState] = useAtom(giveSellAtom);
+  const [{ giveOrder, sales, prize }, setFormState] = useAtom(giveSellAtom);
   const [f_loading, setLoading] = useState<boolean>(false)
   const [errMsg, setErrMsg] = useState<string | null>(null)
 
@@ -21,9 +22,9 @@ export default function GiveSell_Step2View() {
       console.info('handleSubmit success', { data });
 
       if (data.status === 'HasSold') {
-        setFormState(prev => ({ ...prev, mode: 'Step3', raffleOrder: data }))
+        setFormState(prev => ({ ...prev, mode: 'Step3', giveOrder: data }))
       } else {
-        setFormState(prev => ({ ...prev, mode: 'Finish', raffleOrder: data }))
+        setFormState(prev => ({ ...prev, mode: 'Finish', giveOrder: data }))
       }
     } catch (error) {
       if (error instanceof ResponseError) {
@@ -37,6 +38,32 @@ export default function GiveSell_Step2View() {
     } finally {
       setLoading(false)
     }
+  });
+
+  const handleRevoke = useEventCallback(async () => {
+    try {
+      setLoading(true);
+      setErrMsg(null); // 先清除錯誤訊息
+
+      const data = await postData<IGiveOrder>(`/api/GiveSell/RevokeGiveOrder/${giveOrder?.giveOrderNo}`);
+      console.info('handleRevoke success', { data });
+      setFormState(prev => ({ ...prev, mode: 'Finish', giveOrder: data }))
+    } catch (error) {
+      if (error instanceof ResponseError) {
+        console.error('handleSubmit ResponseError', error.message);
+        setErrMsg(error.message)
+      }
+      else {
+        console.error('handleSubmit error', { error });
+        setErrMsg("出現預期之外的錯誤請通知系統工程師。" + error);
+      }
+    } finally {
+      setLoading(false)
+    }
+  });
+
+  const handlePrevious = useEventCallback(() => {
+    setFormState(prev => ({ ...prev, mode: 'Step1' }))
   });
 
   if (!giveOrder) {
@@ -70,7 +97,7 @@ export default function GiveSell_Step2View() {
               <TableCell component="th">
                 VIP Name
               </TableCell>
-              <TableCell>{vip?.vipName}</TableCell>
+              <TableCell>{giveOrder.vipName}</TableCell>
             </TableRow>
             <TableRow>
               {/* 聯絡電話 */}
@@ -130,6 +157,35 @@ export default function GiveSell_Step2View() {
           onClick={handleSubmit}
         >Payment received </Button>
 
+        <ButtonGroup variant='text'>
+          {/* 上一步 */}
+          <Button color='primary' sx={{ flexGrow: 1 }}
+            loading={f_loading}
+            onClick={handlePrevious}
+          >Previous Step</Button>
+
+          {/* 放棄訂單 */}
+          <Button color='warning' sx={{ flexGrow: 1 }}
+            loading={f_loading}
+            onClick={() => {
+              Swal.fire({
+                title: "Are you sure?",
+                text: "This action cannot be undone.",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                confirmButtonText: "Yes, cancel it",
+                cancelButtonColor: "#d33",
+                cancelButtonText: "No, keep it"
+              }).then((result) => {
+                if (result.isConfirmed) {
+                  handleRevoke()
+                }
+              });
+            }}>
+            Cancel Order
+          </Button>
+        </ButtonGroup>
       </Stack>
 
       <pre>prize: {JSON.stringify(prize)}</pre>

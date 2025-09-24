@@ -11,7 +11,6 @@ giveUnitPriceAtom.debugLabel = 'giveUnitPriceAtom'
 
 interface GiveSell_BizState {
   mode: EditMode
-  vip?: IVipProfile,
   giveOrder?: IGiveOrder,
   sales?: IStaffProfile,
   prize?: IGivePrize
@@ -19,7 +18,6 @@ interface GiveSell_BizState {
 
 export const initialState: GiveSell_BizState = {
   mode: 'Init',
-  vip: undefined,
   giveOrder: undefined,
   sales: undefined,
   prize: undefined,

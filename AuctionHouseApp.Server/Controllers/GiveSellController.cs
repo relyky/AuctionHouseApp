@@ -34,16 +34,17 @@ public class GiveSellController(
         string sql = """
 INSERT INTO [dbo].[GiveOrder]
 ([GiveOrderNo],
- [PaddleNum],[GiftId],[PurchaseCount],[PurchaseAmount],[HasPaid],[SalesId],[Status])
+ [PaddleNum],[VipName],[GiftId],[PurchaseCount],[PurchaseAmount],[HasPaid],[SalesId],[Status])
  OUTPUT inserted.*
 VALUES
 (FORMAT(NEXT VALUE FOR GiveSaleSeq,'GS00000'), 
- @PaddleNum, @GiftId, @PurchaseCount, @PurchaseAmount, @HasPaid, @SalesId, @Status)
+ @PaddleNum, @VipName, @GiftId, @PurchaseCount, @PurchaseAmount, @HasPaid, @SalesId, @Status)
 """;
 
         var parameters = new
         {
           dto.PaddleNum,
+          dto.VipName,
           dto.GiftId,
           dto.PurchaseCount,
           dto.PurchaseAmount,
@@ -66,6 +67,7 @@ VALUES
         string sql = """
 UPDATE [dbo].[GiveOrder]
   SET [PaddleNum] = @PaddleNum
+     ,[VipName] = @VipName
      ,[GiftId] = @GiftId
      ,[PurchaseCount] = @PurchaseCount
      ,[PurchaseAmount] = @PurchaseAmount
@@ -80,6 +82,7 @@ WHERE [GiveOrderNo] = @GiveOrderNo
         {
           dto.GiveOrderNo,
           dto.PaddleNum,
+          dto.VipName,
           dto.GiftId,
           dto.PurchaseCount,
           dto.PurchaseAmount,
@@ -205,6 +208,35 @@ WHERE GiveOrderNo = @GiveOrderNo
     }
   }
 
+  /// <summary>
+  /// 放棄訂單
+  /// </summary>
+  [HttpPost("[action]/{id}")]
+  public ActionResult<RaffleOrder> RevokeGiveOrder(string id)
+  {
+    string updateInvalid = """
+UPDATE [dbo].[GiveOrder]
+SET [HasPaid] = 'N', [Status] = 'Invalid', [SoldDtm] = NULL
+WHERE GiveOrderNo = @GiveOrderNo
+""";
+
+    using var conn = DBHelper.AUCDB.Open();
+    using var txn = conn.BeginTransaction();
+
+    int affected = conn.Execute(updateInvalid, new { GiveOrderNo = id }, txn);
+    if (affected != 1)
+    {
+      txn.Rollback();
+      return BadRequest(new MsgObj("更新訂單執行失敗！", id));
+    }
+
+    var updated = conn.GetEx<GiveOrder>(new { GiveOrderNo = id }, txn);
+    txn.Commit();
+    return Ok(updated);
+  }
+
+
+
   [NonAction]
   private void DoGenGiveTickets(GiveOrder order, SqlConnection conn, SqlTransaction txn)
   {
@@ -225,7 +257,7 @@ VALUES
       {
         order.GiveOrderNo,
         order.PaddleNum,
-        HolderName = "unknown"
+        HolderName = order.VipName,
       }, txn);
     }
   }
