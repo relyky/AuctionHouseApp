@@ -2,6 +2,8 @@ using Dapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Hosting;
+using System.IO;
 using System.Security.Claims;
 using Vista.DB;
 using Vista.DB.Schema;
@@ -42,11 +44,14 @@ public class LiveAuctionController(
     /// </returns>
     [AllowAnonymous]
     [HttpGet("[action]")]
-    public ActionResult<CommonResult<LiveAuctionPreviewResponse>> Preview()
+    public async Task<ActionResult<CommonResult<LiveAuctionPreviewResponse>>> Preview()
     {
         try
         {
-            using var conn = DBHelper.AUCDB.Open();
+            var request = HttpContext.Request;
+            string publicWebRoot = $"{request.Scheme}://{request.Host}";
+
+            using var conn = await DBHelper.AUCDB.OpenAsync();
 
             // 查詢所有商品預覽 (整合 VIP 和員工資訊)
             string sql = @"
@@ -61,8 +66,8 @@ public class LiveAuctionController(
                         WHEN ah.[ItemId] IS NOT NULL THEN ah.[AuctionResult]
                         ELSE 'active'
                     END as Status
-                FROM [dbo].[AuctionPrize] ap
-                LEFT JOIN [dbo].[AuctionHammered] ah ON ap.[ItemId] = ah.[ItemId]
+                FROM [dbo].[AuctionPrize] ap (NOLOCK)
+                LEFT JOIN [dbo].[AuctionHammered] ah (NOLOCK) ON ap.[ItemId] = ah.[ItemId]
                 ORDER BY
                     CASE
                         WHEN ah.[AuctionResult] IS NULL THEN 1  -- Active
@@ -71,12 +76,12 @@ public class LiveAuctionController(
                     END,
                     ap.[ItemId]";
 
-            var queryResults = conn.Query<AuctionPreviewQueryResult>(sql);
+            var queryResults = await conn.QueryAsync<AuctionPreviewQueryResult>(sql);
             var items = queryResults.Select(row => new LiveAuctionItem(
                 ItemId: row.ItemId,
                 Name: row.Name,
                 Description: row.Description,
-                Image: row.Image,
+                Image: $"{publicWebRoot}{row.Image}",
                 StartingPrice: row.StartingPrice,
                 ReservePrice: row.ReservePrice,
                 Status: row.Status == "Hammered" || row.Status == "Passed" ? "ended" : "active"
@@ -123,22 +128,25 @@ public class LiveAuctionController(
     /// </returns>
     [AllowAnonymous]
     [HttpGet("preview/{itemId}")]
-    public ActionResult<CommonResult<LiveAuctionItemDetailResponse>> PreviewItem(string itemId)
+    public async Task<ActionResult<CommonResult<LiveAuctionItemDetailResponse>>> PreviewItem(string itemId)
     {
         try
         {
-            using var conn = DBHelper.AUCDB.Open();
+            var request = HttpContext.Request;
+            string publicWebRoot = $"{request.Scheme}://{request.Host}";
+
+            using var conn = await DBHelper.AUCDB.OpenAsync();
 
             // 查詢單一商品詳細資訊 (含結標狀態)
             string sql = @"
                 SELECT
                     ap.*,
                     ah.[AuctionResult]
-                FROM [dbo].[AuctionPrize] ap
-                LEFT JOIN [dbo].[AuctionHammered] ah ON ap.[ItemId] = ah.[ItemId]
+                FROM [dbo].[AuctionPrize] ap (NOLOCK)
+                LEFT JOIN [dbo].[AuctionHammered] ah (NOLOCK) ON ap.[ItemId] = ah.[ItemId]
                 WHERE ap.[ItemId] = @ItemId";
 
-            var itemData = conn.QueryFirstOrDefault<AuctionItemDetailQueryResult>(sql, new { ItemId = itemId });
+            var itemData = await conn.QueryFirstOrDefaultAsync<AuctionItemDetailQueryResult>(sql, new { ItemId = itemId });
 
             if (itemData == null)
             {
@@ -149,7 +157,7 @@ public class LiveAuctionController(
                 ItemId: itemData.ItemId,
                 Name: itemData.Name,
                 Description: itemData.Description,
-                Image: itemData.Image,
+                Image: $"{publicWebRoot}{itemData.Image}",
                 StartingPrice: itemData.StartPrice,
                 ReservePrice: itemData.ReservePrice,
                 Status: itemData.AuctionResult == "Hammered" || itemData.AuctionResult == "Passed" ? "ended" : "active"

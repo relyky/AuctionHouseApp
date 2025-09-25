@@ -40,3 +40,11 @@ GET {{AuctionHouseApp.Server_HostAddress}}/api/display/status
 Accept: application/json
 
 ###------------------------------------
+
+### 7.1 取得拍賣商品預覽
+GET {{AuctionHouseApp.Server_HostAddress}}/api/liveauction/preview
+Accept: application/json
+
+### 7.2 取得指定拍賣商品詳情
+GET {{AuctionHouseApp.Server_HostAddress}}/api/liveauction/preview/L02
+Accept: application/json
