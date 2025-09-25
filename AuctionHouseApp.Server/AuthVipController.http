@@ -53,6 +53,10 @@ Accept: application/json
 GET {{AuctionHouseApp.Server_HostAddress}}/api/raffleticket/prizes/xxx
 Accept: application/json
 
+### 6.1 取得福袋清單
+GET {{AuctionHouseApp.Server_HostAddress}}/api/givetowin/gifts
+Accept: application/json
+
 ### 7.1 取得拍賣商品預覽
 GET {{AuctionHouseApp.Server_HostAddress}}/api/liveauction/preview
 Accept: application/json
