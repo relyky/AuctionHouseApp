@@ -179,6 +179,7 @@ interface IGiveOrder {
 interface IGiveTicket {
   giveTicketNo: string;
   giveOrderNo: string;
+  giftId: string;
   paddleNum: string;
   holderName: string;
 }

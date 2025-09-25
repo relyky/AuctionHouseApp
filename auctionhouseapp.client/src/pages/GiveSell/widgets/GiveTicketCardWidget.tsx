@@ -13,7 +13,7 @@ export default function GiveTicketCardWidget(props: {
         <CardContent sx={{ flex: '1 0 auto' }}>
           {/* 拍賣活動抽獎券 */}
           <Typography component="div" variant="h6">
-            Gift Ticket
+            Gift Ticket for #{`${ticket.giftId}`}
           </Typography>
           <Typography variant="subtitle1" sx={{ color: 'text.primary' }}>
             NO. {ticket.giveTicketNo}

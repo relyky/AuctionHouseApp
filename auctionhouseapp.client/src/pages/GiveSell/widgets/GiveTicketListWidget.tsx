@@ -36,7 +36,6 @@ export default function GiveTicketListWidget(props: {
 
   return (
     <Box>
-      debug:{props.giveOrderNo} {ticketList.length}
       {f_loading && <LinearProgress color='info' />}
 
       {errMsg && <Alert severity='error' sx={{ m: 3 }} >{errMsg}</Alert>}

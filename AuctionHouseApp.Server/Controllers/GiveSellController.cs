@@ -242,10 +242,10 @@ WHERE GiveOrderNo = @GiveOrderNo
     string sql = """
 INSERT INTO [dbo].[GiveTicket]
 ([GiveTicketNo],
- [GiveOrderNo],[PaddleNum],[HolderName])
+ [GiveOrderNo],[GiftId],[PaddleNum],[HolderName])
 VALUES
 (FORMAT(NEXT VALUE FOR GiveTicketSeq,'\B000000'), 
- @GiveOrderNo, @PaddleNum, @HolderName)
+ @GiveOrderNo, @GiftId, @PaddleNum, @HolderName)
 """;
 
     // 產生抽獎券：編號 Annnnnn (含前置字元 A + 6碼序號)
@@ -255,6 +255,7 @@ VALUES
       {
         order.GiveOrderNo,
         order.PaddleNum,
+        order.GiftId,
         HolderName = order.VipName,
       }, txn);
     }
