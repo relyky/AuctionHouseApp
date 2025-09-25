@@ -57,6 +57,11 @@ Accept: application/json
 GET {{AuctionHouseApp.Server_HostAddress}}/api/givetowin/gifts
 Accept: application/json
 
+### 6.2 取得我的福袋抽獎券 [須先登入認證]
+GET {{AuctionHouseApp.Server_HostAddress}}/api/givetowin/mytickets/{giftId}
+Accept: application/json
+Authorization: Bearer {{loginRequest.response.body.$.data.token}}
+
 ### 7.1 取得拍賣商品預覽
 GET {{AuctionHouseApp.Server_HostAddress}}/api/liveauction/preview
 Accept: application/json
@@ -68,3 +73,18 @@ Accept: application/json
 ### 7.2 取得指定拍賣商品詳情 (錯誤商品ID)
 GET {{AuctionHouseApp.Server_HostAddress}}/api/liveauction/preview/xxx
 Accept: application/json
+
+### 8.1 取得商品清單
+GET {{AuctionHouseApp.Server_HostAddress}}/api/silentauction/items
+Accept: application/json
+
+### 8.2 取得單一商品詳情
+GET {{AuctionHouseApp.Server_HostAddress}}/api/silentauction/items/S01
+Accept: application/json
+
+### 8.2 取得單一商品詳情 (錯誤商品ID)
+GET {{AuctionHouseApp.Server_HostAddress}}/api/silentauction/items/xxx
+Accept: application/json
+
+###------------------------------------
+
