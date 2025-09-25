@@ -40,8 +40,8 @@ const customTheme = createTheme(
       colorSchemeSelector: 'class' // 使用 class 作為色彩方案選擇器
     },
     palette: {
-      primary: { main: '#BF4690' },
-      secondary: { main: '#E7C058' }, // '#E7C058' #CA87B0
+      primary: { main: '#780266' }, // '#BF4690'
+      secondary: { main: '#E7C056' }, // '#E7C058' #CA87B0
       background: {
         paper: '#fafafa',
         default: '#fff'
