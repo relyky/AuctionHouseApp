@@ -53,7 +53,7 @@ export default function StaffLogin_AppForm() {
   });
 
   return (
-    <Container maxWidth='sm'>
+    <Container maxWidth='md'>
       {/* 抽獎券銷售查驗 */}
       <Typography variant='h5' gutterBottom>Raffle Ticket Sales Verification</Typography>
       {/* 業務把收到的錢交給經理後，經理打勾確認。 */}
