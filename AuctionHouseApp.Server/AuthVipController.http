@@ -11,6 +11,17 @@ Content-Type: application/json
 	"email": "arnold@mail.server"
 }
 
+### 2.1 賓客登入 (取得 Token)
+# @name loginRequest
+POST {{AuctionHouseApp.Server_HostAddress}}/api/auth/vip/login
+Accept: application/json
+Content-Type: application/json
+
+{
+	"name": "Angelina Jolie Voight",
+	"email": "angelina@mail.server"
+}
+
 ### 通訊測試 (需攜帶 Token)
 POST {{AuctionHouseApp.Server_HostAddress}}/api/auth/vip/authstatus
 Accept: application/json
@@ -58,7 +69,7 @@ GET {{AuctionHouseApp.Server_HostAddress}}/api/givetowin/gifts
 Accept: application/json
 
 ### 6.2 取得我的福袋抽獎券 [須先登入認證]
-GET {{AuctionHouseApp.Server_HostAddress}}/api/givetowin/mytickets/{giftId}
+GET {{AuctionHouseApp.Server_HostAddress}}/api/givetowin/mytickets/G01
 Accept: application/json
 Authorization: Bearer {{loginRequest.response.body.$.data.token}}
 

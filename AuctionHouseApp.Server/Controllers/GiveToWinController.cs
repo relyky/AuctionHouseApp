@@ -5,13 +5,15 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Vista.DB;
 using Vista.DB.Schema;
+using AuctionHouseApp.Server.Services;
 
 namespace AuctionHouseApp.Server.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
 public class GiveToWinController(
-    ILogger<GiveToWinController> _logger
+    ILogger<GiveToWinController> _logger,
+    AuthVipService _vipSvc
 ) : ControllerBase
 {
   /// <summary>
@@ -45,13 +47,12 @@ public class GiveToWinController(
       var request = HttpContext.Request;
       string publicWebRoot = $"{request.Scheme}://{request.Host}";
 
-      using var conn = await DBHelper.AUCDB.OpenAsync();
-
       // 查詢所有商品預覽 (整合 VIP 和員工資訊)
       string sql = """
 SELECT * FROM [GivePrize] (NOLOCK)
 """;
 
+      using var conn = await DBHelper.AUCDB.OpenAsync();
       var infoList = await conn.QueryAsync<GivePrize>(sql);
       var prizeList = infoList.Select(row => new
       {
@@ -79,12 +80,66 @@ SELECT * FROM [GivePrize] (NOLOCK)
 
   /// <summary>
   /// 6.2 取得我的福袋抽獎券 [須先登入認證]
+  /// **GET** `api/givetowin/mytickets/{giftId}`
   /// </summary>
+  /// <returns>
+  /// **Response:**
+  /// ```json
+  /// {
+  ///   "success": true,
+  ///   "data": {
+  ///     "tickets": [
+  ///       {
+  ///         "giftNumber": "string", // 福袋編號
+  ///         "purchaseTime": "ISO 8601", //購買時間
+  ///         "isWinner": boolean, //是否中獎
+  ///       }
+  ///     ],
+  ///     "totalCount": number
+  ///   }
+  /// }
+  /// ```
+  /// </returns>
   [Authorize(AuthenticationSchemes = "Bearer")]
-  [HttpGet("[action]")]
-  public async Task<ActionResult<CommonResult<dynamic>>> Mytickets()
+  [HttpGet("[action]/{giftId}")]
+  public async Task<ActionResult<CommonResult<dynamic>>> MyTickets(string giftId)
   {
-    throw new NotImplementedException();
+    string paddleNum = _vipSvc.PaddleNum;
+
+    try
+    {
+      // 查詢所有商品預覽 (整合 VIP 和員工資訊)
+      string sql = """
+SELECT *
+ FROM GiveTicket T (NOLOCK)
+WHERE T.GiftId = @GiftId
+ AND T.PaddleNum = @PaddleNum
+""";
+
+      using var conn = await DBHelper.AUCDB.OpenAsync();
+      var infoList = await conn.QueryAsync<GiveTicket>(sql, new { GiftId = giftId, PaddleNum = paddleNum });
+      var ticketList = infoList.Select(row => new
+      {
+        GiveTicketNo = row.GiveTicketNo,
+        GiveOrderNo = row.GiveOrderNo,
+        GiftId = row.GiftId,
+        PaddleNum = row.PaddleNum,
+        HolderName = row.HolderName,
+      }).ToArray();
+
+      var result = new CommonResult<dynamic>(
+          true,
+          new { Tickets = ticketList },
+          null);
+
+      return Ok(result);
+    }
+    catch (Exception ex)
+    {
+      string errMsg = string.Format("Exception！{0}", ex.Message);
+      _logger.LogError(ex, errMsg);
+      return Ok(new CommonResult<dynamic>(false, null, errMsg));
+    }
   }
 
 }

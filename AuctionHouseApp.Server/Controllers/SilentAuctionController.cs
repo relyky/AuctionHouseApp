@@ -52,13 +52,12 @@ public class SilentAuctionController(
       var request = HttpContext.Request;
       string publicWebRoot = $"{request.Scheme}://{request.Host}";
 
-      using var conn = await DBHelper.AUCDB.OpenAsync();
-
       // 查詢所有商品預覽 (整合 VIP 和員工資訊)
       string sql = """
 SELECT * FROM [SilentPrize] (NOLOCK)
 """;
 
+      using var conn = await DBHelper.AUCDB.OpenAsync();
       var infoList = await conn.QueryAsync<SilentPrize>(sql);
       var prizeList = infoList.Select(row => new
       {
@@ -137,14 +136,13 @@ SELECT * FROM [SilentPrize] (NOLOCK)
       var request = HttpContext.Request;
       string publicWebRoot = $"{request.Scheme}://{request.Host}";
 
-      using var conn = await DBHelper.AUCDB.OpenAsync();
-
       // 查詢所有商品預覽 (整合 VIP 和員工資訊)
       string sql = """
 SELECT * FROM [SilentPrize] (NOLOCK)
 WHERE ItemId = @ItemId
 """;
 
+      using var conn = await DBHelper.AUCDB.OpenAsync();
       var info = await conn.QueryFirstOrDefaultAsync<SilentPrize>(sql, new { ItemId = itemId });
 
       if (info == null)

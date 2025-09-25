@@ -96,6 +96,7 @@ try
   builder.Services.AddSingleton<SysParamsService>();
   builder.Services.AddScoped<AesHelperService>();
   builder.Services.AddScoped<EmailProxyService>();
+  builder.Services.AddScoped<AuthVipService>();
 
   builder.Services.AddCors(); // for 開放跨源
 

@@ -51,8 +51,6 @@ public class LiveAuctionController(
             var request = HttpContext.Request;
             string publicWebRoot = $"{request.Scheme}://{request.Host}";
 
-            using var conn = await DBHelper.AUCDB.OpenAsync();
-
             // 查詢所有商品預覽 (整合 VIP 和員工資訊)
             string sql = @"
                 SELECT
@@ -76,6 +74,7 @@ public class LiveAuctionController(
                     END,
                     ap.[ItemId]";
 
+            using var conn = await DBHelper.AUCDB.OpenAsync();
             var queryResults = await conn.QueryAsync<AuctionPreviewQueryResult>(sql);
             var items = queryResults.Select(row => new LiveAuctionItem(
                 ItemId: row.ItemId,
@@ -135,8 +134,6 @@ public class LiveAuctionController(
             var request = HttpContext.Request;
             string publicWebRoot = $"{request.Scheme}://{request.Host}";
 
-            using var conn = await DBHelper.AUCDB.OpenAsync();
-
             // 查詢單一商品詳細資訊 (含結標狀態)
             string sql = @"
                 SELECT
@@ -146,6 +143,7 @@ public class LiveAuctionController(
                 LEFT JOIN [dbo].[AuctionHammered] ah (NOLOCK) ON ap.[ItemId] = ah.[ItemId]
                 WHERE ap.[ItemId] = @ItemId";
 
+            using var conn = await DBHelper.AUCDB.OpenAsync();
             var itemData = await conn.QueryFirstOrDefaultAsync<AuctionItemDetailQueryResult>(sql, new { ItemId = itemId });
 
             if (itemData == null)

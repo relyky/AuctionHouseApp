@@ -45,13 +45,12 @@ public class RaffleTicketController(
       var request = HttpContext.Request;
       string publicWebRoot = $"{request.Scheme}://{request.Host}";
 
-      using var conn = await DBHelper.AUCDB.OpenAsync();
-
       // 查詢所有商品預覽 (整合 VIP 和員工資訊)
       string sql = """
 SELECT * FROM [RafflePrize] (NOLOCK)
 """;
 
+      using var conn = await DBHelper.AUCDB.OpenAsync();
       var infoList = await conn.QueryAsync<RafflePrize>(sql);
       var prizeList = infoList.Select(row => new
       {
@@ -109,14 +108,13 @@ SELECT * FROM [RafflePrize] (NOLOCK)
       var request = HttpContext.Request;
       string publicWebRoot = $"{request.Scheme}://{request.Host}";
 
-      using var conn = await DBHelper.AUCDB.OpenAsync();
-
       // 查詢所有商品預覽 (整合 VIP 和員工資訊)
       string sql = """
 SELECT * FROM [RafflePrize] (NOLOCK)
 WHERE PrizeId = @PrizeId
 """;
 
+      using var conn = await DBHelper.AUCDB.OpenAsync();
       var info = await conn.QueryFirstOrDefaultAsync<RafflePrize>(sql, new { PrizeId = prizeId });
 
       if (info == null)
