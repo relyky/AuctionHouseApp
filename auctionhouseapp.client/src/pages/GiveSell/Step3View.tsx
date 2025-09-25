@@ -1,11 +1,9 @@
 import { Box, Button, Container, Typography, useEventCallback } from "@mui/material";
 import { useAtom } from "jotai";
-import { useState } from "react";
 import { giveSellAtom } from "./atom";
+import GiveTicketListWidget from "./widgets/GiveTicketListWidget";
 
-
-export default function GiveSell_Step3View()
-{
+export default function GiveSell_Step3View() {
   const [{ giveOrder }, setFormState] = useAtom(giveSellAtom);
 
   const handleFinish = useEventCallback(() => {
@@ -22,7 +20,8 @@ export default function GiveSell_Step3View()
       {/* 抽獎券張數 */}
       <Box typography='body1' color='text.primay' sx={{ mb: 1 }}>Total Tickets: {giveOrder?.purchaseCount}</Box>
 
-      <pre>未實作顯示抽獎券</pre>
+      {giveOrder &&
+        <GiveTicketListWidget giveOrderNo={giveOrder.giveOrderNo} />}
 
       {/* 完成 */}
       <Button variant='contained'

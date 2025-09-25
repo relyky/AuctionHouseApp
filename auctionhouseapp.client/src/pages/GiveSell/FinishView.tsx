@@ -31,7 +31,6 @@ export default function RaffleSell_FinishView() {
         Start Next Sale
       </Button>
 
-      <pre>giveOrder:{JSON.stringify(giveOrder, null, 2)}</pre>
     </Container>
   )
 }

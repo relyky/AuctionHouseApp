@@ -1,9 +1,9 @@
 import { Alert, Button, ButtonGroup, Checkbox, Container, Divider, FormControlLabel, Paper, Stack, Table, TableBody, TableCell, TableContainer, TableRow, Typography, useEventCallback } from "@mui/material";
 import { useAtom } from "jotai";
 import { useState } from "react";
+import Swal from "sweetalert2";
 import { postData, ResponseError } from "../../tools/httpHelper";
 import { giveSellAtom } from "./atom";
-import Swal from "sweetalert2";
 
 export default function GiveSell_Step2View() {
   const [{ giveOrder, sales, prize }, setFormState] = useAtom(giveSellAtom);
@@ -188,9 +188,11 @@ export default function GiveSell_Step2View() {
         </ButtonGroup>
       </Stack>
 
+      {/* for debug 
       <pre>prize: {JSON.stringify(prize)}</pre>
       <pre>sales: {JSON.stringify(sales)}</pre>
-      <pre>giveOrder: {JSON.stringify(giveOrder)}</pre>
+      <pre>giveOrder: {JSON.stringify(giveOrder)}</pre>        
+      */}
     </Container>
   )
 }

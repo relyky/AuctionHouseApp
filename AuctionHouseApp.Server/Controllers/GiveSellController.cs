@@ -235,8 +235,6 @@ WHERE GiveOrderNo = @GiveOrderNo
     return Ok(updated);
   }
 
-
-
   [NonAction]
   private void DoGenGiveTickets(GiveOrder order, SqlConnection conn, SqlTransaction txn)
   {
@@ -262,5 +260,17 @@ VALUES
     }
   }
 
+  [HttpPost("[action]/{id}")]
+  public async Task<ActionResult<IEnumerable<GiveTicket>>> ListGiveTicket(string id)
+  {
+    string sql = """
+SELECT * 
+FROM GiveTicket (NOLOCK)
+WHERE GiveOrderNo = @GiveOrderNo
+""";
 
+    using var conn = await DBHelper.AUCDB.OpenAsync();
+    var infoList = await conn.QueryAsync<GiveTicket>(sql, new { GiveOrderNo = id});
+    return Ok(infoList);
+  }
 }

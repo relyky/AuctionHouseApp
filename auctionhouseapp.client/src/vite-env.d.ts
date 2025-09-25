@@ -180,6 +180,7 @@ interface IGiveTicket {
   giveTicketNo: string;
   giveOrderNo: string;
   paddleNum: string;
+  holderName: string;
 }
 
 interface IGivePrize {
