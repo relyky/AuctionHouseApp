@@ -58,16 +58,12 @@ export default function BackendIndex_AppForm() {
         <Stack gap={2} sx={{ mb: 2 }}>
           {/* 抽獎券銷售查驗 */}
           <Button component={NavLink} variant='text' to='/backend/rafflecheck'>Verify Ticket Sales</Button>
-          {/* 抽獎券銷售統計 */}
-          <Button component={NavLink} variant='text' to='/backend/rafflequery'>Sales Statistics</Button>
 
           {/* 銷售福袋 */}
-          {import.meta.env.DEV &&
-            <Button component={NavLink} variant='text' to='/backend/givecheck'>查驗福袋銷售</Button>}
+          <Button component={NavLink} variant='text' to='/backend/givecheck'>Verify Ticket Sales (Give-to-Win)</Button>
 
-          {/* 銷售福袋紀錄 */}
-          {import.meta.env.DEV &&
-            <Button component={NavLink} variant='text' to='/backend/givequery'>福袋銷售統計</Button>}
+          {/* 抽獎券銷售統計 */}
+          <Button component={NavLink} variant='text' to='/backend/rafflequery'>Sales Statistics</Button>
 
         </Stack>
       </AuthorizeGuard>

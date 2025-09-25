@@ -74,3 +74,11 @@ export function formatDateYmd(isoDateStr: string) {
     return 'invalid date'
   }
 }
+
+/**
+* 格式化數值，加上千位逗號`,`
+* helper funciton
+*/
+export function formatWithComma(num: number) {
+  return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}

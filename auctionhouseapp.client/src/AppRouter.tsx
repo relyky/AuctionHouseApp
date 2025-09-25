@@ -17,7 +17,7 @@ import BackendIndex from './pages/BackendIndex/AppForm'
 import BackendRaffleCheck from './pages/BackendRaffleCheck/AppForm'
 import BackendRaffleQuery from './pages/BackendRaffleQuery/AppForm'
 import BackendGiveCheck from './pages/BackendGiveCheck'
-import BackendGiveQuery from './pages/BackendGiveQuery'
+//import BackendGiveQuery from './pages/BackendGiveQuery' 併入 BackendRaffleQuery
 import Home from './pages/home/AppForm'
 import RaffleBuyer from './pages/RaffleBuyer/AppForm'
 //import RaffleIndex from './pages/RaffleIndex/AppForm'
@@ -105,7 +105,6 @@ const router = createBrowserRouter([
       { path: "rafflecheck", element: <BackendRaffleCheck /> },
       { path: "rafflequery", element: <BackendRaffleQuery /> },
       { path: "givecheck", element: <BackendGiveCheck /> },
-      { path: "givequery", element: <BackendGiveQuery /> },
     ]
   },
   {

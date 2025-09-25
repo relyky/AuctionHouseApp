@@ -57,7 +57,7 @@ export default function BackendGiveCheck() {
   return (
     <Container maxWidth='sm'>
       {/* 抽獎券銷售查驗 */}
-      <Typography variant='h5' gutterBottom>Give to Win Ticket Sales Verification</Typography>
+      <Typography variant='h5' gutterBottom>Give-to-Win Sales Verification</Typography>
       {/* 業務把收到的錢交給經理後，經理打勾確認。 */}
       <Box>The finance staff will verify and confirm the amount.</Box>
 

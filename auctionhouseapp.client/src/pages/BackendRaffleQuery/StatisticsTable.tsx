@@ -1,5 +1,6 @@
 import { Paper, Table, TableBody, TableCell, TableContainer, TableRow } from '@mui/material'
 import type { ICalcRaffleOrderStatisticsResult } from './dto/ICalcRaffleOrderStatisticsResult';
+import { formatWithComma } from '../../tools/utils';
 
 /**
  * 抽獎券統計呈現
@@ -17,32 +18,32 @@ export default function StatisticsTable(props: {
           <TableRow>
             {/* 售出總張數 */}
             <TableCell>Total Tickets Sold:</TableCell>
-            <TableCell align='right'>{result.soldTicketCount}</TableCell>
+            <TableCell align='right'>{formatWithComma(result.soldTicketCount)}</TableCell>
           </TableRow>
           <TableRow>
             {/* 售出訂單數 */}
             <TableCell>Number of Orders:</TableCell>
-            <TableCell align='right'>{result.soldOrderCount}</TableCell>
+            <TableCell align='right'>{formatWithComma(result.soldOrderCount)}</TableCell>
           </TableRow>
           <TableRow>
             {/* 售出總金額 */}
             <TableCell>Total Sales Amount:</TableCell>
-            <TableCell align='right'>{result.totalSoldAmount}</TableCell>
+            <TableCell align='right'>{formatWithComma(result.totalSoldAmount)}</TableCell>
           </TableRow>
           <TableRow>
             {/* 已查驗訂單 */}
             <TableCell>Verified Orders:</TableCell>
-            <TableCell align='right'>{result.checkedOrderCount}</TableCell>
+            <TableCell align='right'>{formatWithComma(result.checkedOrderCount)}</TableCell>
           </TableRow>
           <TableRow>
             {/* 已查驗金額 */}
             <TableCell>Verified Amount:</TableCell>
-            <TableCell align='right'>{result.checkedSoldAmount}</TableCell>
+            <TableCell align='right'>{formatWithComma(result.checkedSoldAmount)}</TableCell>
           </TableRow>
           <TableRow>
             {/* 購買人數 */}
             <TableCell>Number of Buyers:</TableCell>
-            <TableCell align='right'>{result.buyerCount}</TableCell>
+            <TableCell align='right'>{formatWithComma(result.buyerCount)}</TableCell>
           </TableRow>
         </TableBody>
       </Table>
