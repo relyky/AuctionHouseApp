@@ -22,6 +22,11 @@ public class GiveOrder
   [Display(Name = "貴賓代碼")]
   public string PaddleNum { get; set; } = default!;
   /// <summary>
+  /// 貴賓名稱
+  /// </summary>
+  [Display(Name = "貴賓名稱")]
+  public string VipName { get; set; } = default!;
+  /// <summary>
   /// 福袋獎品ID
   /// </summary>
   [Display(Name = "福袋獎品ID")]
@@ -77,6 +82,7 @@ public class GiveOrder
   {
     this.GiveOrderNo = src.GiveOrderNo;
     this.PaddleNum = src.PaddleNum;
+    this.VipName = src.VipName;
     this.GiftId = src.GiftId;
     this.PurchaseCount = src.PurchaseCount;
     this.PurchaseAmount = src.PurchaseAmount;
@@ -95,6 +101,7 @@ public class GiveOrder
     return new GiveOrder {
       GiveOrderNo = this.GiveOrderNo,
       PaddleNum = this.PaddleNum,
+      VipName = this.VipName,
       GiftId = this.GiftId,
       PurchaseCount = this.PurchaseCount,
       PurchaseAmount = this.PurchaseAmount,

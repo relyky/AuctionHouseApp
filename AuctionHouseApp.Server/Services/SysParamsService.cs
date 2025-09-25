@@ -98,5 +98,46 @@ public class SysParamsService(
     return raffleTicketImageUrl;
   }
 
+  /// <summary>
+  /// 系統參數：福袋抽獎券單價
+  /// </summary>
+  public decimal GetGiveUnitPrice()
+  {
+    const string sql = @"SELECT * FROM [dbo].[SysParameter] (NOLOCK) WHERE IdName = 'GiveUnitPrice' ";
+    const string cacheIdName = @"SysParameter_GiveUnitPrice";
+
+    decimal giveUnitPrice = 0m;
+
+    //# 若 cache 有值就送回 cache 的值。
+    if (_cache.TryGetValue<decimal>(cacheIdName, out giveUnitPrice))
+    {
+      _logger.LogDebug("系統參數：福袋抽獎券單價 => 取自 cache => {giveUnitPrice}", giveUnitPrice);
+      return giveUnitPrice;
+    }
+
+    //# 否則自 DB 取系統參數。
+    //※ 失敗或未設定時傳回 0 不讓系統當掉。
+    using var conn = DBHelper.AUCDB.Open();
+    var info = conn.QueryFirstOrDefault<SysParameter>(sql);
+    if (decimal.TryParse(info?.Value, out giveUnitPrice))
+    {
+      _logger.LogDebug("系統參數：福袋抽獎券單價 => 取自 DB 成功 => {giveUnitPrice}。", giveUnitPrice);
+
+      // 存入 cache 5分鐘並 sliding 3分鐘
+      _cache.Set<decimal>(cacheIdName, giveUnitPrice, new MemoryCacheEntryOptions
+      {
+        SlidingExpiration = TimeSpan.FromMinutes(5), // 若有存取則延長 5 分鐘
+        AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(30) // 最長存活時間
+      });
+    }
+    else
+    {
+      giveUnitPrice = 0m;
+      _logger.LogDebug("系統參數：福袋抽獎券單價 => 取自 DB 失敗傳回預設值 => {giveUnitPrice}。", giveUnitPrice);
+    }
+
+    return giveUnitPrice;
+  }
+
 }
 

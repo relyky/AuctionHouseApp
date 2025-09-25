@@ -41,9 +41,9 @@ export default function BackendIndex_AppForm() {
           {/* 銷售查詢 */}
           <Button component={NavLink} variant='text' to='/raffle/sellquery'>Sales Records</Button>
 
-          {/* 銷售福袋 */}
+          {/* 銷售福袋抽獎券 */}
           {import.meta.env.DEV &&
-            <Button component={NavLink} variant='text' to='/give/sell'>銷售福袋</Button>}
+            <Button component={NavLink} variant='text' to='/give/sell'>銷售福袋抽獎券</Button>}
 
           {/* 銷售福袋紀錄 */}
           {import.meta.env.DEV &&

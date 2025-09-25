@@ -1,9 +1,9 @@
 /// <reference types="vite/client" />
 
 type EditMode = 'Init' |  'List' | 'Add' | 'Edit' | 'Step1' | 'Step2' | 'Step3' | 'Step4' | 'Step5' | 'Finish';
-// Init µe­±ªì©l¤Æ¡G¦p¸ü¤JÀô¹Ò³]©w¡B¨t²Î°Ñ¼Æµ¥
+// Init ç•«é¢åˆå§‹åŒ–ï¼šå¦‚è¼‰å…¥ç’°å¢ƒè¨­å®šã€ç³»çµ±åƒæ•¸ç­‰
 
-// ¦¹±M®×ªº³q¥Î«¬°T®§ª«¥ó
+// æ­¤å°ˆæ¡ˆçš„é€šç”¨å‹è¨Šæ¯ç‰©ä»¶
 interface MsgObj {
   message: string,
   formNo?: string,
@@ -53,7 +53,7 @@ interface IBidder {
 type IAccountState = IBidder
 
 /**
- * ©ç«~¸ê°T profile
+ * æ‹å“è³‡è¨Š profile
  */
 interface ILotProfile {
   lotNo: string
@@ -61,65 +61,76 @@ interface ILotProfile {
 }
 
 /**
- * ©ç«~¸ê°T
+ * æ‹å“è³‡è¨Š
  */
-interface ILot {
-  lotNo: string
-  lotTitle: string
-  lotDesc: string
-  catalog: string
-  highEstimate: number
-  lowEstimate: number
-  reservePrice: number
-  startPrice: number
-  status: string
-}
+//interface ILot {
+//  lotNo: string
+//  lotTitle: string
+//  lotDesc: string
+//  catalog: string
+//  highEstimate: number
+//  lowEstimate: number
+//  reservePrice: number
+//  startPrice: number
+//  status: string
+//}
+//
+//interface ILiveAuctionStatus {
+//  /**
+//   * ç³»çµ±ç‰ˆæ¬¡ã€‚é€™å€‹æ¬„ä½æ˜¯ç”¨ä¾†åˆ¤æ–·æ˜¯å¦æœ‰æ›´æ–°
+//   */
+//  rowversion: number
+//  step: StepEnum
+//  curLotNo: string
+//  curBidPrice: number
+//  bidIncrement: number
+//  isLocked: boolean
+//  isBidOpen: boolean
+//  isHammered: boolean
+//  bidOpenSn: number
+//  thisBidOpenTime?: string
+//  thisBidCloseTime?: string
+//  lastBiddingEventUpdDtm?: string // ISO 8601 æ ¼å¼çš„æ™‚é–“å­—ä¸²
+//}
+//
+//interface IBidMsg {
+//  lotNo: string
+//  bidderNo: string
+//  bidPrice: number
+//  bidOpenSn: number // int
+//}
+//
+//interface IBiddingEvent {
+//  biddingSn: number
+//  lotNo: string
+//  bidderNo: string
+//  bidPrice: number
+//  isValid: 'Y' | 'N'
+//  bidOpenSn: number
+//  bidTimestamp: string // ISO 8601 æ ¼å¼çš„æ™‚é–“å­—ä¸²
+//}
+//
+//interface IHammeredRecord {
+//  lotNo: string
+//  bidResult: string
+//  winnerNo: string
+//  hammerPrice: number
+//  biddingSn: number
+//  hammerTime: string // ISO 8601 æ ¼å¼çš„æ™‚é–“å­—ä¸²
+//}
 
-interface ILiveAuctionStatus {
-  /**
-   * ¨t²Îª©¦¸¡C³o­ÓÄæ¦ì¬O¥Î¨Ó§PÂ_¬O§_¦³§ó·s
-   */
-  rowversion: number
-  step: StepEnum
-  curLotNo: string
-  curBidPrice: number
-  bidIncrement: number
-  isLocked: boolean
-  isBidOpen: boolean
-  isHammered: boolean
-  bidOpenSn: number
-  thisBidOpenTime?: string
-  thisBidCloseTime?: string
-  lastBiddingEventUpdDtm?: string // ISO 8601 ®æ¦¡ªº®É¶¡¦r¦ê
+//#region èˆ‡ DB Schema å°æ‡‰çš„è³‡æ–™è¡¨ä»‹é¢å®šç¾©
+interface IVip {
+  paddleNum: string;
+  vipName: string;
+  vipEmail: string;
+  vipPhone: string;
+  tableNumber: string;
+  seatNumber: string;
+  isEnterprise: string;
+  receiptHeader: string;
+  taxNum: string;
 }
-
-interface IBidMsg {
-  lotNo: string
-  bidderNo: string
-  bidPrice: number
-  bidOpenSn: number // int
-}
-
-interface IBiddingEvent {
-  biddingSn: number
-  lotNo: string
-  bidderNo: string
-  bidPrice: number
-  isValid: 'Y' | 'N'
-  bidOpenSn: number
-  bidTimestamp: string // ISO 8601 ®æ¦¡ªº®É¶¡¦r¦ê
-}
-
-interface IHammeredRecord {
-  lotNo: string
-  bidResult: string
-  winnerNo: string
-  hammerPrice: number
-  biddingSn: number
-  hammerTime: string // ISO 8601 ®æ¦¡ªº®É¶¡¦r¦ê
-}
-
-//#region »P DB Schema ¹ïÀ³ªº¸ê®Æªí¤¶­±©w¸q
 
 interface IRaffleOrder {
   raffleOrderNo: string;
@@ -146,6 +157,37 @@ interface IRaffleTicket {
   buyerPhone: string;
   emailTimes: number;
   lastEmailDtm: string;
+}
+
+interface IGiveOrder {
+  giveOrderNo: string;
+  paddleNum: string;
+  vipName: string;
+  giftId: string;
+  purchaseCount: number;
+  purchaseAmount: number;
+  hasPaid: string;
+  salesId: string;
+  soldDtm: string;
+  status: string;
+  remark: string;
+  isChecked: string;
+  checker: string;
+  checkedDtm: string;
+}
+
+interface IGiveTicket {
+  giveTicketNo: string;
+  giveOrderNo: string;
+  paddleNum: string;
+}
+
+interface IGivePrize {
+  giftId: string;
+  name: string;
+  description: string;
+  image: string;
+  value: number;
 }
 
 //#endregion
