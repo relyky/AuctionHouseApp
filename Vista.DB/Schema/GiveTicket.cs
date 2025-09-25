@@ -22,6 +22,11 @@ public class GiveTicket
   [Display(Name = "訂單號碼")]
   public string GiveOrderNo { get; set; } = default!;
   /// <summary>
+  /// 福袋獎品標的
+  /// </summary>
+  [Display(Name = "福袋獎品標的")]
+  public string GiftId { get; set; } = default!;
+  /// <summary>
   /// 貴賓編號
   /// </summary>
   [Display(Name = "貴賓編號")]
@@ -36,6 +41,7 @@ public class GiveTicket
   {
     this.GiveTicketNo = src.GiveTicketNo;
     this.GiveOrderNo = src.GiveOrderNo;
+    this.GiftId = src.GiftId;
     this.PaddleNum = src.PaddleNum;
     this.HolderName = src.HolderName;
   }
@@ -45,6 +51,7 @@ public class GiveTicket
     return new GiveTicket {
       GiveTicketNo = this.GiveTicketNo,
       GiveOrderNo = this.GiveOrderNo,
+      GiftId = this.GiftId,
       PaddleNum = this.PaddleNum,
       HolderName = this.HolderName,
     };
