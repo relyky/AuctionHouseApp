@@ -53,7 +53,7 @@ SELECT *
   }
 
   /// <summary>
-  /// 取得業務賣出抽獎券訂單(未查驗)
+  /// 會計查驗收費後勾選標記成已查驗
   /// </summary>
   [HttpPost("[action]")]
   public ActionResult<MsgObj> CheckRaffleOrders([FromBody] CheckRaffleOrdersArgs args)
@@ -102,4 +102,77 @@ WHERE [RaffleOrderNo] = @RaffleOrderNo
       return BadRequest("Exception！" + ex.Message);
     }
   }
+
+  /// <summary>
+  /// 取得業務賣出福袋抽獎券訂單(未查驗)
+  /// </summary>
+  [HttpPost("[action]/{id}")]
+  public async Task<ActionResult<IEnumerable<GiveOrder>>> LoadSalesSoldGiveOrder(string id)
+  {
+    const string sql = """
+SELECT * 
+ FROM [dbo].[GiveOrder] (NOLOCK)
+ WHERE SalesId = @SalesId
+  AND HasPaid = 'Y'
+  AND [Status] = 'HasSold'
+  AND IsChecked IS NULL;
+""";
+
+    using var conn = await DBHelper.AUCDB.OpenAsync();
+    var orderList = await conn.QueryAsync<GiveOrder>(sql, new { SalesId = id });
+    return Ok(orderList);
+  }
+
+
+  /// <summary>
+  /// 會計查驗收費後勾選標記成已查驗
+  /// </summary>
+  [HttpPost("[action]")]
+  public ActionResult<MsgObj> CheckGiveOrders([FromBody] CheckGiveOrdersArgs args)
+  {
+    try
+    {
+      string sql = """
+UPDATE [dbo].[GiveOrder]
+SET IsChecked = 'Y'
+ , Checker = @Checker
+ , CheckedDtm = GetDate()
+WHERE [GiveOrderNo] = @GiveOrderNo
+ AND [HasPaid] = 'Y'
+ AND [Status] = 'HasSold'
+ AND IsChecked IS NULL
+ AND Checker IS NULL
+ AND CheckedDtm IS NULL;
+""";
+
+      // Validate
+      //...
+
+      var userId = User.Identity?.Name;
+
+      // GO
+      using var conn = DBHelper.AUCDB.Open();
+      using var txn = conn.BeginTransaction();
+
+      foreach (var orderNo in args.OrderNoList)
+      {
+        var affectedRows = conn.Execute(sql, new { GiveOrderNo = orderNo, Checker = userId }, txn);
+        if (affectedRows != 1)
+        {
+          txn.Rollback();
+          // 訂單 {orderNo} 查驗失敗，請重新整理後再試！ 
+          return Ok(new MsgObj($"Order {orderNo} verification failed. Please refresh and try again.", Severity: "error"));
+        }
+      }
+
+      txn.Commit();
+      // 成功完成查驗。
+      return Ok(new MsgObj("Verification completed successfully.", Severity: "success"));
+    }
+    catch (Exception ex)
+    {
+      return BadRequest("Exception！" + ex.Message);
+    }
+  }
+
 }

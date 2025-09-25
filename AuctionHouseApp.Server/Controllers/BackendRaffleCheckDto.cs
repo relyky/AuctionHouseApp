@@ -14,3 +14,9 @@ public record CheckRaffleOrdersArgs
 {
   public required string[] OrderNoList { get; init; }
 }
+
+[TsInterface(Namespace = "pages.BackendGiveCheck.dto")]
+public record CheckGiveOrdersArgs
+{
+  public required string[] OrderNoList { get; init; }
+}
