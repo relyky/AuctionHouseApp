@@ -41,10 +41,26 @@ Accept: application/json
 
 ###------------------------------------
 
+### 5.1 取得獎品清單
+GET {{AuctionHouseApp.Server_HostAddress}}/api/raffleticket/prizes
+Accept: application/json
+
+### 5.2 取得指定獎品詳情
+GET {{AuctionHouseApp.Server_HostAddress}}/api/raffleticket/prizes/R03
+Accept: application/json
+
+### 5.2 取得指定獎品詳情 (錯誤商品ID)
+GET {{AuctionHouseApp.Server_HostAddress}}/api/raffleticket/prizes/xxx
+Accept: application/json
+
 ### 7.1 取得拍賣商品預覽
 GET {{AuctionHouseApp.Server_HostAddress}}/api/liveauction/preview
 Accept: application/json
 
 ### 7.2 取得指定拍賣商品詳情
 GET {{AuctionHouseApp.Server_HostAddress}}/api/liveauction/preview/L02
+Accept: application/json
+
+### 7.2 取得指定拍賣商品詳情 (錯誤商品ID)
+GET {{AuctionHouseApp.Server_HostAddress}}/api/liveauction/preview/xxx
 Accept: application/json
