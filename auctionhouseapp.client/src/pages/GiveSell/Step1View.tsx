@@ -99,7 +99,7 @@ function Step1View() {
   }, [purchaseCount])
 
   return (
-    <Container maxWidth='xs' sx={{ outline: 'red dashed 1px' }}>
+    <Container maxWidth='xs'>
       {/* 銷售福袋抽獎券 */}
       <Typography variant='h5' gutterBottom>銷售福袋抽獎券</Typography>
 
