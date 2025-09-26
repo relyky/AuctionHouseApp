@@ -1,0 +1,46 @@
+/* DataListLab.css */
+
+.custom-autocomplete-container {
+  position: relative;
+  width: 300px;
+  font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;
+}
+
+.input-wrapper {
+  position: relative;
+}
+
+.custom-input {
+  width: 100%;
+  border: none;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.42);
+  padding: 7px 0;
+  font-size: 1rem;
+  background-color: transparent;
+  outline: none;
+  transition: border-bottom-color 0.2s;
+}
+
+.custom-input:focus {
+  border-bottom: 2px solid #1976d2;
+}
+
+.custom-label {
+  position: absolute;
+  left: 0;
+  top: 7px;
+  color: rgba(0, 0, 0, 0.6);
+  pointer-events: none;
+  transition: all 0.2s ease-out;
+  transform-origin: top left;
+}
+
+.custom-input:focus + .custom-label,
+.custom-input:not(:placeholder-shown) + .custom-label {
+  transform: translateY(-1.5em) scale(0.75);
+  color: #1976d2;
+}
+
+.custom-input:not(:focus):not(:placeholder-shown) + .custom-label {
+    color: rgba(0, 0, 0, 0.6);
+}
