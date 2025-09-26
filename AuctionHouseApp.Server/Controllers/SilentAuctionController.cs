@@ -1,4 +1,5 @@
-﻿using Dapper;
+﻿using AuctionHouseApp.Server.Services;
+using Dapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -12,7 +13,8 @@ namespace AuctionHouseApp.Server.Controllers;
 [Route("api/[controller]")]
 [ApiController]
 public class SilentAuctionController(
-    ILogger<RaffleTicketController> _logger
+  ILogger<RaffleTicketController> _logger,
+  SysParamsService _prmSvc
 ) : ControllerBase
 {
   /// <summary>
@@ -179,4 +181,29 @@ WHERE ItemId = @ItemId
       return Ok(new CommonResult<dynamic>(false, null, errMsg));
     }
   }
+
+  [AllowAnonymous]
+  [HttpGet("[action]")]
+  public async Task<ActionResult<CommonResult<dynamic>>> FrontUrlBase()
+  {
+    try
+    {
+      await Task.Yield();
+      string frontUrlBase = _prmSvc.GetFrontWeb_PublicUrlBase();
+
+      var result = new CommonResult<dynamic>(
+          true,
+          frontUrlBase,
+          null);
+
+      return Ok(result);
+    }
+    catch (Exception ex)
+    {
+      string errMsg = string.Format("Exception！{0}", ex.Message);
+      _logger.LogError(ex, errMsg);
+      return Ok(new CommonResult<dynamic>(false, null, errMsg));
+    }
+  }
+
 }

@@ -106,5 +106,9 @@ Accept: application/json
 GET {{AuctionHouseApp.Server_HostAddress}}/api/silentauction/items/xxx
 Accept: application/json
 
+### 8.x 取前端網址
+GET {{AuctionHouseApp.Server_HostAddress}}/api/silentauction/fronturlbase
+Accept: application/json
+
 ###------------------------------------
 

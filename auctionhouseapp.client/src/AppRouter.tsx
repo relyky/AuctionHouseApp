@@ -28,6 +28,7 @@ import GiveSellQuery from './pages/GiveSellQuery'
 import SiteIndex from './pages/SiteIndex'
 import AskInput from "./pages/AskInput"
 import AuctionInput from "./pages/AuctionInput"
+import SilentQrcode from './pages/SilentQrcode'
 
 //---下面測試用功能
 import ACU1010 from './pages/AUC1010/AppForm'
@@ -114,6 +115,7 @@ const router = createBrowserRouter([
       { index: true, element: <SiteIndex /> },
       { path: "ask", element: <AskInput /> },
       { path: "auction", element: <AuctionInput /> },
+      { path: "silentqrcode", element: <SilentQrcode /> },
     ]
   },
   {

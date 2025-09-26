@@ -139,5 +139,47 @@ public class SysParamsService(
     return giveUnitPrice;
   }
 
+  /// <summary>
+  /// 系統參數：前端網站參數
+  /// FrontWeb_PublicUrlBase
+  /// </summary>
+  public string GetFrontWeb_PublicUrlBase()
+  {
+    const string sql = @"SELECT * FROM [dbo].[SysParameter] (NOLOCK) WHERE IdName = 'FrontWeb_PublicUrlBase' ";
+    const string cacheIdName = @"SysParameter_FrontWeb_PublicUrlBase";
+
+    string? frontWeb_PublicUrlBase = "unknown";
+
+    //# 若 cache 有值就送回 cache 的值。
+    if (_cache.TryGetValue<string>(cacheIdName, out frontWeb_PublicUrlBase))
+    {
+      _logger.LogDebug("系統參數：前端網站參數 => 取自 cache 成功");
+      return frontWeb_PublicUrlBase!;
+    }
+
+    //# 否則自 DB 取系統參數。
+    //※ 失敗或未設定時傳回 0 不讓系統當掉。
+    using var conn = DBHelper.AUCDB.Open();
+    var info = conn.QueryFirstOrDefault<SysParameter>(sql);
+    if (info != null)
+    {
+      frontWeb_PublicUrlBase = info.Value;
+      _logger.LogDebug("系統參數：前端網站參數 => 取自 DB 成功");
+
+      // 存入 cache 5分鐘並 sliding 3分鐘
+      _cache.Set<string>(cacheIdName, frontWeb_PublicUrlBase, new MemoryCacheEntryOptions
+      {
+        SlidingExpiration = TimeSpan.FromMinutes(5), // 若有存取則延長 5 分鐘
+        AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(30) // 最長存活時間
+      });
+    }
+    else
+    {
+      frontWeb_PublicUrlBase = "unknown";
+      _logger.LogDebug("系統參數：前端網站參數 => 取自 DB 失敗傳回預設值");
+    }
+
+    return frontWeb_PublicUrlBase;
+  }
 }
 

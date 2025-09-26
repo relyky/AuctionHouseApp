@@ -195,4 +195,20 @@ interface IGivePrize {
   value: number;
 }
 
+interface ISilentPrize {
+  itemId: string;
+  name: string;
+  description: string;
+  image: string;
+  startPrice: number;
+  minIncrement: number;
+  startTime: string;
+  endTime: string;
+  status: string;
+  displayOrder: number;
+  createdAt: string;
+  updatedAt: string;
+  createdBy: string;
+}
+
 //#endregion
