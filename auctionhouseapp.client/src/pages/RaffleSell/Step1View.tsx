@@ -1,4 +1,4 @@
-import { Alert, Button, ButtonGroup, Container, IconButton, InputAdornment, Stack, TextField, Toolbar, Typography, useEventCallback } from "@mui/material";
+import { Alert, Button, ButtonGroup, Container, Divider, IconButton, InputAdornment, Stack, TextField, Toolbar, Typography, useEventCallback } from "@mui/material";
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import type { ChangeEvent, FormEvent } from 'react';
 import { useEffect, useState } from 'react';
@@ -13,6 +13,7 @@ import type { IStaffProfile } from "./dto/IStaffProfile";
 import PlusIcon from '@mui/icons-material/Add';
 import MinusIcon from '@mui/icons-material/Remove';
 import PickBuyerDlg from "./PickBuyerDlg";
+import PickVipDlg from "./PickVipDlg";
 
 /**
  * 業務-銷售抽獎券
@@ -96,6 +97,12 @@ export default function RaffleSell_Step1View() {
     setBuyerPhone(buyer.buyerPhone);
   });
 
+  const handlePickVip = useEventCallback((vip: IVip) => {
+    setBuyerName(vip.vipName)
+    setBuyerEmail(vip.vipEmail)
+    setBuyerPhone(vip.vipPhone)
+  });
+
   // 若已填過單。可修改訂單內容。
   useEffect(() => {
     if (raffleOrder) {
@@ -124,13 +131,11 @@ export default function RaffleSell_Step1View() {
     <Container maxWidth='xs'>
       {/* 銷售抽獎券 */}
       <Typography variant='h5'>Sell Raffle Tickets</Typography>
-      <Toolbar variant='regular' disableGutters>
+      <Toolbar variant='regular' disableGutters sx={{ justifyContent: 'space-between' }} >
         {/* 老客戶 */}
         <PickBuyerDlg label='Returning Customer' onPick={handlePickBuyer} />
-
-        {import.meta.env.DEV && /* 正式版先藏起來 */
-          <Button onClick={() => alert('自貴賓清單查詢帶出')}>貴賓</Button>
-        }
+        {/* 貴賓 */}
+        <PickVipDlg label='VIP' onPick={handlePickVip} />
       </Toolbar>
 
       <form onSubmit={handleSubmit}>
@@ -218,7 +223,7 @@ export default function RaffleSell_Step1View() {
 
       {/* 抽獎券單張 100 元。優惠活動 12 張 1000 元。*/}
       <Alert severity='info' sx={{ my: 2 }}>
-        Each raffle ticket NT${raffleUnitPrice}.<br/> Promotion: 12 tickets for NT${raffleUnitPrice * 10}.
+        Each raffle ticket NT${raffleUnitPrice}.<br /> Promotion: 12 tickets for NT${raffleUnitPrice * 10}.
       </Alert>
     </Container>
   )

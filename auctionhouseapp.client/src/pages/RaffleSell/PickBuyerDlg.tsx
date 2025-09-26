@@ -76,6 +76,17 @@ export default function PickBuyerDlg(props: {
       <Dialog
         open={open}
         onClose={handleClose}
+        slotProps={{
+          paper: {
+            sx: {
+              position: 'absolute',
+              top: '20%',
+              left: '50%',
+              transform: 'translate(-50%, -20%)',
+              m: 0,
+            },
+          },
+        }}
       >
         <DialogTitle>
           {/* 買家名稱/聯絡電話/電郵信箱 */}
