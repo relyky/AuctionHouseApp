@@ -16,9 +16,9 @@ export default function SilentQRCode() {
     setLoading(true)
 
     const p1 = new Promise((resolve) => {
-      fetch('/api/silentauction/fronturlbase')
-        .then(resp => resp.json())
-        .then(result => setFrontUrlBase(result.data))
+    fetch('/api/silentauction/fronturlbase')
+      .then(resp => resp.json())
+      .then(result => setFrontUrlBase(result.data))
         .catch((err) => {
           console.log(err);
           setErrMsg('Get the url of the front website fail!');
@@ -27,9 +27,9 @@ export default function SilentQRCode() {
     });
 
     const p2 = new Promise((resolve) => {
-      fetch('/api/silentauction/items')
-        .then(resp => resp.json())
-        .then(result => setSilentPrize(result.data.items))
+    fetch('/api/silentauction/items')
+      .then(resp => resp.json())
+      .then(result => setSilentPrize(result.data.items))
         .catch((err) => {
           console.log(err);
           setErrMsg('Load the silent prize information fail!');
