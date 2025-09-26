@@ -3,6 +3,7 @@ import { QRCodeSVG } from '@akamfoad/qrcode';
 
 export default function QrCodeWidget(props: {
   value: string,
+  level?: 'L' | 'M' | 'Q' | 'H',
   imageSrc?: string,
   bgColor?: string,
   fgColor?: string,
@@ -11,7 +12,9 @@ export default function QrCodeWidget(props: {
 }) {
   const devRef = useRef<HTMLDivElement>(null)
 
-  const options = useMemo(() => ({
+  const config = useMemo(() => ({
+    level: props.level ?? 'M', // use high error correction level
+    padding: 1,
     bgColor: props.bgColor,
     fgColor: props.fgColor,
     image: props.imageSrc ?
@@ -22,12 +25,12 @@ export default function QrCodeWidget(props: {
         x: 'center',
         y: 'center',
       } : undefined,
-  }), [props.bgColor, props.fgColor, props.imageSrc])
+  }), [props])
 
   const qrSvgXml = useMemo(() => {
-    const qrSVG = new QRCodeSVG(props.value, options);
+    const qrSVG = new QRCodeSVG(props.value, config);
     return qrSVG.toString();
-  }, [props.value, options])
+  }, [props.value, config])
 
   useEffect(() => {
     if (devRef.current && qrSvgXml)
