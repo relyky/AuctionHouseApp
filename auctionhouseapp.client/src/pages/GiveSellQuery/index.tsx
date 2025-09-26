@@ -18,7 +18,7 @@ export default function GiveSellQuery() {
   return (
     <Container maxWidth='sm'>
       {/* ·~°È/¾P°â¬d¸ß */}
-      <Typography variant='h5'>Give-to-Win Sales Records</Typography>
+      <Typography variant='h5'>Sales Records (Give-to-Win)</Typography>
 
       {sales && <GiveTicketSalesView sales={sales} />}
     </Container>

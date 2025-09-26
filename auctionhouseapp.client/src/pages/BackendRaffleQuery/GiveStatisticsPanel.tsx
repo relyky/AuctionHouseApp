@@ -37,7 +37,7 @@ export default function GiveStatisticsPanel() {
   return (
     <Box>
       {/* 抽獎券銷售統計 */}
-      <Typography variant='h5' gutterBottom>Give-to-Win Sales Statistics</Typography>
+      <Typography variant='h5' gutterBottom>Give-to-Win Ticket Sales Statistics</Typography>
 
       {f_loading && <LinearProgress color='info' />}
 

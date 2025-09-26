@@ -14,6 +14,9 @@ export default function LiveEventsView() {
           <Button component={NavLink} variant='text' to='/site/ask'>Open Ask 捐贈輸入</Button>
           {/* 抽獎券銷售統計 */}
           <Button component={NavLink} variant='text' to='/site/auction'>Live Auction 競價輸入</Button>
+
+          {/* 生成 Silent Auction QR Code */}
+          <Button component={NavLink} variant='text' to='/site/auction'>Silent Auction Prizes QR Code</Button>
         </Stack>
       </Paper>
     </>

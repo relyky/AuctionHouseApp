@@ -13,7 +13,7 @@ export default function GiveSell_Step3View() {
   return (
     <Container maxWidth='sm'>
       {/* 只需列出抽獎券清單。福袋抽獎券不用寄。 */}
-      <Typography variant='h5'>List Give Tickets</Typography>
+      <Typography variant='h5'>Give-to-Win Tickets List</Typography>
 
       <Typography variant='h6'>Order No. {giveOrder?.giveOrderNo}</Typography>
       <Box typography='body2' color='text.secondary' sx={{ mb: 1 }}>Reminder: Please scroll down and send the e-ticket by email to the buyer to complete the order.</Box>

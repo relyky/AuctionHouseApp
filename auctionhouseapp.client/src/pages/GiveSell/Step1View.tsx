@@ -31,7 +31,7 @@ function Step1View() {
       setErrMsg(null); // 先清除錯誤訊息
 
       if (!Boolean(paddleNum)) {
-        setErrMsg('未選取貴賓！');
+        setErrMsg('No VIP selected!');
         return;
       }
 
@@ -101,7 +101,7 @@ function Step1View() {
   return (
     <Container maxWidth='xs'>
       {/* 銷售福袋抽獎券 */}
-      <Typography variant='h5' gutterBottom>銷售福袋抽獎券</Typography>
+      <Typography variant='h5' gutterBottom>Sell Give-to-Win Tickets</Typography>
 
       {!Boolean(giveOrder) &&
         <Toolbar variant='regular' disableGutters sx={{ mb: 2 }}>
@@ -117,7 +117,7 @@ function Step1View() {
               slotProps={{ input: { readOnly: true } }}
             />}
 
-          <SelectGiftField name='giftId' label='福袋獎品' required
+          <SelectGiftField name='giftId' label='Give-to-Win Prize' required
             value={giftId}
             onChange={setGiftId}
             readOnly={false}

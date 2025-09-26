@@ -34,12 +34,12 @@ export default function GiveLayout() {
           <BottomNavigationAction label="Staff Panel" icon={<HomeIcon color='primary' />}
             component={Link} to='/backend' />
           {/* 銷售福袋抽獎券 */}
-          <BottomNavigationAction label="銷售福袋抽獎券" sx={{ whiteSpace: 'nowrap' }}
+          <BottomNavigationAction label="Sell Give-to-Win Tickets" sx={{ whiteSpace: 'nowrap' }}
             icon={<GiftIcon color='primary' />}
             component={Link} to='/give/sell'
           />
           {/* 銷售福袋紀錄 */}
-          <BottomNavigationAction label="銷售福袋紀錄" icon={<SearchIcon color='primary' />}
+          <BottomNavigationAction label="Sales Records" icon={<SearchIcon color='primary' />}
             component={Link} to='/give/sellquery'
           />
         </BottomNavigation>

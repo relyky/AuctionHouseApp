@@ -42,12 +42,10 @@ export default function BackendIndex_AppForm() {
           <Button component={NavLink} variant='text' to='/raffle/sellquery'>Sales Records</Button>
 
           {/* 銷售福袋抽獎券 */}
-          {import.meta.env.DEV &&
-            <Button component={NavLink} variant='text' to='/give/sell'>銷售福袋抽獎券</Button>}
+          <Button component={NavLink} variant='text' to='/give/sell'>Sell Give-to-Win Tickets</Button>
 
           {/* 銷售福袋紀錄 */}
-          {import.meta.env.DEV &&
-            <Button component={NavLink} variant='text' to='/give/sellquery'>銷售福袋紀錄</Button>}
+          <Button component={NavLink} variant='text' to='/give/sellquery'>Sales Records (Give-to-Win)</Button>
 
         </Stack>
       </AuthorizeGuard>
@@ -69,7 +67,7 @@ export default function BackendIndex_AppForm() {
       </AuthorizeGuard>
 
       {/* 現場活動 */}
-      {import.meta.env.DEV && <LiveEventsPanel />}
+      <LiveEventsPanel />
 
       {/*
       <Typography variant='h6' gutterBottom>前台</Typography>

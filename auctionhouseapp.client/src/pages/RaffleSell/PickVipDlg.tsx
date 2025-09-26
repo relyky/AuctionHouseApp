@@ -78,7 +78,7 @@ export default function PickBuyerDlg(props: {
   return (
     <>
       <Button sx={{ flexGrow: 1 }} onClick={handleOpen}>{props.label}</Button>
-      <Dialog
+      <Dialog maxWidth='xs' fullWidth
         open={open}
         onClose={handleClose}
         slotProps={{

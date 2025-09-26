@@ -73,7 +73,7 @@ export default function GiveSell_Step2View() {
   return (
     <Container maxWidth='xs'>
       {/* 抽獎券訂單 */}
-      <Typography variant='h5' gutterBottom>Give Tickets Order</Typography>
+      <Typography variant='h5' gutterBottom>Give-to-Win Tickets Order</Typography>
 
       <TableContainer component={Paper}>
         <Table>
