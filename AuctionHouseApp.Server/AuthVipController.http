@@ -1,5 +1,14 @@
 @AuctionHouseApp.Server_HostAddress = https://localhost:60026
 
+### 2.x 貴賓名冊
+POST {{AuctionHouseApp.Server_HostAddress}}/api/auth/vip/guestlist
+Accept: application/json
+Content-Type: application/json
+
+{
+	"credential": "AIzaSyDaGmWKa4JsXZ-HjGw7ISLn_3namBGewQe"
+}
+
 ### 2.1 賓客登入 (取得 Token)
 # @name loginRequest
 POST {{AuctionHouseApp.Server_HostAddress}}/api/auth/vip/login

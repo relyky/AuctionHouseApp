@@ -55,3 +55,8 @@ public record AuthVipStatusResult(
   Guid AuthGuid,
   string[] Roles
 );
+
+[TsInterface(Namespace = "dto.authVip")]
+public record AuthVipGuestListArgs(
+  string Credential
+);

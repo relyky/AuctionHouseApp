@@ -1,4 +1,6 @@
 ﻿using AuctionHouseApp.Server.Models;
+using Azure.Core;
+using Dapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -16,6 +18,77 @@ public class AuthVipController(
     IConfiguration _config
   ) : ControllerBase
 {
+  /// <summary>
+  /// 貴賓名冊。
+  /// 讓貴賓可以 autocomplete 登入。
+  /// </summary>
+  /// <returns>
+  /// -----------------------------
+  /// ### 2.x 貴賓名冊
+  /// **POST** `api/auth/vip/guestlist`
+  /// 
+  /// **Request Body:**
+  /// ```json
+  /// {
+  ///   "credential": "string", // 想不到先亂填或進行編碼。
+  /// }
+  /// ```
+  /// 
+  /// ** Response:**
+  /// ```json
+  /// {
+  ///   "success": true,
+  ///   "data": {
+  ///     "guests": [{
+  ///       "name": "string",  //賓客姓名
+  ///       "email": "string",  //賓客email
+  ///     }]
+  ///   }
+  /// }
+  /// ```
+  /// </returns>
+  [AllowAnonymous]
+  [HttpPost("[action]")]
+  public async Task<ActionResult<CommonResult<dynamic>>> GuestList([FromBody] AuthVipGuestListArgs args)
+  {
+    try
+    {
+      bool isValid = "AIzaSyDaGmWKa4JsXZ-HjGw7ISLn_3namBGewQe".Equals(args.Credential);
+      if (!isValid)
+        return Ok(new CommonResult<dynamic>(false, null, "The credential is invalid!"));
+
+      // 查詢所有商品預覽 (整合 VIP 和員工資訊)
+      string sql = """
+SELECT [VipName], [VipEmail]
+  FROM [Vip] (NOLOCK)
+  ORDER BY VipName ASC;
+""";
+
+      using var conn = await DBHelper.AUCDB.OpenAsync();
+      var infoList = await conn.QueryAsync(sql);
+    
+      var guestList = infoList.Select(c => new
+      {
+        Name = c.VipName,
+        Email = c.VipEmail
+      });
+
+      var result = new CommonResult<dynamic>(
+          true,
+          new { Guests = guestList },
+          null);
+
+      return Ok(result);
+    }
+    catch (Exception ex)
+    {
+      string errMsg = string.Format("Exception！{0}", ex.Message);
+      _logger.LogError(ex, errMsg);
+      return Ok(new CommonResult<dynamic>(false, null, errMsg));
+    }
+  }
+
+  [AllowAnonymous]
   [HttpPost("[action]")]
   public ActionResult<AuthVipLoginResult> Login([FromBody] AuthVipLoginArgs args)
   {
@@ -108,5 +181,6 @@ public class AuthVipController(
 
     return (jwtToken, expiresUtc);
   }
+
 
 }
