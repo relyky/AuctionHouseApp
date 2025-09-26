@@ -4,43 +4,90 @@
   position: relative;
   width: 300px;
   font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;
+  padding: 16px;
+  margin: 16px;
 }
 
 .input-wrapper {
   position: relative;
 }
 
+/* 移除 input 的底線，並增加內距以容納外框 */
 .custom-input {
   width: 100%;
+  box-sizing: border-box;
   border: none;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.42);
-  padding: 7px 0;
+  padding: 16.5px 14px;
   font-size: 1rem;
   background-color: transparent;
   outline: none;
-  transition: border-bottom-color 0.2s;
-}
-
-.custom-input:focus {
-  border-bottom: 2px solid #1976d2;
+  z-index: 1; /* 確保 input 在 fieldset 上方 */
+  position: relative;
 }
 
 .custom-label {
   position: absolute;
-  left: 0;
-  top: 7px;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
   color: rgba(0, 0, 0, 0.6);
   pointer-events: none;
   transition: all 0.2s ease-out;
   transform-origin: top left;
+  z-index: 2; /* 確保 label 在 fieldset 上方 */
+  background-color: white; /* 讓 label 有背景色，才能蓋住後面的框線 */
+  padding: 0 4px;
 }
 
+/* 浮動標籤的轉換 */
 .custom-input:focus + .custom-label,
 .custom-input:not(:placeholder-shown) + .custom-label {
-  transform: translateY(-1.5em) scale(0.75);
+  top: 0;
+  transform: translateY(-50%) scale(0.75);
   color: #1976d2;
 }
 
 .custom-input:not(:focus):not(:placeholder-shown) + .custom-label {
     color: rgba(0, 0, 0, 0.6);
+}
+
+/* --- 描邊樣式核心 --- */
+.custom-fieldset {
+  position: absolute;
+  top: -5px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: 0;
+  padding: 0 8px;
+  border: 1px solid rgba(0, 0, 0, 0.23);
+  border-radius: 4px;
+  pointer-events: none; /* 讓點擊可以穿透 */
+}
+
+.custom-legend {
+  padding: 0;
+  text-align: left;
+  visibility: hidden; /* 隱藏 legend 自身的文字 */
+  max-width: 0.01px; /* 初始狀態下，讓缺口寬度為0 */
+  transition: max-width 50ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
+}
+
+.custom-legend span {
+    display: inline-block;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+/* 當 input focus 或有值時，展開 legend 來撐開缺口 */
+.custom-input:focus ~ .custom-fieldset .custom-legend,
+.custom-input:not(:placeholder-shown) ~ .custom-fieldset .custom-legend {
+  max-width: 100%; /* 展開寬度 */
+  transition: max-width 100ms cubic-bezier(0.0, 0, 0.2, 1) 50ms;
+}
+
+/* input focus 時，邊框變色變粗 */
+.custom-input:focus ~ .custom-fieldset {
+  border-width: 2px;
+  border-color: #1976d2;
 }
