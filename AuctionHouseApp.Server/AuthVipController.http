@@ -16,7 +16,7 @@ Accept: application/json
 Content-Type: application/json
 
 {
-	"name": "Arnold Alois Schwarzenegger",
+	"name": "Arnold Alois Schwarzenegger"
 }
 
 ### 2.1 賓客登入 (取得 Token)
@@ -29,7 +29,7 @@ Content-Type: application/json
 	"name": "Alois"
 }
 
-### 2.1 賓客登入 (取得 Token)
+### 2.1 賓客登入 (有多位符合)
 # @name loginRequest
 POST {{AuctionHouseApp.Server_HostAddress}}/api/auth/vip/login
 Accept: application/json
@@ -80,6 +80,11 @@ Accept: application/json
 ### 5.2 取得指定獎品詳情 (錯誤商品ID)
 GET {{AuctionHouseApp.Server_HostAddress}}/api/raffleticket/prizes/xxx
 Accept: application/json
+
+### 5.3 取得我的票券 [須先登入認證]
+GET {{AuctionHouseApp.Server_HostAddress}}/api/raffleticket/mytickets
+Accept: application/json
+Authorization: Bearer {{loginRequest.response.body.$.data.token}}
 
 ### 6.1 取得福袋清單
 GET {{AuctionHouseApp.Server_HostAddress}}/api/givetowin/gifts
