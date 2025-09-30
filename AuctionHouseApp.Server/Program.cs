@@ -1,6 +1,7 @@
 using AuctionHouseApp.Server.Models;
 using AuctionHouseApp.Server.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using N8ReactAppTpl.Server.Models;
 using Serilog;
 using System.Text.Json.Serialization;
 
@@ -91,6 +92,10 @@ try
   builder.Services.AddEndpointsApiExplorer();
   builder.Services.AddSwaggerGen();
 
+  //## for 健康狀態檢查
+  builder.Services.AddHealthChecks()
+         .AddCheck<SimpleHealthCheck>(nameof(SimpleHealthCheck));
+
   builder.Services.AddMemoryCache();
   builder.Services.AddHttpContextAccessor();
 
@@ -129,8 +134,15 @@ try
 
   app.UseAuthorization();
 
-  app.MapControllers();
 
+  //## for 健康狀態檢查
+  app.MapHealthChecks("/healthz", new Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions
+  {
+    ResponseWriter = SimpleHealthCheck.WriteHealthCheckUIResponse
+  });
+
+  //## Endpoints
+  app.MapControllers();
   app.MapFallbackToFile("/index.html");
 
   #endregion
