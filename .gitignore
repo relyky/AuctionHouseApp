@@ -401,3 +401,4 @@ FodyWeavers.xsd
 *.sln.iml
 /_publish
 /AuctionHouseApp.Server/appsettings.Development.json
+/AuctionHouseApp.Server/appsettings.docker.json
