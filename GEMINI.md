@@ -9,9 +9,9 @@
 - **使用者介面要求**: 競標者的使用者介面需以手機應用來設計。拍賣官的使用者介面則是網頁應用來設計。
 
 ## 技術棧 (Technology Stack)
-
+- 專案框架: React and ASP.NET Core (TypeScript)
 - **後端 (Backend)**:
-  - C# 12 / ASP.NET Core 8
+  - C# 12 / ASP.NET Core 8 Web API
 - **前端 (Frontend)**:
   - TypeScript
   - React 19
