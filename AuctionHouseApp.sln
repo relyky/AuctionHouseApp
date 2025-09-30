@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuctionHouseApp.Server", "A
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vista.DB", "Vista.DB\Vista.DB.csproj", "{92ECCF1B-F329-460A-8C4C-FA09DD122117}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vista.DbPanda", "Vista.DbPanda\Vista.DbPanda.csproj", "{BC722BB5-68FA-D32E-73F4-F27345A42F2F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,6 +31,10 @@ Global
 		{92ECCF1B-F329-460A-8C4C-FA09DD122117}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{92ECCF1B-F329-460A-8C4C-FA09DD122117}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{92ECCF1B-F329-460A-8C4C-FA09DD122117}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BC722BB5-68FA-D32E-73F4-F27345A42F2F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BC722BB5-68FA-D32E-73F4-F27345A42F2F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BC722BB5-68FA-D32E-73F4-F27345A42F2F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BC722BB5-68FA-D32E-73F4-F27345A42F2F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
