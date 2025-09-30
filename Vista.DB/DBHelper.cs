@@ -28,6 +28,7 @@ class DBHelper
   public static void Register(IConfiguration config)
   {
     // 自 appsettings.json 取得連線字串。
+    Console.WriteLine($"Register AUCDB: {config.GetConnectionString("AUCDB")}"); // for debug
     DBHelper.AUCDB = new ConnProxy("AUCDB", config);
 
     ////※ 假設 CONNSEC/CONNSSO 已經取得。
