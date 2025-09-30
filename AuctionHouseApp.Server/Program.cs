@@ -12,6 +12,9 @@ try
   var builder = WebApplication.CreateBuilder(args);
   IConfiguration config = builder.Configuration;
 
+  // for debug
+  Console.WriteLine($"ConnectionStrings:AUCDB: {config.GetValue<string>("ConnectionStrings:AUCDB")}");
+
   #region §§ Prefix system initialization -------------------------------------
   ////## 取得系統名稱，系統基本參數
   string SystemId = config["SystemID"] ?? builder.Environment.ApplicationName;
