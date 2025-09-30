@@ -94,11 +94,28 @@ SELECT [VipName], [VipEmail]
   {
     try
     {
+      string sql = """
+SELECT TOP 2 *
+ FROM [Vip] (NOLOCK)
+ WHERE VipName like @VipName
+""";
+
       // 取 VIP 資料
       using var conn = DBHelper.AUCDB.Open();
-      var vip = conn.GetEx<Vip>(new { VipName = args.Name, VipEmail = args.Email });
-      if(vip is null)
+      var vipList = conn.Query<Vip>(sql, new { VipName = $"%{args.Name}%"}).ToArray();
+      if (vipList.Length <= 0)
         return Ok(new AuthVipLoginResult(false, null, "Login validation fail!"));
+
+      // "發現多位貴賓，請輸入更精確名稱。"
+      if (vipList.Length > 1)
+        return Ok(new AuthVipLoginResult(false, null, "Several VIP records match your input. Please provide a more precise name."));
+
+      // 只發現一位才通過。
+      var vip = vipList[0];
+
+      //var vip = conn.GetEx<Vip>(new { VipName = args.Name, VipEmail = args.Email });
+      //if(vip is null)
+      //  return Ok(new AuthVipLoginResult(false, null, "Login validation fail!"));
 
       // 取得貴賓資料
       var guest = new AuthVipLoginResult_Guest(vip.PaddleNum, vip.VipName, vip.VipEmail, vip.TableNumber);

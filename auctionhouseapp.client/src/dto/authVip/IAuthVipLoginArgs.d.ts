@@ -5,5 +5,4 @@
 export interface IAuthVipLoginArgs
 {
 	name: string;
-	email: string;
 }

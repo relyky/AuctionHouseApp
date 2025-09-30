@@ -9,7 +9,8 @@ namespace AuctionHouseApp.Server.Controllers;
 //}
 
 [TsInterface(Namespace = "dto.authVip")]
-public record AuthVipLoginArgs(string Name, string Email);
+public record AuthVipLoginArgs(string Name);
+//public record AuthVipLoginArgs(string Name, string Email);
 
 
 //** Response:**

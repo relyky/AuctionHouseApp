@@ -17,7 +17,6 @@ Content-Type: application/json
 
 {
 	"name": "Arnold Alois Schwarzenegger",
-	"email": "arnold@mail.server"
 }
 
 ### 2.1 賓客登入 (取得 Token)
@@ -27,8 +26,17 @@ Accept: application/json
 Content-Type: application/json
 
 {
-	"name": "Angelina Jolie Voight",
-	"email": "angelina@mail.server"
+	"name": "Alois"
+}
+
+### 2.1 賓客登入 (取得 Token)
+# @name loginRequest
+POST {{AuctionHouseApp.Server_HostAddress}}/api/auth/vip/login
+Accept: application/json
+Content-Type: application/json
+
+{
+	"name": "a"
 }
 
 ### 通訊測試 (需攜帶 Token)
