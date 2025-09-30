@@ -8,7 +8,10 @@
 
   <ItemGroup>
     <PackageReference Include="jose-jwt" Version="5.2.0" />
-    <PackageReference Include="Vista.DbPanda" Version="0.9.5" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Vista.DbPanda\Vista.DbPanda.csproj" />
   </ItemGroup>
 
 </Project>
