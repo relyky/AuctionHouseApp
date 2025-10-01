@@ -19,11 +19,11 @@ internal class SimpleHealthCheck : IHealthCheck
       }
       catch(Exception ex)
       {
-        string errMsg = "測試 DB 連線失敗！" + ex.Message;
+        string errMsg = "Database connection test failed!" + $"({DBHelper.AUCDB.ConnString})"  + ex.Message;
         return HealthCheckResult.Unhealthy(errMsg, ex);
       }
 
-      return HealthCheckResult.Healthy("我很好。");
+      return HealthCheckResult.Healthy("I am fine.");
     }
     catch (Exception ex)
     {

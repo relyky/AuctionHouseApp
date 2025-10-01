@@ -21,12 +21,10 @@ public class ConnProxy
   /// </summary>
   private string _connStr;
 
-#if DEBUG
   /// <summary>
   /// for DEBUG: 檢查連線字串內容
   /// </summary>
-  public String DebugConnString => _connStr;
-#endif
+  public String ConnString => _connStr;
 
   public ConnProxy(string connString)
   {
