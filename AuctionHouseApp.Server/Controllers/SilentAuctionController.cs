@@ -14,47 +14,51 @@ namespace AuctionHouseApp.Server.Controllers;
 [ApiController]
 public class SilentAuctionController(
     ILogger<SilentAuctionController> _logger,
+    SysParamsService _prmSvc,
     AuthVipService _vipSvc
 ) : ControllerBase
 {
-    /// <summary>
-    /// 取得商品清單
-    /// 大螢幕可沿用 → 不管制授權。
-    /// </summary>
-    /// <returns>
-    /// **Response:**
-    /// ```json
-    /// {
-    ///   "success": true,
-    ///   "data": {
-    ///     "items": [
-    ///       {
-    ///         "itemId": "string", // 商品ID
-    ///         "name": "string", // 商品名稱
-    ///         "description": "string", // 商品描述
-    ///         "image": "string", // 商品圖片URL
-    ///         "startPrice": number, // 起標價
-    ///         "currentPrice": number,  //當前價格
-    ///         "minIncrement": number,  //最低加價
-    ///         "currentBidderPaddleNum": "string",  //最高出價者
-    ///         "currentBidderPaddleName": "string", //最高出價者姓名
-    ///         "endTime": "ISO 8601"  //結標時間
-    ///       }
-    ///     ]
-    ///   }
-    /// }
-    /// ```
-    /// </returns>
-    [AllowAnonymous]
-    [HttpGet("[action]")]
-    public ActionResult<CommonResult<SilentAuctionItemsResponse>> Items()
+  /// <summary>
+  /// 取得商品清單
+  /// 大螢幕可沿用 → 不管制授權。
+  /// </summary>
+  /// <returns>
+  /// **Response:**
+  /// ```json
+  /// {
+  ///   "success": true,
+  ///   "data": {
+  ///     "items": [
+  ///       {
+  ///         "itemId": "string", // 商品ID
+  ///         "name": "string", // 商品名稱
+  ///         "description": "string", // 商品描述
+  ///         "image": "string", // 商品圖片URL
+  ///         "startPrice": number, // 起標價
+  ///         "currentPrice": number,  //當前價格
+  ///         "minIncrement": number,  //最低加價
+  ///         "currentBidderPaddleNum": "string",  //最高出價者
+  ///         "currentBidderPaddleName": "string", //最高出價者姓名
+  ///         "endTime": "ISO 8601"  //結標時間
+  ///       }
+  ///     ]
+  ///   }
+  /// }
+  /// ```
+  /// </returns>
+  [AllowAnonymous]
+  [HttpGet("[action]")]
+  public ActionResult<CommonResult<SilentAuctionItemsResponse>> Items()
+  {
+    try
     {
-        try
-        {
-            using var conn = DBHelper.AUCDB.Open();
+      var request = HttpContext.Request;
+      string publicWebRoot = $"{request.Scheme}://{request.Host}";
 
-            // 查詢所有商品清單 (整合最高出價資訊)
-            string sql = @"
+      using var conn = DBHelper.AUCDB.Open();
+
+      // 查詢所有商品清單 (整合最高出價資訊)
+      string sql = @"
                 SELECT
                     sp.[ItemId],
                     sp.[Name],
@@ -102,82 +106,85 @@ public class SilentAuctionController(
                     sp.[DisplayOrder],
                     sp.[ItemId]";
 
-            var queryResults = conn.Query<SilentAuctionItemQueryResult>(sql);
-            var items = queryResults.Select(row => new SilentAuctionItem(
-                ItemId: row.ItemId,
-                Name: row.Name,
-                Description: row.Description,
-                Image: row.Image,
-                StartPrice: row.StartPrice ?? 0,
-                CurrentPrice: row.CurrentPrice ?? row.StartPrice ?? 0,
-                MinIncrement: row.MinIncrement,
-                CurrentBidderPaddleNum: row.CurrentBidderPaddleNum ?? "",
-                CurrentBidderPaddleName: row.CurrentBidderPaddleName ?? "",
-                EndTime: row.EndTime
-            )).ToArray();
+      var queryResults = conn.Query<SilentAuctionItemQueryResult>(sql);
+      var items = queryResults.Select(row => new SilentAuctionItem(
+          ItemId: row.ItemId,
+          Name: row.Name,
+          Description: row.Description,
+          Image: $"{publicWebRoot}{row.Image}",
+          StartPrice: row.StartPrice ?? 0,
+          CurrentPrice: row.CurrentPrice ?? row.StartPrice ?? 0,
+          MinIncrement: row.MinIncrement,
+          CurrentBidderPaddleNum: row.CurrentBidderPaddleNum ?? "",
+          CurrentBidderPaddleName: row.CurrentBidderPaddleName ?? "",
+          EndTime: row.EndTime
+      )).ToArray();
 
-            var result = new CommonResult<SilentAuctionItemsResponse>(
-                true,
-                new SilentAuctionItemsResponse(items),
-                null);
+      var result = new CommonResult<SilentAuctionItemsResponse>(
+          true,
+          new SilentAuctionItemsResponse(items),
+          null);
 
-            return Ok(result);
-        }
-        catch (Exception ex)
-        {
-            string errMsg = string.Format("Exception！{0}", ex.Message);
-            _logger.LogError(ex, errMsg);
-            return Ok(new CommonResult<SilentAuctionItemsResponse>(false, null, errMsg));
-        }
+      return Ok(result);
     }
-
-    /// <summary>
-    /// 取得單一商品詳情
-    /// 大螢幕可沿用 → 不管制授權。
-    /// </summary>
-    /// <param name="itemId">商品ID</param>
-    /// <returns>
-    /// **Response:**
-    /// ```json
-    /// {
-    ///   "success": true,
-    ///   "data": {
-    ///     "item": {
-    ///       "itemId": "string", // 商品ID
-    ///       "name": "string", // 商品名稱
-    ///       "description": "string", // 商品描述
-    ///       "image": "string", // 商品圖片URL
-    ///       "startPrice": number, // 起標價
-    ///       "currentPrice": number,  //當前價格
-    ///       "minIncrement": number,  //最低加價
-    ///       "currentBidderPaddleNum": "string",  //最高出價者
-    ///       "currentBidderPaddleName": "string", //最高出價者姓名
-    ///       "endTime": "ISO 8601",  //結標時間
-    ///       "timeRemaining": number,  //剩餘秒數
-    ///       "status": "active" | "ended",  //拍賣狀態
-    ///       "bidHistory": [
-    ///         {
-    ///           "bidderPaddleNum": "string",  //出價者
-    ///           "bidderPaddleName": "string", // 出價者姓名
-    ///           "amount": number,  //出價價格
-    ///           "timestamp": "ISO 8601"  //出價時間
-    ///         }
-    ///       ]
-    ///     }
-    ///   }
-    /// }
-    /// ```
-    /// </returns>
-    [AllowAnonymous]
-    [HttpGet("items/{itemId}")]
-    public ActionResult<CommonResult<SilentAuctionItemDetailResponse>> GetItemDetail(string itemId)
+    catch (Exception ex)
     {
-        try
-        {
-            using var conn = DBHelper.AUCDB.Open();
+      string errMsg = string.Format("Exception！{0}", ex.Message);
+      _logger.LogError(ex, errMsg);
+      return Ok(new CommonResult<SilentAuctionItemsResponse>(false, null, errMsg));
+    }
+  }
 
-            // 查詢單一商品詳細資訊 (含競標歷程和時間狀態)
-            string sql = @"
+  /// <summary>
+  /// 取得單一商品詳情
+  /// 大螢幕可沿用 → 不管制授權。
+  /// </summary>
+  /// <param name="itemId">商品ID</param>
+  /// <returns>
+  /// **Response:**
+  /// ```json
+  /// {
+  ///   "success": true,
+  ///   "data": {
+  ///     "item": {
+  ///       "itemId": "string", // 商品ID
+  ///       "name": "string", // 商品名稱
+  ///       "description": "string", // 商品描述
+  ///       "image": "string", // 商品圖片URL
+  ///       "startPrice": number, // 起標價
+  ///       "currentPrice": number,  //當前價格
+  ///       "minIncrement": number,  //最低加價
+  ///       "currentBidderPaddleNum": "string",  //最高出價者
+  ///       "currentBidderPaddleName": "string", //最高出價者姓名
+  ///       "endTime": "ISO 8601",  //結標時間
+  ///       "timeRemaining": number,  //剩餘秒數
+  ///       "status": "active" | "ended",  //拍賣狀態
+  ///       "bidHistory": [
+  ///         {
+  ///           "bidderPaddleNum": "string",  //出價者
+  ///           "bidderPaddleName": "string", // 出價者姓名
+  ///           "amount": number,  //出價價格
+  ///           "timestamp": "ISO 8601"  //出價時間
+  ///         }
+  ///       ]
+  ///     }
+  ///   }
+  /// }
+  /// ```
+  /// </returns>
+  [AllowAnonymous]
+  [HttpGet("items/{itemId}")]
+  public ActionResult<CommonResult<SilentAuctionItemDetailResponse>> GetItemDetail(string itemId)
+  {
+    try
+    {
+      var request = HttpContext.Request;
+      string publicWebRoot = $"{request.Scheme}://{request.Host}";
+
+      using var conn = DBHelper.AUCDB.Open();
+
+      // 查詢單一商品詳細資訊 (含競標歷程和時間狀態)
+      string sql = @"
                 SELECT
                     sp.*,
                     COALESCE(latest_bid.[BidAmount], sp.[StartPrice]) as CurrentPrice,
@@ -225,15 +232,15 @@ public class SilentAuctionController(
                 ) bid_count ON sp.[ItemId] = bid_count.[ItemId]
                 WHERE sp.[ItemId] = @ItemId";
 
-            var itemData = conn.QueryFirstOrDefault<SilentAuctionItemDetailQueryResult>(sql, new { ItemId = itemId });
+      var itemData = conn.QueryFirstOrDefault<SilentAuctionItemDetailQueryResult>(sql, new { ItemId = itemId });
 
-            if (itemData == null)
-            {
-                return Ok(new CommonResult<SilentAuctionItemDetailResponse>(false, null, "商品不存在"));
-            }
+      if (itemData == null)
+      {
+        return Ok(new CommonResult<SilentAuctionItemDetailResponse>(false, null, "商品不存在"));
+      }
 
-            // 查詢競標歷程
-            string bidHistorySql = @"
+      // 查詢競標歷程
+      string bidHistorySql = @"
                 SELECT
                     sbe.[PaddleNum] as BidderPaddleNum,
                     sbe.[PaddleName] as BidderPaddleName,
@@ -244,89 +251,89 @@ public class SilentAuctionController(
                   AND sbe.[IsValid] = 'Y'
                 ORDER BY sbe.[Timestamp] DESC";
 
-            var bidHistoryData = conn.Query<SilentAuctionBidHistoryQueryResult>(bidHistorySql, new { ItemId = itemId });
-            var bidHistory = bidHistoryData.Select(bid => new SilentAuctionBidHistoryItem(
-                BidderPaddleNum: bid.BidderPaddleNum,
-                BidderPaddleName: bid.BidderPaddleName,
-                Amount: bid.BidAmount,
-                Timestamp: bid.Timestamp.ToString("yyyy-MM-ddTHH:mm:ss.fffZ")
-            )).ToArray();
+      var bidHistoryData = conn.Query<SilentAuctionBidHistoryQueryResult>(bidHistorySql, new { ItemId = itemId });
+      var bidHistory = bidHistoryData.Select(bid => new SilentAuctionBidHistoryItem(
+          BidderPaddleNum: bid.BidderPaddleNum,
+          BidderPaddleName: bid.BidderPaddleName,
+          Amount: bid.BidAmount,
+          Timestamp: bid.Timestamp.ToString("yyyy-MM-ddTHH:mm:ss.fffZ")
+      )).ToArray();
 
-            var item = new SilentAuctionItemDetail(
-                ItemId: itemData.ItemId,
-                Name: itemData.Name,
-                Description: itemData.Description,
-                Image: itemData.Image,
-                StartPrice: itemData.StartPrice ?? 0,
-                CurrentPrice: itemData.CurrentPrice ?? itemData.StartPrice ?? 0,
-                MinIncrement: itemData.MinIncrement,
-                CurrentBidderPaddleNum: itemData.CurrentBidderPaddleNum ?? "",
-                CurrentBidderPaddleName: itemData.CurrentBidderPaddleName ?? "",
-                EndTime: itemData.EndTime,
-                TimeRemaining: itemData.TimeRemaining ?? 0,
-                Status: itemData.Status == "Hammered" || itemData.Status == "Passed" || itemData.Status == "ended" ? "ended" : "active",
-                BidHistory: bidHistory
-            );
+      var item = new SilentAuctionItemDetail(
+          ItemId: itemData.ItemId,
+          Name: itemData.Name,
+          Description: itemData.Description,
+          Image: $"{publicWebRoot}{itemData.Image}",
+          StartPrice: itemData.StartPrice ?? 0,
+          CurrentPrice: itemData.CurrentPrice ?? itemData.StartPrice ?? 0,
+          MinIncrement: itemData.MinIncrement,
+          CurrentBidderPaddleNum: itemData.CurrentBidderPaddleNum ?? "",
+          CurrentBidderPaddleName: itemData.CurrentBidderPaddleName ?? "",
+          EndTime: itemData.EndTime,
+          TimeRemaining: itemData.TimeRemaining ?? 0,
+          Status: itemData.Status == "Hammered" || itemData.Status == "Passed" || itemData.Status == "ended" ? "ended" : "active",
+          BidHistory: bidHistory
+      );
 
-            var result = new CommonResult<SilentAuctionItemDetailResponse>(
-                true,
-                new SilentAuctionItemDetailResponse(item),
-                null);
+      var result = new CommonResult<SilentAuctionItemDetailResponse>(
+          true,
+          new SilentAuctionItemDetailResponse(item),
+          null);
 
-            return Ok(result);
-        }
-        catch (Exception ex)
-        {
-            string errMsg = string.Format("Exception！{0}", ex.Message);
-            _logger.LogError(ex, errMsg);
-            return Ok(new CommonResult<SilentAuctionItemDetailResponse>(false, null, errMsg));
-        }
+      return Ok(result);
     }
-
-    /// <summary>
-    /// 取得單一商品競標歷程（隱私版本）
-    /// 需要授權 → 僅顯示使用者自己的出價記錄
-    /// </summary>
-    /// <param name="itemId">商品ID</param>
-    /// <returns>
-    /// **Response:**
-    /// ```json
-    /// {
-    ///   "success": true,
-    ///   "data": {
-    ///     "item": {
-    ///       "itemId": "string", // 商品ID
-    ///       "currentPrice": number,  //當前價格
-    ///       "isCurrentBidder": boolean,  //是否最高出價者
-    ///       "bidHistory": [
-    ///         {
-    ///           "amount": number,  //出價價格
-    ///           "timestamp": "ISO 8601"  //出價時間
-    ///         }
-    ///       ],
-    ///       "userCurrentBid": number | null //用戶當前出價
-    ///     }
-    ///   }
-    /// }
-    /// ```
-    /// </returns>
-    [Authorize(AuthenticationSchemes = "Bearer")]
-    [HttpGet("items/{itemId}/bidHistory")]
-    public ActionResult<CommonResult<SilentAuctionBidHistoryResponse>> GetBidHistory(string itemId)
+    catch (Exception ex)
     {
-        try
-        {
-            // 取得當前用戶的 PaddleNum
-            string userPaddleNum = _vipSvc.PaddleNum;
-            if (string.IsNullOrEmpty(userPaddleNum))
-            {
-                return Ok(new CommonResult<SilentAuctionBidHistoryResponse>(false, null, "未找到用戶資訊"));
-            }
+      string errMsg = string.Format("Exception！{0}", ex.Message);
+      _logger.LogError(ex, errMsg);
+      return Ok(new CommonResult<SilentAuctionItemDetailResponse>(false, null, errMsg));
+    }
+  }
 
-            using var conn = DBHelper.AUCDB.Open();
+  /// <summary>
+  /// 取得單一商品競標歷程（隱私版本）
+  /// 需要授權 → 僅顯示使用者自己的出價記錄
+  /// </summary>
+  /// <param name="itemId">商品ID</param>
+  /// <returns>
+  /// **Response:**
+  /// ```json
+  /// {
+  ///   "success": true,
+  ///   "data": {
+  ///     "item": {
+  ///       "itemId": "string", // 商品ID
+  ///       "currentPrice": number,  //當前價格
+  ///       "isCurrentBidder": boolean,  //是否最高出價者
+  ///       "bidHistory": [
+  ///         {
+  ///           "amount": number,  //出價價格
+  ///           "timestamp": "ISO 8601"  //出價時間
+  ///         }
+  ///       ],
+  ///       "userCurrentBid": number | null //用戶當前出價
+  ///     }
+  ///   }
+  /// }
+  /// ```
+  /// </returns>
+  [Authorize(AuthenticationSchemes = "Bearer")]
+  [HttpGet("items/{itemId}/bidHistory")]
+  public ActionResult<CommonResult<SilentAuctionBidHistoryResponse>> GetBidHistory(string itemId)
+  {
+    try
+    {
+      // 取得當前用戶的 PaddleNum
+      string userPaddleNum = _vipSvc.PaddleNum;
+      if (string.IsNullOrEmpty(userPaddleNum))
+      {
+        return Ok(new CommonResult<SilentAuctionBidHistoryResponse>(false, null, "未找到用戶資訊"));
+      }
 
-            // 取得當前價格和用戶是否為最高出價者
-            string currentPriceSql = @"
+      using var conn = DBHelper.AUCDB.Open();
+
+      // 取得當前價格和用戶是否為最高出價者
+      string currentPriceSql = @"
                 SELECT
                     COALESCE(latest_bid.[BidAmount], sp.[StartPrice]) as CurrentPrice,
                     CASE WHEN latest_bid.[PaddleNum] = @UserPaddleNum THEN 1 ELSE 0 END as IsCurrentBidder
@@ -342,15 +349,15 @@ public class SilentAuctionController(
                 ) latest_bid ON sp.[ItemId] = latest_bid.[ItemId] AND latest_bid.rn = 1
                 WHERE sp.[ItemId] = @ItemId";
 
-            var currentPriceData = conn.QueryFirstOrDefault(currentPriceSql, new { ItemId = itemId, UserPaddleNum = userPaddleNum });
+      var currentPriceData = conn.QueryFirstOrDefault(currentPriceSql, new { ItemId = itemId, UserPaddleNum = userPaddleNum });
 
-            if (currentPriceData == null)
-            {
-                return Ok(new CommonResult<SilentAuctionBidHistoryResponse>(false, null, "商品不存在"));
-            }
+      if (currentPriceData == null)
+      {
+        return Ok(new CommonResult<SilentAuctionBidHistoryResponse>(false, null, "商品不存在"));
+      }
 
-            // 查詢競標歷程 (隱藏其他競標者身份，僅顯示當前用戶的出價)
-            string sql = @"
+      // 查詢競標歷程 (隱藏其他競標者身份，僅顯示當前用戶的出價)
+      string sql = @"
                 SELECT
                     sbe.[BidAmount],
                     sbe.[Timestamp],
@@ -366,86 +373,86 @@ public class SilentAuctionController(
                   ))
                 ORDER BY sbe.[Timestamp] DESC";
 
-            var bidHistoryData = conn.Query<SilentAuctionPrivateBidHistoryQueryResult>(sql, new { ItemId = itemId, UserPaddleNum = userPaddleNum });
+      var bidHistoryData = conn.Query<SilentAuctionPrivateBidHistoryQueryResult>(sql, new { ItemId = itemId, UserPaddleNum = userPaddleNum });
 
-            // 僅返回用戶自己的出價記錄
-            var userBidHistory = bidHistoryData.Where(b => b.IsMyBid).Select(bid => new SilentAuctionPrivateBidHistoryItem(
-                Amount: bid.BidAmount,
-                Timestamp: bid.Timestamp.ToString("yyyy-MM-ddTHH:mm:ss.fffZ")
-            )).ToArray();
+      // 僅返回用戶自己的出價記錄
+      var userBidHistory = bidHistoryData.Where(b => b.IsMyBid).Select(bid => new SilentAuctionPrivateBidHistoryItem(
+          Amount: bid.BidAmount,
+          Timestamp: bid.Timestamp.ToString("yyyy-MM-ddTHH:mm:ss.fffZ")
+      )).ToArray();
 
-            // 取得用戶目前最高出價
-            decimal? userCurrentBid = bidHistoryData.Where(b => b.IsMyBid).OrderByDescending(b => b.Timestamp).FirstOrDefault()?.BidAmount;
+      // 取得用戶目前最高出價
+      decimal? userCurrentBid = bidHistoryData.Where(b => b.IsMyBid).OrderByDescending(b => b.Timestamp).FirstOrDefault()?.BidAmount;
 
-            var item = new SilentAuctionBidHistoryDetail(
-                ItemId: itemId,
-                CurrentPrice: currentPriceData.CurrentPrice,
-                IsCurrentBidder: currentPriceData.IsCurrentBidder == 1,
-                BidHistory: userBidHistory,
-                UserCurrentBid: userCurrentBid
-            );
+      var item = new SilentAuctionBidHistoryDetail(
+          ItemId: itemId,
+          CurrentPrice: currentPriceData.CurrentPrice,
+          IsCurrentBidder: currentPriceData.IsCurrentBidder == 1,
+          BidHistory: userBidHistory,
+          UserCurrentBid: userCurrentBid
+      );
 
-            var result = new CommonResult<SilentAuctionBidHistoryResponse>(
-                true,
-                new SilentAuctionBidHistoryResponse(item),
-                null);
+      var result = new CommonResult<SilentAuctionBidHistoryResponse>(
+          true,
+          new SilentAuctionBidHistoryResponse(item),
+          null);
 
-            return Ok(result);
-        }
-        catch (Exception ex)
-        {
-            string errMsg = string.Format("Exception！{0}", ex.Message);
-            _logger.LogError(ex, errMsg);
-            return Ok(new CommonResult<SilentAuctionBidHistoryResponse>(false, null, errMsg));
-        }
+      return Ok(result);
     }
-
-    /// <summary>
-    /// 提交出價
-    /// 需要授權
-    /// </summary>
-    /// <param name="itemId">商品ID</param>
-    /// <param name="request">出價請求</param>
-    /// <returns>
-    /// **Response:**
-    /// ```json
-    /// {
-    ///   "success": true,
-    ///   "data": {
-    ///     "itemId": "string", // 商品ID
-    ///     "amount": number,  //出價價格
-    ///     "isHighestBid": boolean,  //是最高出價
-    ///     "currentHighestBid": number,  //當前價格
-    ///     "timestamp": "ISO 8601"  //出價時間
-    ///   }
-    /// }
-    /// ```
-    /// </returns>
-    [Authorize(AuthenticationSchemes = "Bearer")]
-    [HttpPost("items/{itemId}/bid")]
-    public ActionResult<CommonResult<SilentAuctionBidResponse>> SubmitBid(string itemId, [FromBody] SilentAuctionBidRequest request)
+    catch (Exception ex)
     {
-        try
-        {
-            // 取得當前用戶資訊
-            string userPaddleNum = _vipSvc.PaddleNum;
-            if (string.IsNullOrEmpty(userPaddleNum))
-            {
-                return Ok(new CommonResult<SilentAuctionBidResponse>(false, null, "未找到用戶資訊"));
-            }
+      string errMsg = string.Format("Exception！{0}", ex.Message);
+      _logger.LogError(ex, errMsg);
+      return Ok(new CommonResult<SilentAuctionBidHistoryResponse>(false, null, errMsg));
+    }
+  }
 
-            using var conn = DBHelper.AUCDB.Open();
+  /// <summary>
+  /// 提交出價
+  /// 需要授權
+  /// </summary>
+  /// <param name="itemId">商品ID</param>
+  /// <param name="request">出價請求</param>
+  /// <returns>
+  /// **Response:**
+  /// ```json
+  /// {
+  ///   "success": true,
+  ///   "data": {
+  ///     "itemId": "string", // 商品ID
+  ///     "amount": number,  //出價價格
+  ///     "isHighestBid": boolean,  //是最高出價
+  ///     "currentHighestBid": number,  //當前價格
+  ///     "timestamp": "ISO 8601"  //出價時間
+  ///   }
+  /// }
+  /// ```
+  /// </returns>
+  [Authorize(AuthenticationSchemes = "Bearer")]
+  [HttpPost("items/{itemId}/bid")]
+  public ActionResult<CommonResult<SilentAuctionBidResponse>> SubmitBid(string itemId, [FromBody] SilentAuctionBidRequest request)
+  {
+    try
+    {
+      // 取得當前用戶資訊
+      string userPaddleNum = _vipSvc.PaddleNum;
+      if (string.IsNullOrEmpty(userPaddleNum))
+      {
+        return Ok(new CommonResult<SilentAuctionBidResponse>(false, null, "未找到用戶資訊"));
+      }
 
-            // 競標提交前驗證和記錄
-            decimal currentPrice = 0;
-            decimal minIncrement = 0;
-            string endTime = "";
-            int vipExists = 0;
-            int isActive = 0;
-            string vipName = "";
+      using var conn = DBHelper.AUCDB.Open();
 
-            // 檢查商品是否還在競標中
-            string checkSql = @"
+      // 競標提交前驗證和記錄
+      decimal currentPrice = 0;
+      decimal minIncrement = 0;
+      string endTime = "";
+      int vipExists = 0;
+      int isActive = 0;
+      string vipName = "";
+
+      // 檢查商品是否還在競標中
+      string checkSql = @"
                 SELECT
                     COALESCE(MAX(sbe.[BidAmount]), sp.[StartPrice]) as CurrentPrice,
                     sp.[MinIncrement],
@@ -458,54 +465,54 @@ public class SilentAuctionController(
                 WHERE sp.[ItemId] = @ItemId
                 GROUP BY sp.[StartPrice], sp.[MinIncrement], sp.[StartTime], sp.[EndTime], sp.[Status]";
 
-            var itemStatus = conn.QueryFirstOrDefault(checkSql, new { ItemId = itemId });
+      var itemStatus = conn.QueryFirstOrDefault(checkSql, new { ItemId = itemId });
 
-            if (itemStatus == null)
-            {
-                return Ok(new CommonResult<SilentAuctionBidResponse>(false, null, "商品不存在"));
-            }
+      if (itemStatus == null)
+      {
+        return Ok(new CommonResult<SilentAuctionBidResponse>(false, null, "商品不存在"));
+      }
 
-            currentPrice = itemStatus.CurrentPrice;
-            minIncrement = itemStatus.MinIncrement;
-            endTime = itemStatus.EndTime;
-            isActive = itemStatus.IsActive;
+      currentPrice = itemStatus.CurrentPrice;
+      minIncrement = itemStatus.MinIncrement;
+      endTime = itemStatus.EndTime;
+      isActive = itemStatus.IsActive;
 
-            // 檢查 VIP 是否存在且有效
-            string vipCheckSql = "SELECT COUNT(*) AS Item1, MAX([VipName]) AS Item2 FROM [dbo].[Vip] WHERE [PaddleNum] = @PaddleNum";
-            var vipInfo = conn.QueryFirstOrDefault(vipCheckSql, new { PaddleNum = userPaddleNum });
-            vipExists = vipInfo?.Item1 ?? 0;
-            vipName = vipInfo?.Item2 ?? "";
+      // 檢查 VIP 是否存在且有效
+      string vipCheckSql = "SELECT COUNT(*) AS Item1, MAX([VipName]) AS Item2 FROM [dbo].[Vip] WHERE [PaddleNum] = @PaddleNum";
+      var vipInfo = conn.QueryFirstOrDefault(vipCheckSql, new { PaddleNum = userPaddleNum });
+      vipExists = vipInfo?.Item1 ?? 0;
+      vipName = vipInfo?.Item2 ?? "";
 
-            // 驗證出價條件
-            if (vipExists == 0)
-            {
-                return Ok(new CommonResult<SilentAuctionBidResponse>(false, null, "VIP 用戶不存在"));
-            }
+      // 驗證出價條件
+      if (vipExists == 0)
+      {
+        return Ok(new CommonResult<SilentAuctionBidResponse>(false, null, "VIP 用戶不存在"));
+      }
 
-            if (isActive == 0)
-            {
-                return Ok(new CommonResult<SilentAuctionBidResponse>(false, null, "競標已結束或未開始"));
-            }
+      if (isActive == 0)
+      {
+        return Ok(new CommonResult<SilentAuctionBidResponse>(false, null, "競標已結束或未開始"));
+      }
 
-            if (request.Amount < currentPrice + minIncrement)
-            {
-                return Ok(new CommonResult<SilentAuctionBidResponse>(false, null, $"出價必須高於目前最高價 {currentPrice:C} 加上最低加價 {minIncrement:C}"));
-            }
+      if (request.Amount < currentPrice + minIncrement)
+      {
+        return Ok(new CommonResult<SilentAuctionBidResponse>(false, null, $"出價必須高於目前最高價 {currentPrice:C} 加上最低加價 {minIncrement:C}"));
+      }
 
-            using var transaction = conn.BeginTransaction();
+      using var transaction = conn.BeginTransaction();
 
-            try
-            {
-                // 標記之前的出價為被超越
-                string updateOutbidSql = @"
+      try
+      {
+        // 標記之前的出價為被超越
+        string updateOutbidSql = @"
                     UPDATE [dbo].[SilentBidEvent]
                     SET [IsOutbid] = 'Y', [OutbidTime] = GETDATE()
                     WHERE [ItemId] = @ItemId AND [IsValid] = 'Y' AND [IsOutbid] = 'N'";
 
-                conn.Execute(updateOutbidSql, new { ItemId = itemId }, transaction);
+        conn.Execute(updateOutbidSql, new { ItemId = itemId }, transaction);
 
-                // 插入新的出價記錄
-                string insertBidSql = @"
+        // 插入新的出價記錄
+        string insertBidSql = @"
                     INSERT INTO [dbo].[SilentBidEvent] (
                         [ItemId], [PaddleNum], [PaddleName], [BidAmount], [PreviousHighestBid],
                         [BidType], [SessionId], [IPAddress], [Notes], [Timestamp], [IsValid], [IsOutbid]
@@ -514,44 +521,68 @@ public class SilentAuctionController(
                         'Online', @SessionId, @IPAddress, @Notes, GETDATE(), 'Y', 'N'
                     )";
 
-                var insertParams = new
-                {
-                    ItemId = itemId,
-                    PaddleNum = userPaddleNum,
-                    PaddleName = vipName,
-                    BidAmount = request.Amount,
-                    PreviousHighestBid = currentPrice,
-                    SessionId = "",
-                    IPAddress = HttpContext.Connection.RemoteIpAddress?.ToString() ?? "",
-                    Notes = "線上出價"
-                };
-
-                conn.Execute(insertBidSql, insertParams, transaction);
-
-                transaction.Commit();
-
-                var response = new SilentAuctionBidResponse(
-                    ItemId: itemId,
-                    Amount: request.Amount,
-                    IsHighestBid: true,
-                    CurrentHighestBid: request.Amount,
-                    Timestamp: DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss.fffZ")
-                );
-
-                return Ok(new CommonResult<SilentAuctionBidResponse>(true, response, null));
-            }
-            catch (Exception transactionEx)
-            {
-                _logger.LogError(transactionEx, "Transaction rollback failed");
-                transaction.Rollback();
-                throw;
-            }
-        }
-        catch (Exception ex)
+        var insertParams = new
         {
-            string errMsg = string.Format("Exception！{0}", ex.Message);
-            _logger.LogError(ex, errMsg);
-            return Ok(new CommonResult<SilentAuctionBidResponse>(false, null, errMsg));
-        }
+          ItemId = itemId,
+          PaddleNum = userPaddleNum,
+          PaddleName = vipName,
+          BidAmount = request.Amount,
+          PreviousHighestBid = currentPrice,
+          SessionId = "",
+          IPAddress = HttpContext.Connection.RemoteIpAddress?.ToString() ?? "",
+          Notes = "線上出價"
+        };
+
+        conn.Execute(insertBidSql, insertParams, transaction);
+
+        transaction.Commit();
+
+        var response = new SilentAuctionBidResponse(
+            ItemId: itemId,
+            Amount: request.Amount,
+            IsHighestBid: true,
+            CurrentHighestBid: request.Amount,
+            Timestamp: DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss.fffZ")
+        );
+
+        return Ok(new CommonResult<SilentAuctionBidResponse>(true, response, null));
+      }
+      catch (Exception transactionEx)
+      {
+        _logger.LogError(transactionEx, "Transaction rollback failed");
+        transaction.Rollback();
+        throw;
+      }
     }
+    catch (Exception ex)
+    {
+      string errMsg = string.Format("Exception！{0}", ex.Message);
+      _logger.LogError(ex, errMsg);
+      return Ok(new CommonResult<SilentAuctionBidResponse>(false, null, errMsg));
+    }
+  }
+
+  [AllowAnonymous]
+  [HttpGet("[action]")]
+  public async Task<ActionResult<CommonResult<dynamic>>> FrontUrlBase()
+  {
+    try
+    {
+      await Task.Yield();
+      string frontUrlBase = _prmSvc.GetFrontWeb_PublicUrlBase();
+
+      var result = new CommonResult<dynamic>(
+          true,
+          frontUrlBase,
+          null);
+
+      return Ok(result);
+    }
+    catch (Exception ex)
+    {
+      string errMsg = string.Format("Exception！{0}", ex.Message);
+      _logger.LogError(ex, errMsg);
+      return Ok(new CommonResult<dynamic>(false, null, errMsg));
+    }
+  }
 }
