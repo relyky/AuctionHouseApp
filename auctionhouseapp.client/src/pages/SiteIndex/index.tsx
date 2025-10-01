@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import type { FC, ReactNode } from "react";
 import { Button, Container, Typography, Box, useEventCallback } from "@mui/material";
 import RaffleTicketPanel from "./RaffleTicketPanel";
@@ -8,9 +8,33 @@ import SilentAuctionPanel from "./SilentAuctionPanel";
 import OpenAskPanel from "./OpenAskPanel";
 import DonationPanel from "./DonationPanel";
 import { postData } from "../../tools/httpHelper";
+import { useSetAtom } from 'jotai'
+import { givePrizeProfileAtom, rafflePrizeProfileAtom, auctionPrizeProfileAtom } from './atom'
+import type { IRafflePrizeProfile } from "../../dto/display/IRafflePrizeProfile"
+import type { IGivePrizeProfile } from "../../dto/display/IGivePrizeProfile"
+import type { IAuctionPrizeProfile } from "../../dto/display/IAuctionPrizeProfile"
 
 export default function SiteIndex() {
   const [activity, setActivity] = useState<ActivityEnum>('silentAuction')
+  const setRafflePrizeProfile = useSetAtom(rafflePrizeProfileAtom)
+  const setGivePrizeProfile = useSetAtom(givePrizeProfileAtom)
+  const setAuctionPrizeProfile = useSetAtom(auctionPrizeProfileAtom)
+
+  // 取得此 pagＥe 需要的基本資料
+  useEffect(() => {
+    postData<IRafflePrizeProfile[]>(`/api/Display/ListRafflePrizeProfile`)
+      .then(setRafflePrizeProfile)
+      .catch(console.log);
+
+    postData<IGivePrizeProfile[]>(`/api/Display/ListGivePrizeProfile`)
+      .then(setGivePrizeProfile)
+      .catch(console.log);
+
+    postData<IAuctionPrizeProfile[]>(`/api/Display/ListAuctionPrizeProfile`)
+      .then(setAuctionPrizeProfile)
+      .catch(console.log);
+
+  }, [])
 
   const handleActivity = useEventCallback((activity: ActivityEnum) => {
     postData(`/api/Site/SwitchDisplay/${activity}`)
