@@ -4,8 +4,8 @@ import type { IGivePrizeProfile } from "../../dto/display/IGivePrizeProfile"
 import type { IAuctionPrizeProfile } from "../../dto/display/IAuctionPrizeProfile"
 
 // 主控台狀態：
-export const siteStatusAtom = atom(0)
-siteStatusAtom.debugLabel = 'siteStatusAtom'
+export const siteActivityAtom = atom<ActivityEnum>('silentAuction')
+siteActivityAtom.debugLabel = 'siteActivityAtom'
 
 //----------------------
 

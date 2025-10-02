@@ -8,19 +8,20 @@ import SilentAuctionPanel from "./SilentAuctionPanel";
 import OpenAskPanel from "./OpenAskPanel";
 import DonationPanel from "./DonationPanel";
 import { postData } from "../../tools/httpHelper";
-import { useSetAtom } from 'jotai'
-import { givePrizeProfileAtom, rafflePrizeProfileAtom, auctionPrizeProfileAtom } from './atom'
+import { useAtom, useSetAtom } from 'jotai'
+import { givePrizeProfileAtom, rafflePrizeProfileAtom, auctionPrizeProfileAtom, siteActivityAtom } from './atom'
 import type { IRafflePrizeProfile } from "../../dto/display/IRafflePrizeProfile"
 import type { IGivePrizeProfile } from "../../dto/display/IGivePrizeProfile"
 import type { IAuctionPrizeProfile } from "../../dto/display/IAuctionPrizeProfile"
 
 export default function SiteIndex() {
   const [activity, setActivity] = useState<ActivityEnum>('silentAuction')
+  //const [activity, setActivity] = useAtom(siteActivityAtom) // 應該自DB:LiveSession 取初值
   const setRafflePrizeProfile = useSetAtom(rafflePrizeProfileAtom)
   const setGivePrizeProfile = useSetAtom(givePrizeProfileAtom)
   const setAuctionPrizeProfile = useSetAtom(auctionPrizeProfileAtom)
 
-  // 取得此 pagＥe 需要的基本資料
+  // 背影: 取得此 page 需要的基本資料
   useEffect(() => {
     postData<IRafflePrizeProfile[]>(`/api/Display/ListRafflePrizeProfile`)
       .then(setRafflePrizeProfile)

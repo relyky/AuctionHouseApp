@@ -88,4 +88,27 @@ WHERE StateName = 'DonationSwitch'
     var info = await conn.QueryFirstAsync<LiveSession>(sql);
     return Ok(new MsgObj(info.StringValue));
   }
+
+  [HttpPost("[action]/{amount}")]
+  public ActionResult<OpenAskRound> OpenAskNewRound(decimal amount)
+  {
+    // --關閉現有的，建立新一輪。
+    string sql = """
+UPDATE [OpenAskRound] SET [IsActive] = 'N';
+WITH NewRound (RoundNo) AS 
+ (SELECT RoundNo = IsNull(MAX([Round]),0)+1 FROM [OpenAskRound])
+INSERT INTO [dbo].[OpenAskRound] 
+ ([Round],[Amount],[IsActive])
+ OUTPUT inserted.*
+SELECT 
+ RoundNo, @Amount, 'N'
+ FROM NewRound;
+""";
+
+    using var conn = DBHelper.AUCDB.Open();
+    using var txn = conn.BeginTransaction();
+    var info = conn.QueryFirst<OpenAskRound>(sql, new { Amount = amount }, txn);
+    return Ok(info);
+  }
+
 }

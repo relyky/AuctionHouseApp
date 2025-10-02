@@ -26,9 +26,12 @@ import RaffleSellQuery from './pages/RaffleSellQuery/AppForm'
 import GiveSell from './pages/GiveSell'
 import GiveSellQuery from './pages/GiveSellQuery'
 import SiteIndex from './pages/SiteIndex'
+import VipInfo from './pages/VipInfo'
 import AskInput from "./pages/AskInput"
 import AuctionInput from "./pages/AuctionInput"
 import SilentQrcode from './pages/SilentQrcode'
+import ClosingPayment from './pages/ClosingPayment'
+import ClosingGiftGiving from './pages/ClosingGiftGiving'
 
 //---下面測試用功能
 import ACU1010 from './pages/AUC1010/AppForm'
@@ -113,9 +116,18 @@ const router = createBrowserRouter([
     element: <BackendLayout />,
     children: [
       { index: true, element: <SiteIndex /> },
+      { path: "vipinfo", element: <VipInfo />},
       { path: "ask", element: <AskInput /> },
       { path: "auction", element: <AuctionInput /> },
       { path: "silentqrcode", element: <SilentQrcode /> },
+    ]
+  },
+  {
+    path: "closing",
+    element: <BackendLayout />,
+    children: [
+      { path: "payment", element: <ClosingPayment /> },
+      { path: "giftgiving", element: <ClosingGiftGiving /> },
     ]
   },
   {

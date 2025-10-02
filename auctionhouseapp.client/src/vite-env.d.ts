@@ -212,4 +212,10 @@ interface ISilentPrize {
   createdBy: string;
 }
 
+interface IOpenAskRound {
+  round: number;
+  amount: number;
+  isActive: string;
+}
+
 //#endregion
