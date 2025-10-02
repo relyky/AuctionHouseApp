@@ -46,8 +46,6 @@ export default function LiveAuctionPanel(props: {
         />
       </Box>
 
-      {prize && <Alert>Edit Auction</Alert>}
-
     </Paper>
   )
 }
