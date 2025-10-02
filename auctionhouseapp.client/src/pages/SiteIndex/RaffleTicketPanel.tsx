@@ -31,7 +31,7 @@ export default function RaffleTicketPanel(props: {
   // show
   return (
     <Paper sx={{ pt: 1, px: 2, pb: 2 }}>
-      <Typography variant='h6' borderBottom='solid 1px' gutterBottom>1. Raffle Ticket 控制平板</Typography>
+      <Typography variant='h6' borderBottom='solid 1px' gutterBottom>1. Raffle Ticket Control Panel</Typography>
 
       <Stack gap={2} sx={{ m: 3 }} >
 

@@ -37,7 +37,7 @@ public class DisplayController(
   {
     try
     {
-      //# 六個活動八種螢幕：liveAuction | openAsk | raffleDrawing | rafflePrizeDisplay | raffleWinnersCarousel | silentAuction | give | donation;
+      //# 六個活動九種螢幕：silentAuction | liveAuction | openAsk | raffleDrawing | rafflePrizeDisplay | raffleWinnersCarousel | give | giveDrawing | donation;
 
       string sql = """
 SELECT * 

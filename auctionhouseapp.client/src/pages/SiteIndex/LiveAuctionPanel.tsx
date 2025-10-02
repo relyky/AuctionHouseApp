@@ -32,7 +32,7 @@ export default function LiveAuctionPanel(props: {
   // show
   return (
     <Paper sx={{ pt: 1, px: 2, pb: 2 }}>
-      <Typography variant='h6' borderBottom='solid 1px' >3. Live Auction 控制平板</Typography>
+      <Typography variant='h6' borderBottom='solid 1px' >3. Live Auction Control Panel</Typography>
 
       <Box sx={{ m: 3 }}>
         {/* 選擇拍品 */}

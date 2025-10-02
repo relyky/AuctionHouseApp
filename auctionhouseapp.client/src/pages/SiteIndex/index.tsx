@@ -39,7 +39,7 @@ export default function SiteIndex() {
   const handleActivity = useEventCallback((activity: ActivityEnum) => {
     postData(`/api/Site/SwitchDisplay/${activity}`)
       .then((msg) => {
-        console.log(msg)
+        //console.log(msg)
         setActivity(activity)
       })
       .catch(console.log)
@@ -57,7 +57,7 @@ export default function SiteIndex() {
         <ActivitySwitch value={activity} onChange={handleActivity} activity='liveAuction'
           label={<span>3. Live Auction <br />(現場拍賣)</span>} />
         <ActivitySwitch value={activity} onChange={handleActivity} activity='silentAuction'
-          label={<span>4. Silent Auction <br />(靜態拍賣)</span>} />
+          label={<span>4. Silent Auction <br />(靜默拍賣)</span>} />
         <ActivitySwitch value={activity} onChange={handleActivity} activity='openAsk'
           label={<span>5. Open Ask <br />(募款活動)</span>} />
         <ActivitySwitch value={activity} onChange={handleActivity} activity='donation'

@@ -28,12 +28,13 @@ type ActivityEnum =
   'donation';
 
 type DisplayMode =
-  'raffleDrawing' |
-  'rafflePrizeDisplay' |
-  'raffleWinnersCarousel' |
-  'give' |
-  'liveAuction' |
   'silentAuction' |
+  'raffleWinnersCarousel' |
+  'rafflePrizeDisplay' |
+  'raffleDrawing' |
+  'give' |
+  'giveDrawing' |
+  'liveAuction' |
   'openAsk' |
   'donation';
 

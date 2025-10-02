@@ -30,7 +30,7 @@ export default function DonationPanel(props: {
   // show
   return (
     <Paper sx={{ pt: 1, px: 2, pb: 2 }}>
-      <Typography variant='h6' borderBottom='solid 1px' >6. Donation 控制平板</Typography>
+      <Typography variant='h6' borderBottom='solid 1px' >6. Donation Control Panel</Typography>
       <Box color='text.secondary'>📃 自動播放捐贈累計金額</Box>
 
       <FormGroup>
