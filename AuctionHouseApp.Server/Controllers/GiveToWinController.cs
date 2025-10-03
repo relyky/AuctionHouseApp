@@ -79,7 +79,73 @@ SELECT * FROM [GivePrize] (NOLOCK)
   }
 
   /// <summary>
-  /// 6.2 取得我的福袋抽獎券 [須先登入認證]
+  /// ### 6.2 取得單一福袋詳情
+  /// **GET** `/api/givetowin/gifts/{giftId}`
+  /// </summary>
+  /// <returns>
+  /// **Response:**
+  /// ```json
+  /// {
+  ///   "success": true,
+  ///   "data": {
+  ///     "package": {
+  ///       "giftId": "string", // 福袋類型唯一識別碼
+  ///       "name": "string", // 福袋名稱
+  ///       "description": "string", // 福袋描述
+  ///       "image": "string", // 福袋圖片URL
+  ///       "value": "string" // 福袋價值
+  ///     }
+  ///   }
+  /// }
+  /// ```
+  /// </returns>
+  [AllowAnonymous]
+  [HttpGet("gifts/{giftId}")]
+  public async Task<ActionResult<CommonResult<dynamic>>> GetGift(string giftId)
+  {
+    try
+    {
+      var request = HttpContext.Request;
+      string publicWebRoot = $"{request.Scheme}://{request.Host}";
+
+      // 查詢所有商品預覽 (整合 VIP 和員工資訊)
+      string sql = """
+SELECT * FROM [GivePrize] (NOLOCK)
+WHERE GiftId = @GiftId
+""";
+
+      using var conn = await DBHelper.AUCDB.OpenAsync();
+      var info = await conn.QueryFirstOrDefaultAsync<GivePrize>(sql, new { GiftId = giftId });
+
+      if (info == null)
+        return Ok(new CommonResult<dynamic>(false, null, "商品不存在"));
+
+      var prize = new
+      {
+        GiftId = info.GiftId,
+        Name = info.Name,
+        Description = info.Description,
+        Image = $"{publicWebRoot}{info.Image}",
+        Value = info.Value,
+      };
+
+      var result = new CommonResult<dynamic>(
+          true,
+          new { Package = prize },
+          null);
+
+      return Ok(result);
+    }
+    catch (Exception ex)
+    {
+      string errMsg = string.Format("Exception！{0}", ex.Message);
+      _logger.LogError(ex, errMsg);
+      return Ok(new CommonResult<dynamic>(false, null, errMsg));
+    }
+  }
+
+  /// <summary>
+  /// 6.3 取得我的福袋(抽獎券) [須先登入認證]
   /// **GET** `api/givetowin/mytickets/{giftId}`
   /// </summary>
   /// <returns>

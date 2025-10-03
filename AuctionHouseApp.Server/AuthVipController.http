@@ -91,7 +91,7 @@ GET {{AuctionHouseApp.Server_HostAddress}}/api/givetowin/gifts
 Accept: application/json
 
 ### 指定測試參數
-@GiftId  = G02
+@GiftId = G02
 
 ### 6.2 取得單一福袋詳情
 GET {{AuctionHouseApp.Server_HostAddress}}/api/givetowin/gifts/{{GiftId}}
