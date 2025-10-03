@@ -9,6 +9,7 @@
     <SpaRoot>..\auctionhouseapp.client</SpaRoot>
     <SpaProxyLaunchCommand>npm run dev</SpaProxyLaunchCommand>
     <SpaProxyServerUrl>https://localhost:60026</SpaProxyServerUrl>
+    <InterceptorsNamespaces>$(InterceptorsNamespaces);Dapper.AOT</InterceptorsNamespaces>
   </PropertyGroup>
 
   <ItemGroup>

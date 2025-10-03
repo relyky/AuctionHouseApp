@@ -1,7 +1,9 @@
-﻿
-//## Reinforced.Typings 全域設定說明
+﻿using Dapper;
 using Reinforced.Typings.Attributes;
 
+[module: DapperAot(true)]
+
+//## Reinforced.Typings 全域設定說明
 [assembly: TsGlobal(
   CamelCaseForProperties = true,            // 小駱駝命名法
   UseModules = true,                        // 啟用 modules
