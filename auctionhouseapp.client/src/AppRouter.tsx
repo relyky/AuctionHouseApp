@@ -28,6 +28,7 @@ import GiveSellQuery from './pages/GiveSellQuery'
 import SiteIndex from './pages/SiteIndex'
 import VipInfo from './pages/VipInfo'
 import AskInput from "./pages/AskInput"
+import AskInputFix from './pages/AskInputFix'
 import AuctionInput from "./pages/AuctionInput"
 import SilentQrcode from './pages/SilentQrcode'
 import ClosingPayment from './pages/ClosingPayment'
@@ -118,6 +119,7 @@ const router = createBrowserRouter([
       { index: true, element: <SiteIndex /> },
       { path: "vipinfo", element: <VipInfo />},
       { path: "ask", element: <AskInput /> },
+      { path: "askfix", element: <AskInputFix />},
       { path: "auction", element: <AuctionInput /> },
       { path: "silentqrcode", element: <SilentQrcode /> },
     ]

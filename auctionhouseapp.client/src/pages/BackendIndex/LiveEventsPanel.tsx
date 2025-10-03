@@ -13,12 +13,16 @@ export default function LiveEventsView() {
               活動主控台(大螢幕切換)</Button>
           </Grid>
           <Grid size={{ xs: 12, sm: 6 }}>
-            <Button component={NavLink} fullWidth variant='outlined' to='/site/ask'>
-              Open Ask 捐贈輸入</Button>
-          </Grid>
-          <Grid size={{ xs: 12, sm: 6 }}>
             <Button component={NavLink} fullWidth variant='outlined' to='/site/auction'>
               Live Auction 競價輸入</Button>
+          </Grid>
+          <Grid size={{ xs: 12, sm: 6 }}>
+            <Button component={NavLink} fullWidth variant='outlined' to='/site/ask'>
+              Open Ask 認捐輸入</Button>
+          </Grid>
+          <Grid size={{ xs: 12, sm: 6 }}>
+            <Button component={NavLink} fullWidth variant='outlined' to='/site/askfix'>
+              Open Ask 認捐校正</Button>
           </Grid>
           <Grid size={{ xs: 12, sm: 6 }}>
             <Button component={NavLink} fullWidth variant='outlined' to='/site/silentqrcode'>

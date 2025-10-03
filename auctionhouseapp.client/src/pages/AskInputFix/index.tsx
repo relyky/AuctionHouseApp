@@ -1,10 +1,10 @@
 import { Container, Typography } from "@mui/material";
 
-export default function AskInput() {
+export default function AskInputFix() {
 
   return (
     <Container>
-      <Typography variant='h5'>Open Ask 認捐輸入</Typography>
+      <Typography variant='h5'>Open Ask 認捐校正</Typography>
 
     </Container>
   )
