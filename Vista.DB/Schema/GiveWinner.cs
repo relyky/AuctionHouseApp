@@ -10,13 +10,17 @@ using System.ComponentModel.DataAnnotations.Schema;
 [Table("GiveWinner")]
 public class GiveWinner 
 {
+  [Key]
   public string GiftId { get; set; } = default!;
+  [Key]
   public string GiveTicketNo { get; set; } = default!;
+  public DateTime? DrawDtm { get; set; }
 
   public void Copy(GiveWinner src)
   {
     this.GiftId = src.GiftId;
     this.GiveTicketNo = src.GiveTicketNo;
+    this.DrawDtm = src.DrawDtm;
   }
 
   public GiveWinner Clone()
@@ -24,6 +28,7 @@ public class GiveWinner
     return new GiveWinner {
       GiftId = this.GiftId,
       GiveTicketNo = this.GiveTicketNo,
+      DrawDtm = this.DrawDtm,
     };
   }
 }

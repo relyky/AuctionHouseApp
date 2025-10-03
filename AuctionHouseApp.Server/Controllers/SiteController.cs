@@ -89,6 +89,9 @@ WHERE StateName = 'DonationSwitch'
     return Ok(new MsgObj(info.StringValue));
   }
 
+  /// <summary>
+  /// OpenAsk - 建立新回合
+  /// </summary>
   [HttpPost("[action]/{amount}")]
   public ActionResult<OpenAskRound> OpenAskNewRound(decimal amount)
   {
@@ -101,13 +104,32 @@ INSERT INTO [dbo].[OpenAskRound]
  ([Round],[Amount],[IsActive])
  OUTPUT inserted.*
 SELECT 
- RoundNo, @Amount, 'N'
+ RoundNo, @Amount, 'Y'
  FROM NewRound;
 """;
 
     using var conn = DBHelper.AUCDB.Open();
     using var txn = conn.BeginTransaction();
     var info = conn.QueryFirst<OpenAskRound>(sql, new { Amount = amount }, txn);
+    return Ok(info);
+  }
+
+  /// <summary>
+  /// OpenAsk - 現在回合
+  /// </summary>
+  [HttpPost("[action]/{amount}")]
+  public async Task<ActionResult<OpenAskRound?>> OpenAskCurrentRound()
+  {
+    // --關閉現有的，建立新一輪。
+    string sql = """
+SELECT TOP 1 * 
+ FROM [OpenAskRound] (NOLOCK)
+ WHERE IsActive = 'Y'
+ ORDER BY [Round] DESC;
+""";
+
+    using var conn = await DBHelper.AUCDB.OpenAsync();
+    var info = await conn.QueryFirstOrDefaultAsync<OpenAskRound>(sql);
     return Ok(info);
   }
 

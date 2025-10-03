@@ -1,7 +1,4 @@
-﻿using Dapper;
-using System.Runtime.CompilerServices;
-
-[module: DapperAot(true)]
+﻿using System.Runtime.CompilerServices;
 
 /// Friend Assembly
 [assembly: InternalsVisibleTo("AuctionHouseApp.Server")]

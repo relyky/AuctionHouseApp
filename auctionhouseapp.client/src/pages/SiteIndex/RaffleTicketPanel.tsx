@@ -21,6 +21,14 @@ export default function RaffleTicketPanel(props: {
       .catch(console.log)
   })
 
+  const handleDrawMinor = useEventCallback(() => {
+    alert('抽小獎');
+  });
+
+  const handleDrawMajor = useEventCallback(() => {
+    alert('抽大獎');
+  });
+
   useEffect(() => {
     // 活動一變就回到滾輪模式
     setMode('raffleWinnersCarousel')
@@ -59,8 +67,12 @@ export default function RaffleTicketPanel(props: {
             進行抽獎(Drawing)</Button>
 
         </ButtonGroup>
-      </Stack>
 
+        <Button onClick={handleDrawMinor}>小獎抽獎</Button>
+
+        <Button onClick={handleDrawMajor}>大獎抽獎</Button>
+
+      </Stack>
 
     </Paper>
   )

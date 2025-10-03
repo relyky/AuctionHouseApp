@@ -1,7 +1,6 @@
-﻿
-//## Reinforced.Typings 全域設定說明
-using Reinforced.Typings.Attributes;
+﻿using Reinforced.Typings.Attributes;
 
+//## Reinforced.Typings 全域設定說明
 [assembly: TsGlobal(
   CamelCaseForProperties = true,            // 小駱駝命名法
   UseModules = true,                        // 啟用 modules
