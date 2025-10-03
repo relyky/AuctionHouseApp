@@ -103,6 +103,7 @@ try
   builder.Services.AddScoped<AesHelperService>();
   builder.Services.AddScoped<EmailProxyService>();
   builder.Services.AddScoped<AuthVipService>();
+  builder.Services.AddScoped<LotteryDrawService>();
 
   builder.Services.AddCors(); // for 開放跨源
 

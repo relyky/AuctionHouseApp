@@ -20,7 +20,6 @@ public class RaffleWinner
   /// 中獎抽獎券編號
   /// </summary>
   [Display(Name = "中獎抽獎券編號")]
-  [Key]
   public string RaffleTickerNo { get; set; } = default!;
   /// <summary>
   /// 抽獎時間

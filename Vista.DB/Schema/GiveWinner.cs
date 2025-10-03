@@ -12,7 +12,6 @@ public class GiveWinner
 {
   [Key]
   public string GiftId { get; set; } = default!;
-  [Key]
   public string GiveTicketNo { get; set; } = default!;
   public DateTime? DrawDtm { get; set; }
 
