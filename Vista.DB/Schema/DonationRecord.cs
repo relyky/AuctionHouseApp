@@ -33,6 +33,21 @@ public class DonationRecord
   /// </summary>
   [Display(Name = "捐款時間")]
   public DateTime? Timestamp { get; set; }
+  /// <summary>
+  /// 已收費:Y/N, for 收費註記
+  /// </summary>
+  [Display(Name = "已收費")]
+  public string HasPaid { get; set; } = default!;
+  /// <summary>
+  /// 收費時間: for 收費註記
+  /// </summary>
+  [Display(Name = "收費時間")]
+  public DateTime? PaidDtm { get; set; }
+  /// <summary>
+  /// 收費人員: for 收費註記
+  /// </summary>
+  [Display(Name = "收費人員")]
+  public string PaidStaff { get; set; } = default!;
 
   public void Copy(DonationRecord src)
   {
@@ -41,6 +56,9 @@ public class DonationRecord
     this.PaddleName = src.PaddleName;
     this.Amount = src.Amount;
     this.Timestamp = src.Timestamp;
+    this.HasPaid = src.HasPaid;
+    this.PaidDtm = src.PaidDtm;
+    this.PaidStaff = src.PaidStaff;
   }
 
   public DonationRecord Clone()
@@ -51,6 +69,9 @@ public class DonationRecord
       PaddleName = this.PaddleName,
       Amount = this.Amount,
       Timestamp = this.Timestamp,
+      HasPaid = this.HasPaid,
+      PaidDtm = this.PaidDtm,
+      PaidStaff = this.PaidStaff,
     };
   }
 }
