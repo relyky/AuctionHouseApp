@@ -90,10 +90,20 @@ Authorization: Bearer {{loginRequest.response.body.$.data.token}}
 GET {{AuctionHouseApp.Server_HostAddress}}/api/givetowin/gifts
 Accept: application/json
 
-### 6.2 取得我的福袋抽獎券 [須先登入認證]
-GET {{AuctionHouseApp.Server_HostAddress}}/api/givetowin/mytickets/G01
+### 指定測試參數
+@GiftId  = G02
+
+### 6.2 取得單一福袋詳情
+GET {{AuctionHouseApp.Server_HostAddress}}/api/givetowin/gifts/{{GiftId}}
+Accept: application/json
+
+### 6.3 取得我的福袋(抽獎券) [須先登入認證]
+GET {{AuctionHouseApp.Server_HostAddress}}/api/givetowin/mytickets/{{GiftId}}
 Accept: application/json
 Authorization: Bearer {{loginRequest.response.body.$.data.token}}
+
+### 6.4 取得福袋中獎結果(大螢幕)
+GET {{AuctionHouseApp.Server_HostAddress}}/api/givetowin/result/{{GiftId}}
 
 ### 7.1 取得拍賣商品預覽
 GET {{AuctionHouseApp.Server_HostAddress}}/api/liveauction/preview

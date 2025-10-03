@@ -9,7 +9,7 @@ import { giveSellAtom, giveUnitPriceAtom } from "./atom";
 //icons
 import PlusIcon from '@mui/icons-material/Add';
 import MinusIcon from '@mui/icons-material/Remove';
-import SelectGiftField from "../RaffleSell/SelectGiftField";
+import SelectGiftField from "./SelectGiftField";
 import { postData, postFormData, ResponseError } from "../../tools/httpHelper";
 import type { IStaffProfile } from "../RaffleSell/dto/IStaffProfile";
 

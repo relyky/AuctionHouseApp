@@ -148,7 +148,7 @@ SELECT * FROM VIP (NOLOCK) WHERE PaddleNum = @id
   public async Task<ActionResult<IEnumerable<GivePrizeProfile>>> ListGivePrizeProfile()
   {
     string sql = """
-SELECT GiftId, GiftName = [Name]
+SELECT GiftId, [Name]
 FROM GivePrize (NOLOCK)
 """;
 

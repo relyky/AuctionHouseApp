@@ -2,7 +2,7 @@ import { FormControl, InputLabel, Select, MenuItem } from "@mui/material";
 import type { SelectChangeEvent } from "@mui/material";
 import { useEffect, useState } from "react";
 import { postData } from "../../tools/httpHelper";
-import type { IGivePrizeProfile } from "../../dto/IGivePrizeProfile";
+import type { IGivePrizeProfile } from "../../dto/display/IGivePrizeProfile";
 
 export default function SelectGiftField(props: {
   name: string
@@ -44,7 +44,7 @@ export default function SelectGiftField(props: {
         {profileList.map((item) => (
           <MenuItem key={item.giftId}
             value={item.giftId}>
-            {`${item.giftId}.${item.giftName}`}
+            {`${item.giftId}.${item.name}`}
           </MenuItem>
         ))}
       </Select>
