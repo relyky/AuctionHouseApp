@@ -1,7 +1,4 @@
-﻿using Dapper;
-using Reinforced.Typings.Attributes;
-
-[module: DapperAot(true)]
+﻿using Reinforced.Typings.Attributes;
 
 //## Reinforced.Typings 全域設定說明
 [assembly: TsGlobal(
