@@ -1,8 +1,14 @@
-import { Alert, Paper, Typography } from "@mui/material";
+import { Alert, Box, Button, FormControlLabel, Paper, Switch, Typography, useEventCallback } from "@mui/material";
+import { useState } from "react";
 
 export default function SilentAuctionPanel(props: {
   activity: ActivityEnum
 }) {
+  const [foolproof, setFoolproff] = useState(false)
+
+  const handleDrawMinor = useEventCallback(() => {
+    alert('未實作手動結標');
+  });
 
   // hidden
   if (props.activity !== 'silentAuction') return (<></>)
@@ -15,6 +21,16 @@ export default function SilentAuctionPanel(props: {
       <Alert severity='info' sx={{ m: 3 }}>
         Automatic Slideshow of Silent Auction Items
       </Alert>
+
+      <Box display='flex' justifyContent='space-between' sx={{ my: 3 }}>
+        <Button variant='contained' color='secondary'
+          disabled={!foolproof}
+          onClick={handleDrawMinor}>靜默拍賣結標</Button>
+
+        {/* 防呆: 防止手殘按下抽獎 */}
+        <FormControlLabel label="Fool-proof"
+          control={<Switch checked={foolproof} onChange={(_, chk) => setFoolproff(chk)} />} />
+      </Box>
     </Paper>
   )
 }

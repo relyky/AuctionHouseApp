@@ -25,7 +25,7 @@ export default function RaffleTicketPanel(props: {
   })
 
   const handleDrawMinor = useEventCallback(() => {
-    alert('抽小獎');
+    alert('未實作抽小獎');
   });
 
   useEffect(() => {
