@@ -52,8 +52,35 @@ Staging:
 
 ## 2. 賓客認證 API
 
-### 2.1 賓客登入
-**POST** `api/auth/vip/login`
+### 2.1 賓客名單查詢
+**POST** `/api/auth/vip/GuestList`
+
+查詢可登入的賓客名單（用於登入前的自動完成功能）。
+
+**Request Body:**
+```json
+{
+  "credential": "string"  //查詢憑證（如員工代碼）
+}
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "data": {
+    "guests": [
+      {
+        "name": "string",  //賓客姓名
+        "email": "string"  //賓客email
+      }
+    ]
+  }
+}
+```
+
+### 2.2 賓客登入
+**POST** `/api/auth/vip/login`
 
 進行登入驗證。
 
@@ -84,7 +111,7 @@ Staging:
 ## 3. 活動狀態 API
 
 ### 3.1 取得所有活動狀態
-**GET** `api/activities/status`
+**GET** `/api/activities/status`
 
 **標示：大螢幕可沿用**
 
@@ -112,24 +139,23 @@ Staging:
 
 系統支援8種主要顯示模式：
 
-1. **Live Auction** (`live-auction`) - 現場拍賣商品展示與競標頁面
+1. **Live Auction** (`liveAuction`) - 現場拍賣商品展示與競標頁面
 2. **Open Ask** (`open-ask`) - 募款活動進度顯示（支援多Round）
-3. **Raffle Ticket - 抽獎進行中** (`raffle-ticket-drawing`) - 抽獎滾動動畫頁面
-4. **Raffle Ticket - 單一獎品展示** (`raffle-ticket-prize-display`) - 抽獎前獎品預覽頁面
-5. **Raffle Ticket - 得獎名單輪播** (`raffle-ticket-winners-carousel`) - 所有得獎者名單展示
-6. **Silent Auction** (`silent-auction`) - 靜態拍賣商品輪播與倒數計時
-7. **Give to Win** (`give-to-win`) - 福袋抽獎動畫與結果顯示
-8. **Donation** (`donation`) - 捐款功能頁面（新增）
-
+3. **Raffle Ticket - 抽獎進行中** (`raffleTicketDrawing`) - 抽獎滾動動畫頁面
+4. **Raffle Ticket - 單一獎品展示** (`raffleTicketPrizeDisplay`) - 抽獎前獎品預覽頁面
+5. **Raffle Ticket - 得獎名單輪播** (`raffleTicketWinnersCarousel`) - 所有得獎者名單展示
+6. **Silent Auction** (`silentAuction`) - 靜態拍賣商品輪播與倒數計時
+7. **Give to Win - 抽獎進行中** (`giveToWin`) - 福袋抽獎動畫與結果顯示
+7. **Give to Win - 單一獎品展示** (`giveToWinGiftsDisplay`) - 福袋抽獎前獎品預覽頁面
 ### 4.1 大螢幕狀態查詢
-**GET** `api/display/status`
+**GET** `/api/display/status`
 
 **Response:**
 ```json
 {
   "success": true,
   "data": {
-    "currentMode": "string", //當前顯示模式
+    "currentMode": "liveAuction" | "openAsk" | "raffleTicketDrawing" | "raffleTicketPrizeDisplay" | "raffleTicketWinnersCarousel" | "silentAuction" | "giveToWin" | "giveToWinGiftsDisplay", //當前顯示模式
     "isActive": boolean, //大螢幕是否啟動
     "currentItemId": "string" //當前顯示項目的唯一識別碼
   }
@@ -137,14 +163,13 @@ Staging:
 ```
 
 ### 4.2 切換顯示模式
-**POST** `api/display/switch`
+**POST** `/api/display/switch`
 
 **Request Body:**
 ```json
 {
-  "currentMode": "liveAuction" | "openAsk" | "raffleTicketDrawing" | "raffleTicketPrizeDisplay" | "raffleTicketWinnersCarousel" | "silentAuction" | "giveToWin" | "donation", //當前顯示模式
-  "isActive": boolean, //大螢幕是否啟動
-  "currentItemId": "string" //當前顯示項目的唯一識別碼
+  "mode": "liveAuction" | "openAsk" | "raffleTicketDrawing" | "raffleTicketPrizeDisplay" | "raffleTicketWinnersCarousel" | "silentAuction" | "giveToWin" | "giveToWinGiftsDisplay", //當前顯示模式
+  "itemId": "string", //項目ID（選填）
 }
 ```
 
@@ -162,7 +187,7 @@ Staging:
 ## 5. Raffle Ticket API
 
 ### 5.1 取得獎品清單
-**GET** `api/raffleticket/prizes`
+**GET** `/api/raffleticket/prizes`
 
 **標示：大螢幕可沿用**
 
@@ -186,9 +211,7 @@ Staging:
 ```
 
 ### 5.2 取得指定獎品詳情
-**GET** `api/raffleticket/prize/{prizeId}`
-
-**標示：大螢幕沿用**
+**GET** `/api/raffleticket/prize/{prizeId}`
 
 **Response:**
 ```json
@@ -208,7 +231,7 @@ Staging:
 ```
 
 ### 5.3 取得我的票券
-**GET** `api/raffleticket/mytickets`
+**GET** `/api/raffleticket/mytickets`
 
 **Headers:**
 - `Authorization: Bearer {token}`
@@ -220,7 +243,7 @@ Staging:
   "data": {
     "tickets": [
       {
-        "ticketNumber": "string", //票券ID
+        "raffleTicketNo": "string", //票券編號
         "purchaseTime": "ISO 8601", //購買時間
         "isWinner": boolean, //是否中獎
         "prizeId": "string" | null, //中獎獎品ID
@@ -233,9 +256,7 @@ Staging:
 ```
 
 ### 5.4 取得中獎結果
-**GET** `api/raffleticket/winner/{prizeId}`
-
-**標示：大螢幕沿用**
+**GET** `/api/raffleticket/winner/{prizeId}`
 
 **Response:**
 ```json
@@ -255,9 +276,7 @@ Staging:
 ```
 
 ### 5.5 取得所有得獎名單
-**GET** `api/raffleticket/winners`
-
-**標示：大螢幕沿用**
+**GET** `/api/raffleticket/winners`
 
 **Response:**
 ```json
@@ -282,9 +301,7 @@ Staging:
 ```
 
 ### 5.6 輪播設定
-**GET** `api/raffleticket/carousel/settings`
-
-**標示：大螢幕沿用**
+**GET** `/api/raffleticket/carousel/settings`
 
 **Response:**
 ```json
@@ -299,7 +316,7 @@ Staging:
 ```
 
 ### 5.7 抽獎通知 (Polling)
-**GET** `api/raffleticket/notifications/check`
+**GET** `/api/raffleticket/notifications/check`
 
 **Headers:**
 - `Authorization: Bearer {token}`
@@ -327,7 +344,7 @@ Staging:
 ## 6. Give to Win API
 
 ### 6.1 取得福袋清單
-**GET** `api/givetowin/gifts`
+**GET** `/api/givetowin/gifts`
 
 **標示：大螢幕可沿用**
 
@@ -349,8 +366,27 @@ Staging:
 }
 ```
 
-### 6.2 取得我的福袋
-**GET** `api/givetowin/mytickets/{giftId}`
+### 6.2 取得單一福袋詳情
+**GET** `/api/givetowin/gifts/{giftId}`
+
+**Response:**
+```json
+{
+  "success": true,
+  "data": {
+    "package": {
+      "giftId": "string", // 福袋類型唯一識別碼
+      "name": "string", // 福袋名稱
+      "description": "string", // 福袋描述
+      "image": "string", // 福袋圖片URL
+      "value": "string" // 福袋價值
+    }
+  }
+}
+```
+
+### 6.3 取得我的福袋
+**GET** `/api/givetowin/mytickets/{giftId}`
 
 **Headers:**
 - `Authorization: Bearer {token}`
@@ -362,9 +398,9 @@ Staging:
   "data": {
     "tickets": [
       {
-        "giftNumber": "string", // 福袋編號
+        "giveTicketNo": "string", // 福袋票券編號
         "purchaseTime": "ISO 8601", //購買時間
-        "isWinner": boolean, //是否中獎
+        "isWinner": boolean //是否中獎
       }
     ],
     "totalCount": number
@@ -372,25 +408,25 @@ Staging:
 }
 ```
 
-### 6.3 取得福袋中獎結果
-**GET** `api/givetowin/result/{giftId}`
-
-**標示：大螢幕沿用**
+### 6.4 取得福袋中獎結果
+**GET** `/api/givetowin/result/{giftId}`
 
 **Response:**
 ```json
 {
-  "giftId": "string", // 福袋類型ID
-  "giftName": "string", // 福袋名稱
-  "winnerID": "string",  //中獎賓客ID
-  "winnerName": "string", // 中獎者姓名
-  "giftNumber": "string", // 中獎福袋編號
-  "prizeDetails": {
-    "name": "string", // 實際獎品名稱
-    "value": "string", // 實際獎品價值
-    "image": "string" // 實際獎品圖片URL
-  },
-  "drawTime": "timestamp" // 抽獎時間
+  "success": true,
+  "data": {
+    "giftId": "string", // 福袋類型ID
+    "giftName": "string", // 福袋名稱
+    "winnerID": "string",  //中獎賓客ID
+    "winnerName": "string", // 中獎者姓名
+    "giftNumber": "string", // 中獎福袋編號
+    "prizeDetails": {
+      "name": "string", // 實際獎品名稱
+      "value": "string", // 實際獎品價值
+      "image": "string" // 實際獎品圖片URL
+    },
+    "drawTime": "string" // 抽獎時間（ISO 8601）
   }
 }
 ```
@@ -398,7 +434,7 @@ Staging:
 ## 7. Live Auction API
 
 ### 7.1 取得拍賣商品預覽
-**GET** `api/liveauction/preview`
+**GET** `/api/liveauction/preview`
 
 **標示：大螢幕可沿用**
 
@@ -423,9 +459,7 @@ Staging:
 ```
 
 ### 7.2 取得指定拍賣商品詳情
-**GET** `api/liveauction/preview/{itemId}`
-
-**標示：大螢幕沿用（原路徑：/api/liveauction/current）**
+**GET** `/api/liveauction/preview/{itemId}`
 
 **Response:**
 ```json
@@ -446,11 +480,7 @@ Staging:
 ```
 
 ### 7.3 取得即時競標狀態
-**GET** `api/liveauction/status/{itemId}`
-
-**標示：大螢幕沿用**
-
-大螢幕每 2 秒 Polling 此 API 以取得最新出價。
+**GET** `/api/liveauction/status/{itemId}`
 
 **Response:**
 ```json
@@ -471,7 +501,7 @@ Staging:
 ## 8. Silent Auction API
 
 ### 8.1 取得商品清單
-**GET** `api/silentauction/items`
+**GET** `/api/silentauction/items`
 
 **標示：大螢幕可沿用**
 
@@ -499,7 +529,7 @@ Staging:
 ```
 
 ### 8.2 取得單一商品詳情
-**GET** `api/silentauction/items/{itemId}`
+**GET** `/api/silentauction/items/{itemId}`
 
 **標示：大螢幕可沿用**
 
@@ -534,8 +564,8 @@ Staging:
 }
 ```
 
-### 8.3 取得單一商品詳情
-**GET** `api/silentauction/items/{itemId}/bidHistory`
+### 8.3 取得出價歷史
+**GET** `/api/silentauction/items/{itemId}/bidHistory`
 
 **Headers:**
 - `Authorization: Bearer {token}`
@@ -562,7 +592,7 @@ Staging:
 ```
 
 ### 8.4 提交出價
-**POST** `api/silentauction/items/{itemId}/bid`
+**POST** `/api/silentauction/items/{itemId}/bid`
 
 **Headers:**
 - `Authorization: Bearer {token}`
@@ -589,9 +619,7 @@ Staging:
 ```
 
 ### 8.5 輪播設定
-**GET** `api/silentauction/carousel/settings`
-
-**標示：大螢幕沿用**
+**GET** `/api/silentauction/carousel/settings`
 
 **Response:**
 ```json
@@ -606,7 +634,7 @@ Staging:
 ```
 
 ### 8.6 出價通知檢查 (Polling)
-**GET** `api/silentauction/notifications/check`
+**GET** `/api/silentauction/notifications/check`
 
 **Headers:**
 - `Authorization: Bearer {token}`
@@ -635,11 +663,7 @@ Staging:
 ## 9. Open Ask API
 
 ### 9.1 取得募款狀態
-**GET** `api/openask/status/{roundNumber}`
-
-**標示：大螢幕沿用**
-
-如果不提供 roundNumber，返回最新 Round 資料。大螢幕每 3 秒 Polling 此 API。
+**GET** `/api/openask/status/{roundNumber}`
 
 **Response:**
 ```json
@@ -655,9 +679,7 @@ Staging:
 ```
 
 ### 9.2 取得最新捐款記錄
-**GET** `api/openask/donations/recent/{roundNumber}`
-
-**標示：大螢幕沿用**
+**GET** `/api/openask/donations/recent/{roundNumber}`
 
 **Query Parameters:**
 - `limit`: number (預設: 10)
@@ -682,7 +704,7 @@ Staging:
 ## 10. Donation API
 
 ### 10.1 取得捐款功能狀態
-**GET** `api/donation/status`
+**GET** `/api/donation/status`
 
 **標示：大螢幕可沿用**
 
@@ -695,20 +717,12 @@ Staging:
     "minAmount": number, // 最小捐款金額
     "totalAmount": number, // 總捐款金額
     "donorCount": number, // 總捐款人數
-    "recentDonations": [
-      {
-        "paddleNum": "string",  // 捐款者ID
-        "paddleName": "string", // 捐款者姓名
-        "amount": number, // 捐款金額
-        "timestamp": "ISO 8601" // 捐款時間
-      }
-    ]
   }
 }
 ```
 
 ### 10.2 提交捐款
-**POST** `api/donation/donate`
+**POST** `/api/donation/donate`
 
 **Headers:**
 - `Authorization: Bearer {token}`
@@ -734,7 +748,9 @@ Staging:
 ## 11. 消費明細 API
 
 ### 11.1 取得消費明細
-**GET** `api/transactions/summary`
+**GET** `/api/transactions/summary`
+
+取得賓客的所有消費記錄、中獎票券、付款狀態與收據資訊。
 
 **Headers:**
 - `Authorization: Bearer {token}`
@@ -744,6 +760,23 @@ Staging:
 {
   "success": true,
   "data": {
+    "winningTickets": {
+      "raffle": [
+        {
+          "ticketNumber": "string",  //中獎票號
+          "prize": "string",  //獎品名稱
+          "value": number  //獎品價值
+        }
+      ],
+      "gift": [
+        {
+          "ticketNumber": "string",  //中獎福袋編號
+          "type": "string",  //福袋類型
+          "content": "string",  //福袋內容
+          "value": number  //福袋價值
+        }
+      ]
+    },
     "summary": {
       "totalAmount": number,  //消費總金額
       "paidAmount": number,  //已支付金額
@@ -752,25 +785,34 @@ Staging:
     "transactions": [
       {
         "transactionId": "string",  //交易識別碼
-        "type": "raffle" | "give" | "liveAuction" | "silentAuction" | "openAsk" | "donation",  //活動ID
-        "description": "string",  //描述
+        "type": "silentAuction" | "liveAuction" | "openAsk" | "donation",  //消費類型
+        "name": "string",  //消費項目名稱（例如: "得標: 神秘藝術品 #001", "愛心捐款"）
         "amount": number,  //消費金額
-        "quantity": number,  //消費數量
-        "timestamp": "ISO 8601",  //消費時間
-        "paymentStatus": "unpaid" | "partial" | "paid",  //付款狀態
-        "paidAmount": number,  //已支付金額
-        "details": object  //細節
+        "status": "unpaid" | "partial" | "paid",  //付款狀態
+        "paidAmount": number | null,  //已支付金額（僅在 status 為 "partial" 時提供）
+        "time": "string"  //消費時間（格式: "MM-dd HH:mm"）
       }
     ],
-    "donationTitle": "string",  //捐款人名稱 
-    "donationId": "string" | null,  //捐款人ID
-    "donationEmail": "string"  //捐款收據 email
+    "receiptInfo": {
+      "receiptType": "none" | "individual" | "company",  //收據類型
+      "receiptTitle": "string",  //收據抬頭
+      "receiptTaxId": "string",  //統一編號/身份證號
+      "receiptEmail": "string"  //收據 Email
+    }
   }
 }
 ```
 
-### 11.2 確認付款
-**POST** `api/transactions/checkout`
+**說明：**
+- 透過 JWT Token 自動識別賓客身份
+- `winningTickets`: 顯示所有中獎的抽獎券與福袋
+- `transactions`: 僅顯示需要付款的活動（Silent Auction、Live Auction、Open Ask、Donation）
+- Raffle Ticket 和 Give to Win 因為購買時已付款，不會出現在 transactions 列表中
+
+### 11.2 更新收據資訊
+**POST** `/api/transactions/receipt`
+
+更新賓客的收據資訊，用於開立收據。全額付清時系統將自動發送感謝函。
 
 **Headers:**
 - `Authorization: Bearer {token}`
@@ -778,9 +820,10 @@ Staging:
 **Request Body:**
 ```json
 {
-  "donationTitle": "string",  //捐款人名稱 
-  "donationId": "string" | null,  //捐款人ID
-  "donationEmail": "string"  //捐款收據 email
+  "receiptType": "none" | "individual" | "company",  //收據類型
+  "receiptTitle": "string",  //收據抬頭（當 receiptType 不為 "none" 時必填）
+  "receiptTaxId": "string",  //統一編號/身份證號（當 receiptType 為 "company" 時必填）
+  "receiptEmail": "string"  //收據 Email（選填）
 }
 ```
 
@@ -789,15 +832,22 @@ Staging:
 {
   "success": true,
   "data": {
-    "message": "string"  //顯示訊息
+    "message": "string"  //顯示訊息（例如: "🎉 感謝您的參與。\n系統將自動發送感謝函給您。"）
   }
 }
 ```
 
+**說明：**
+- 透過 JWT Token 自動識別賓客身份
+- 當 `receiptType` 為 "none" 時，不需要填寫 `receiptTitle` 和 `receiptTaxId`
+- 當 `receiptType` 為 "individual" 時，必須填寫 `receiptTitle`
+- 當 `receiptType` 為 "company" 時，必須填寫 `receiptTitle` 和 `receiptTaxId`（統一編號）
+- 系統會自動檢查是否全額付清，若是則觸發感謝函發送
+
 ## 12. 通知管理 API
 
 ### 12.1 取得通知列表
-**GET** `api/notifications`
+**GET** `/api/notifications`
 
 **Headers:**
 - `Authorization: Bearer {token}`
@@ -829,7 +879,7 @@ Staging:
 ```
 
 ### 12.2 標記通知已讀
-**PUT** `api/notifications/{notificationId}/read`
+**PUT** `/api/notifications/{notificationId}/read`
 
 **Headers:**
 - `Authorization: Bearer {token}`
