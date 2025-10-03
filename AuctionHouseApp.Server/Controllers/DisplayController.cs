@@ -79,11 +79,13 @@ SELECT *
   [HttpPost("[action]")]
   public async Task<ActionResult<IEnumerable<RafflePrizeProfile>>> ListRafflePrizeProfile()
   {
+    // 取獎項並依大→小獎排序
     string sql = """
 SELECT [PrizeId]
  ,[Name]
  ,[Category]
 FROM [RafflePrize] (NOLOCK)
+ORDER BY PrizeId ASC 
 """;
 
     using var conn = await DBHelper.AUCDB.OpenAsync();

@@ -44,14 +44,19 @@ export default function GiveToWinPanel(props: {
 
       <Box sx={{ m: 3 }}>
         <ButtonGroup fullWidth>
-          <Button variant={mode === 'give' ? 'contained' : 'outlined'}
+          <Button sx={{ flexDirection: 'column' }}
+            variant={mode === 'give' ? 'contained' : 'outlined'}
             onClick={_ => handleDisplay('give')}>
-            獎品展示(Prize Display)</Button>
+            <span>Prize Display</span><span>(獎品展示)</span>
+          </Button>
 
-          <Button variant={mode === 'giveDrawing' ? 'contained' : 'outlined'}
+          <Button sx={{ flexDirection: 'column' }}
+            variant={mode === 'giveDrawing' ? 'contained' : 'outlined'}
             disabled={!prize || !foolproof}
             onClick={_ => handleDisplay('giveDrawing')}>
-            進行抽獎(Drawing)</Button>
+            <span>Drawing</span><span>(進行抽獎)</span>
+          </Button>
+
         </ButtonGroup>
         <Box sx={{ textAlign: 'right', my: 3 }}>
           {/* 防呆: 防止手殘按下抽獎 */}

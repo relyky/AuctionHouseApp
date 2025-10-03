@@ -1,19 +1,22 @@
-import { Autocomplete, Button, ButtonGroup, FormControl, InputLabel, MenuItem, Paper, Select, Stack, Typography, useEventCallback, TextField } from "@mui/material";
-import { useState, useEffect } from "react";
-import { postData } from "../../tools/httpHelper";
+import { Box, Button, ButtonGroup, FormControlLabel, Paper, Stack, Switch, Typography, useEventCallback } from "@mui/material";
 import { useAtomValue } from "jotai";
+import { useEffect, useMemo, useState } from "react";
+import { postData } from "../../tools/httpHelper";
 import { rafflePrizeProfileAtom } from "./atom";
-import type { IRafflePrizeProfile } from '../../dto/display/IRafflePrizeProfile'
 
 export default function RaffleTicketPanel(props: {
   activity: ActivityEnum
 }) {
   const rafflePrizeList = useAtomValue(rafflePrizeProfileAtom)
   const [mode, setMode] = useState<DisplayMode>('raffleWinnersCarousel')
-  const [prize, setPrize] = useState<IRafflePrizeProfile | null>(null)
+  const [foolproof, setFoolproff] = useState(false)
+
+  const rafflePrizeTop3 = useMemo(() => {
+    return rafflePrizeList.slice(0, 3).map((c) => c.prizeId).join(',')
+  }, [rafflePrizeList])
 
   const handleDisplay = useEventCallback((mode: DisplayMode) => {
-    postData(`/api/Site/SwitchDisplay/${mode}/${prize?.prizeId}`)
+    postData(`/api/Site/SwitchDisplay/${mode}/${rafflePrizeTop3}`)
       .then((msg) => {
         console.log(msg)
         setMode(mode)
@@ -23,10 +26,6 @@ export default function RaffleTicketPanel(props: {
 
   const handleDrawMinor = useEventCallback(() => {
     alert('抽小獎');
-  });
-
-  const handleDrawMajor = useEventCallback(() => {
-    alert('抽大獎');
   });
 
   useEffect(() => {
@@ -42,35 +41,39 @@ export default function RaffleTicketPanel(props: {
       <Typography variant='h6' borderBottom='solid 1px' gutterBottom>1. Raffle Ticket Control Panel</Typography>
 
       <Stack gap={2} sx={{ m: 3 }} >
-
-        <Autocomplete fullWidth disablePortal disableClearable
-          options={rafflePrizeList}
-          value={prize!}
-          onChange={(_, v) => setPrize(v)}
-          getOptionLabel={item => `${item.prizeId}.${item.name}`}
-          renderInput={(params) => <TextField {...params} label="Raffle Prize" />}
-        />
+        <Box>
+          三大獎編號：{rafflePrizeTop3}
+        </Box>
 
         <ButtonGroup fullWidth>
-          <Button variant={mode === 'raffleWinnersCarousel' ? 'contained' : 'outlined'}
+          <Button sx={{ flexDirection: 'column' }}
+            variant={mode === 'raffleWinnersCarousel' ? 'contained' : 'outlined'}
             onClick={_ => handleDisplay('raffleWinnersCarousel')}>
-            得獎名單(Winners Carousel)</Button>
+            <span>Winners Carousel</span><span>(得獎名單)</span></Button>
 
-          <Button variant={mode === 'rafflePrizeDisplay' ? 'contained' : 'outlined'}
-            disabled={!prize}
+          <Button sx={{ flexDirection: 'column' }}
+            variant={mode === 'rafflePrizeDisplay' ? 'contained' : 'outlined'}
             onClick={_ => handleDisplay('rafflePrizeDisplay')}>
-            獎品展示(Prize Display)</Button>
+            <span>Prize Display</span><span>(獎品展示)</span></Button>
 
-          <Button variant={mode === 'raffleDrawing' ? 'contained' : 'outlined'}
-            disabled={!prize}
+          <Button sx={{ flexDirection: 'column' }}
+            variant={mode === 'raffleDrawing' ? 'contained' : 'outlined'}
+            disabled={!foolproof}
             onClick={_ => handleDisplay('raffleDrawing')}>
-            進行抽獎(Drawing)</Button>
+            <span>Drawing</span><span>(進行抽獎)</span></Button>
 
         </ButtonGroup>
 
-        <Button onClick={handleDrawMinor}>小獎抽獎</Button>
+        <Box display='flex' justifyContent='space-between' sx={{ my: 3 }}>
+          <Button variant='contained' color='secondary'
+            disabled={!foolproof}
+            onClick={handleDrawMinor}>小獎抽獎</Button>
 
-        <Button onClick={handleDrawMajor}>大獎抽獎</Button>
+          {/* 防呆: 防止手殘按下抽獎 */}
+          <FormControlLabel label="Fool-proof"
+            control={<Switch checked={foolproof} onChange={(_, chk) => setFoolproff(chk)} />} />
+        </Box>
+
 
       </Stack>
 
