@@ -1,4 +1,4 @@
-import { Box, Button, ButtonGroup, Paper, Typography, useEventCallback } from "@mui/material";
+import { Box, Button, ButtonGroup, FormControlLabel, Paper, Switch, Typography, useEventCallback } from "@mui/material";
 import { useEffect, useMemo, useState } from "react";
 import { postData } from "../../tools/httpHelper";
 import { givePrizeProfileAtom } from "./atom";
@@ -10,6 +10,7 @@ export default function GiveToWinPanel(props: {
 }) {
   const givePrizeList = useAtomValue(givePrizeProfileAtom)
   const [mode, setMode] = useState<DisplayMode>('give')
+  const [foolproof, setFoolproff] = useState(false)
 
   // 福袋獎品實際上只有一筆。一開始就取。
   const prize = useMemo<IGivePrizeProfile | null>(() => {
@@ -48,10 +49,15 @@ export default function GiveToWinPanel(props: {
             獎品展示(Prize Display)</Button>
 
           <Button variant={mode === 'giveDrawing' ? 'contained' : 'outlined'}
-            disabled={!prize}
+            disabled={!prize || !foolproof}
             onClick={_ => handleDisplay('giveDrawing')}>
             進行抽獎(Drawing)</Button>
         </ButtonGroup>
+        <Box sx={{ textAlign: 'right', my: 3 }}>
+          {/* 防呆: 防止手殘按下抽獎 */}
+          <FormControlLabel label="Fool-proof"
+            control={<Switch checked={foolproof} onChange={(_, chk) => setFoolproff(chk)} />} />
+        </Box>
       </Box>
 
     </Paper>
