@@ -18,7 +18,7 @@ public class SiteController : ControllerBase
   {
     try
     {
-      //# 六個活動八種螢幕：liveAuction | openAsk | raffleDrawing | rafflePrizeDisplay | raffleWinnersCarousel | silentAuction | give | donation;
+      //# 六個活動九種螢幕：silentAuction | liveAuction | openAsk | raffleDrawing | rafflePrizeDisplay | raffleWinnersCarousel | give | giveDrawing | donation;
       string sql = """
 UPDATE [LiveSession] SET StringValue = @mode WHERE StateName = 'DisplayCurrentMode';
 UPDATE [LiveSession] SET StringValue = @itemId WHERE StateName = 'DisplayCurrentItemId';
@@ -28,8 +28,8 @@ UPDATE [LiveSession] SET StringValue = @itemId WHERE StateName = 'DisplayCurrent
       if (mode == "raffle")
         mode = "raffleWinnersCarousel";
 
-      //# 若 mode 不屬於8種之一。不處理。
-      string[] modes = ["liveAuction", "openAsk", "raffleDrawing", "rafflePrizeDisplay", "raffleWinnersCarousel", "silentAuction", "give", "donation"];
+      //# 若 mode 不屬於9種之一。不處理。
+      string[] modes = ["liveAuction", "openAsk", "raffleDrawing", "rafflePrizeDisplay", "raffleWinnersCarousel", "silentAuction", "give", "giveDrawing", "donation"];
       if (!modes.Contains(mode))
         return new MsgObj("SUCCESS");
 
@@ -88,4 +88,27 @@ WHERE StateName = 'DonationSwitch'
     var info = await conn.QueryFirstAsync<LiveSession>(sql);
     return Ok(new MsgObj(info.StringValue));
   }
+
+  [HttpPost("[action]/{amount}")]
+  public ActionResult<OpenAskRound> OpenAskNewRound(decimal amount)
+  {
+    // --關閉現有的，建立新一輪。
+    string sql = """
+UPDATE [OpenAskRound] SET [IsActive] = 'N';
+WITH NewRound (RoundNo) AS 
+ (SELECT RoundNo = IsNull(MAX([Round]),0)+1 FROM [OpenAskRound])
+INSERT INTO [dbo].[OpenAskRound] 
+ ([Round],[Amount],[IsActive])
+ OUTPUT inserted.*
+SELECT 
+ RoundNo, @Amount, 'N'
+ FROM NewRound;
+""";
+
+    using var conn = DBHelper.AUCDB.Open();
+    using var txn = conn.BeginTransaction();
+    var info = conn.QueryFirst<OpenAskRound>(sql, new { Amount = amount }, txn);
+    return Ok(info);
+  }
+
 }

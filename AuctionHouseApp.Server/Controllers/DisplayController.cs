@@ -1,4 +1,5 @@
-﻿using AuctionHouseApp.Server.Models;
+﻿using AuctionHouseApp.Server.DTO;
+using AuctionHouseApp.Server.Models;
 using Dapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -16,7 +17,7 @@ public class DisplayController(
 ) : ControllerBase
 {
   /// <summary>
-  /// 大螢幕狀態查詢
+  /// 4.1 大螢幕狀態查詢
   /// </summary>
   /// <returns>
   /// ```json
@@ -36,7 +37,7 @@ public class DisplayController(
   {
     try
     {
-      //# 六個活動八種螢幕：liveAuction | openAsk | raffleDrawing | rafflePrizeDisplay | raffleWinnersCarousel | silentAuction | give | donation;
+      //# 六個活動九種螢幕：silentAuction | liveAuction | openAsk | raffleDrawing | rafflePrizeDisplay | raffleWinnersCarousel | give | giveDrawing | donation;
 
       string sql = """
 SELECT * 
@@ -69,5 +70,60 @@ SELECT *
         new DisplayStatusResult_Data("silentAuction", true, null),
         null));
     }
+  }
+
+  /// <summary>
+  /// 取 RafflePrize 下拉清單資訊
+  /// </summary>
+  [AllowAnonymous]
+  [HttpPost("[action]")]
+  public async Task<ActionResult<IEnumerable<RafflePrizeProfile>>> ListRafflePrizeProfile()
+  {
+    string sql = """
+SELECT [PrizeId]
+ ,[Name]
+ ,[Category]
+FROM [RafflePrize] (NOLOCK)
+""";
+
+    using var conn = await DBHelper.AUCDB.OpenAsync();
+    var infoList = await conn.QueryAsync<RafflePrizeProfile>(sql);
+    return Ok(infoList);
+  }
+
+  /// <summary>
+  /// 取 GivePrize 下拉清單資訊
+  /// </summary>
+  [AllowAnonymous]
+  [HttpPost("[action]")]
+  public async Task<ActionResult<IEnumerable<GivePrizeProfile>>> ListGivePrizeProfile()
+  {
+    string sql = """
+SELECT [GiftId]
+,[Name]
+FROM [GivePrize] (NOLOCK)
+""";
+
+    using var conn = await DBHelper.AUCDB.OpenAsync();
+    var infoList = await conn.QueryAsync<GivePrizeProfile>(sql);
+    return Ok(infoList);
+  }
+
+  /// <summary>
+  /// 取 AuctionPrize 下拉清單資訊
+  /// </summary>
+  [AllowAnonymous]
+  [HttpPost("[action]")]
+  public async Task<ActionResult<IEnumerable<AuctionPrizeProfile>>> ListAuctionPrizeProfile()
+  {
+    string sql = """
+SELECT [ItemId]
+ ,[Name]
+ FROM [AuctionPrize] (NOLOCK)
+""";
+
+    using var conn = await DBHelper.AUCDB.OpenAsync();
+    var infoList = await conn.QueryAsync<AuctionPrizeProfile>(sql);
+    return Ok(infoList);
   }
 }

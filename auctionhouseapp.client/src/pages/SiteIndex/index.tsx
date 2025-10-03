@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import type { FC, ReactNode } from "react";
 import { Button, Container, Typography, Box, useEventCallback } from "@mui/material";
 import RaffleTicketPanel from "./RaffleTicketPanel";
@@ -8,14 +8,39 @@ import SilentAuctionPanel from "./SilentAuctionPanel";
 import OpenAskPanel from "./OpenAskPanel";
 import DonationPanel from "./DonationPanel";
 import { postData } from "../../tools/httpHelper";
+import { useAtom, useSetAtom } from 'jotai'
+import { givePrizeProfileAtom, rafflePrizeProfileAtom, auctionPrizeProfileAtom, siteActivityAtom } from './atom'
+import type { IRafflePrizeProfile } from "../../dto/display/IRafflePrizeProfile"
+import type { IGivePrizeProfile } from "../../dto/display/IGivePrizeProfile"
+import type { IAuctionPrizeProfile } from "../../dto/display/IAuctionPrizeProfile"
 
 export default function SiteIndex() {
   const [activity, setActivity] = useState<ActivityEnum>('silentAuction')
+  //const [activity, setActivity] = useAtom(siteActivityAtom) // 應該自DB:LiveSession 取初值
+  const setRafflePrizeProfile = useSetAtom(rafflePrizeProfileAtom)
+  const setGivePrizeProfile = useSetAtom(givePrizeProfileAtom)
+  const setAuctionPrizeProfile = useSetAtom(auctionPrizeProfileAtom)
+
+  // 背影: 取得此 page 需要的基本資料
+  useEffect(() => {
+    postData<IRafflePrizeProfile[]>(`/api/Display/ListRafflePrizeProfile`)
+      .then(setRafflePrizeProfile)
+      .catch(console.log);
+
+    postData<IGivePrizeProfile[]>(`/api/Display/ListGivePrizeProfile`)
+      .then(setGivePrizeProfile)
+      .catch(console.log);
+
+    postData<IAuctionPrizeProfile[]>(`/api/Display/ListAuctionPrizeProfile`)
+      .then(setAuctionPrizeProfile)
+      .catch(console.log);
+
+  }, [])
 
   const handleActivity = useEventCallback((activity: ActivityEnum) => {
     postData(`/api/Site/SwitchDisplay/${activity}`)
       .then((msg) => {
-        console.log(msg)
+        //console.log(msg)
         setActivity(activity)
       })
       .catch(console.log)
@@ -33,7 +58,7 @@ export default function SiteIndex() {
         <ActivitySwitch value={activity} onChange={handleActivity} activity='liveAuction'
           label={<span>3. Live Auction <br />(現場拍賣)</span>} />
         <ActivitySwitch value={activity} onChange={handleActivity} activity='silentAuction'
-          label={<span>4. Silent Auction <br />(靜態拍賣)</span>} />
+          label={<span>4. Silent Auction <br />(靜默拍賣)</span>} />
         <ActivitySwitch value={activity} onChange={handleActivity} activity='openAsk'
           label={<span>5. Open Ask <br />(募款活動)</span>} />
         <ActivitySwitch value={activity} onChange={handleActivity} activity='donation'

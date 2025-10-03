@@ -28,12 +28,13 @@ type ActivityEnum =
   'donation';
 
 type DisplayMode =
-  'raffleDrawing' |
-  'rafflePrizeDisplay' |
-  'raffleWinnersCarousel' |
-  'give' |
-  'liveAuction' |
   'silentAuction' |
+  'raffleWinnersCarousel' |
+  'rafflePrizeDisplay' |
+  'raffleDrawing' |
+  'give' |
+  'giveDrawing' |
+  'liveAuction' |
   'openAsk' |
   'donation';
 
@@ -209,6 +210,12 @@ interface ISilentPrize {
   createdAt: string;
   updatedAt: string;
   createdBy: string;
+}
+
+interface IOpenAskRound {
+  round: number;
+  amount: number;
+  isActive: string;
 }
 
 //#endregion

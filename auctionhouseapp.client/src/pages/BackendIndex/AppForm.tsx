@@ -5,6 +5,7 @@ import { NavLink } from "react-router";
 import { selectIsAuthedStaff, staffAccountAtom } from "../../atoms/staffAccountAtom";
 import AuthorizeGuard from "../../layout/AuthorizeGuard";
 import LiveEventsPanel from "./LiveEventsPanel";
+import EventsClosingPanel from "./EventsClosingPanel";
 
 export default function BackendIndex_AppForm() {
   const isAuthedStaff = useAtomValue(selectIsAuthedStaff)
@@ -69,12 +70,10 @@ export default function BackendIndex_AppForm() {
       {/* 現場活動 */}
       <LiveEventsPanel />
 
-      {/*
-      <Typography variant='h6' gutterBottom>前台</Typography>
-      <Button component={NavLink} to='/'>前台首頁</Button>        
-      */}
+      {/* 活動尾聲 */}
+      <EventsClosingPanel />
 
-      <Box sx={{ height: 50 }} ></Box>
+      <Box sx={{ height: '6rem' }} ></Box>
       <Footer />
     </Container>
   )
