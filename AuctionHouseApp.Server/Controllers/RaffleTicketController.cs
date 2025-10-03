@@ -215,4 +215,178 @@ SELECT T.RaffleTicketNo, O.RaffleOrderNo, O.SoldDtm, V.PaddleNum
     }
   }
 
+  /// <summary>
+  /// 5.4 取得中獎結果
+  /// GET /api/raffleticket/winner/{prizeId}
+  /// </summary>
+  /// <param name="prizeId">獎品ID</param>
+  /// <returns>
+  /// **Response:**
+  /// ```json
+  /// {
+  ///   "success": true,
+  ///   "data": {
+  ///     "prizeId": "string", //獎品ID
+  ///     "prizeName": "string", //獎品名稱
+  ///     "winnerID": "string",  //中獎賓客ID
+  ///     "winnerName": "string",  //中獎賓客姓名
+  ///     "ticketNumber": "string", //中獎票號
+  ///     "drawTime": "ISO 8601"  //抽獎時間
+  ///   }
+  /// }
+  /// ```
+  /// </returns>
+  [AllowAnonymous]
+  [HttpGet("winner/{prizeId}")]
+  public async Task<ActionResult<CommonResult<RaffleWinnerData>>> GetWinner(string prizeId)
+  {
+    try
+    {
+      // 查詢指定獎品的中獎記錄
+      string sql = """
+SELECT
+    W.PrizeId,
+    W.RaffleTickerNo,
+    W.DrawDtm,
+    T.BuyerName,
+    T.BuyerEmail,
+    P.Name as PrizeName
+FROM [RaffleWinner] W (NOLOCK)
+INNER JOIN [RaffleTicket] T (NOLOCK) ON W.RaffleTickerNo = T.RaffleTicketNo
+INNER JOIN [RafflePrize] P (NOLOCK) ON W.PrizeId = P.PrizeId
+WHERE W.PrizeId = @PrizeId
+""";
+
+      using var conn = await DBHelper.AUCDB.OpenAsync();
+      var result = await conn.QueryFirstOrDefaultAsync<RaffleWinnerQueryResult>(sql, new { PrizeId = prizeId });
+
+      if (result == null)
+      {
+        return Ok(new CommonResult<RaffleWinnerData>(false, null, "尚未開獎或獎品不存在"));
+      }
+
+      // 嘗試從 Vip 表取得 PaddleNum（如果買家是 VIP）
+      string vipSql = """
+SELECT PaddleNum FROM [Vip] (NOLOCK)
+WHERE VipEmail = @Email
+""";
+
+      var vipInfo = await conn.QueryFirstOrDefaultAsync<VipLookupResult>(vipSql, new { Email = result.BuyerEmail });
+      string winnerID = vipInfo?.PaddleNum ?? result.BuyerEmail; // 如果不是 VIP，使用 Email
+
+      var data = new RaffleWinnerData(
+          PrizeId: result.PrizeId,
+          PrizeName: result.PrizeName,
+          WinnerID: winnerID,
+          WinnerName: result.BuyerName,
+          TicketNumber: result.RaffleTickerNo,
+          DrawTime: result.DrawDtm.ToString("yyyy-MM-ddTHH:mm:ss.fffZ")
+      );
+
+      return Ok(new CommonResult<RaffleWinnerData>(true, data, null));
+    }
+    catch (Exception ex)
+    {
+      string errMsg = string.Format("Exception！{0}", ex.Message);
+      _logger.LogError(ex, errMsg);
+      return Ok(new CommonResult<RaffleWinnerData>(false, null, errMsg));
+    }
+  }
+
+  /// <summary>
+  /// 5.5 取得所有得獎名單
+  /// GET /api/raffleticket/winners
+  /// </summary>
+  /// <returns>
+  /// **Response:**
+  /// ```json
+  /// {
+  ///   "success": true,
+  ///   "data": {
+  ///     "winners": [
+  ///       {
+  ///         "prizeId": "string", //獎品ID
+  ///         "prizeName": "string", //獎品名稱
+  ///         "prizeDescription": "string", //獎品描述
+  ///         "prizeImage": "string", //獎品圖片URL
+  ///         "prizeValue": "string", //獎品價值
+  ///         "winnerID": "string",  //中獎賓客ID
+  ///         "winnerName": "string",  //中獎賓客姓名
+  ///         "ticketNumber": "string",  //中獎票號
+  ///         "drawTime": "ISO 8601"  //抽獎時間
+  ///       }
+  ///     ]
+  ///   }
+  /// }
+  /// ```
+  /// </returns>
+  [AllowAnonymous]
+  [HttpGet("winners")]
+  public async Task<ActionResult<CommonResult<RaffleWinnersData>>> GetAllWinners()
+  {
+    try
+    {
+      var request = HttpContext.Request;
+      string publicWebRoot = $"{request.Scheme}://{request.Host}";
+
+      // 查詢所有得獎記錄
+      string sql = """
+SELECT
+    W.PrizeId,
+    W.RaffleTickerNo,
+    W.DrawDtm,
+    T.BuyerName,
+    T.BuyerEmail,
+    P.Name as PrizeName,
+    P.Description as PrizeDescription,
+    P.Image as PrizeImage,
+    P.Value as PrizeValue
+FROM [RaffleWinner] W (NOLOCK)
+INNER JOIN [RaffleTicket] T (NOLOCK) ON W.RaffleTickerNo = T.RaffleTicketNo
+INNER JOIN [RafflePrize] P (NOLOCK) ON W.PrizeId = P.PrizeId
+ORDER BY W.DrawDtm DESC
+""";
+
+      using var conn = await DBHelper.AUCDB.OpenAsync();
+      var results = await conn.QueryAsync<AllWinnersQueryResult>(sql);
+
+      // 批次查詢所有 VIP 的 PaddleNum
+      var emails = results.Select(r => r.BuyerEmail).Distinct().ToList();
+      var vipDict = new Dictionary<string, string>();
+
+      if (emails.Any())
+      {
+        string vipSql = """
+SELECT VipEmail, PaddleNum FROM [Vip] (NOLOCK)
+WHERE VipEmail IN @Emails
+""";
+
+        var vips = await conn.QueryAsync<VipBatchLookupResult>(vipSql, new { Emails = emails });
+        vipDict = vips.ToDictionary(v => v.VipEmail, v => v.PaddleNum);
+      }
+
+      var winners = results.Select(r => new RaffleWinnerItem(
+          PrizeId: r.PrizeId,
+          PrizeName: r.PrizeName,
+          PrizeDescription: r.PrizeDescription,
+          PrizeImage: $"{publicWebRoot}{r.PrizeImage}",
+          PrizeValue: r.PrizeValue.ToString(),
+          WinnerID: vipDict.ContainsKey(r.BuyerEmail) ? vipDict[r.BuyerEmail] : r.BuyerEmail,
+          WinnerName: r.BuyerName,
+          TicketNumber: r.RaffleTickerNo,
+          DrawTime: r.DrawDtm.ToString("yyyy-MM-ddTHH:mm:ss.fffZ")
+      )).ToList();
+
+      var data = new RaffleWinnersData(winners);
+
+      return Ok(new CommonResult<RaffleWinnersData>(true, data, null));
+    }
+    catch (Exception ex)
+    {
+      string errMsg = string.Format("Exception！{0}", ex.Message);
+      _logger.LogError(ex, errMsg);
+      return Ok(new CommonResult<RaffleWinnersData>(false, null, errMsg));
+    }
+  }
+
 }
