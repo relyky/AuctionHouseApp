@@ -111,16 +111,17 @@ SELECT
     using var conn = DBHelper.AUCDB.Open();
     using var txn = conn.BeginTransaction();
     var info = conn.QueryFirst<OpenAskRound>(sql, new { Amount = amount }, txn);
+    txn.Commit();
     return Ok(info);
   }
 
   /// <summary>
   /// OpenAsk - 現在回合
   /// </summary>
-  [HttpPost("[action]/{amount}")]
+  [HttpPost("[action]")]
   public async Task<ActionResult<OpenAskRound?>> OpenAskCurrentRound()
   {
-    // --關閉現有的，建立新一輪。
+    // --關閉現有的，建立新一輪。 
     string sql = """
 SELECT TOP 1 * 
  FROM [OpenAskRound] (NOLOCK)

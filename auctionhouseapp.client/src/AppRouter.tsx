@@ -26,7 +26,8 @@ import RaffleSellQuery from './pages/RaffleSellQuery/AppForm'
 import GiveSell from './pages/GiveSell'
 import GiveSellQuery from './pages/GiveSellQuery'
 import SiteIndex from './pages/SiteIndex'
-import VipInfo from './pages/VipInfo'
+//import VipInfo from './pages/VipInfo'
+import AdminVip from './pages/Admin/Vip'
 import AskInput from "./pages/AskInput"
 import AskInputFix from './pages/AskInputFix'
 import AuctionInput from "./pages/AuctionInput"
@@ -117,7 +118,7 @@ const router = createBrowserRouter([
     element: <BackendLayout />,
     children: [
       { index: true, element: <SiteIndex /> },
-      { path: "vipinfo", element: <VipInfo />},
+      { path: "adminvip", element: <AdminVip />},
       { path: "ask", element: <AskInput /> },
       { path: "askfix", element: <AskInputFix />},
       { path: "auction", element: <AuctionInput /> },

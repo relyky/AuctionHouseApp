@@ -218,4 +218,16 @@ interface IOpenAskRound {
   isActive: string;
 }
 
+interface IVip {
+  paddleNum: string;
+  vipName: string;
+  vipEmail: string;
+  vipPhone: string;
+  tableNumber: string;
+  seatNumber: string;
+  isEnterprise: string;
+  receiptHeader: string;
+  taxNum: string;
+}
+
 //#endregion

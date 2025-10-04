@@ -1,4 +1,4 @@
-import { Box, Button, Divider, Grid, Paper, Stack, Typography } from "@mui/material";
+import { Button, Divider, Grid, Paper, Typography } from "@mui/material";
 import { NavLink } from "react-router";
 
 export default function LiveEventsView() {
@@ -29,8 +29,8 @@ export default function LiveEventsView() {
               Silent Auction Prizes QR Code</Button>
           </Grid>
           <Grid size={{ xs: 12, sm: 6 }}>
-            <Button component={NavLink} fullWidth variant='outlined' to='/site/vipinfo'>
-              貴賓基本資料維護</Button>
+            <Button component={NavLink} fullWidth variant='outlined' to='/site/adminvip'>
+              貴賓聯絡資料</Button>
           </Grid>
         </Grid>
       </Paper>
