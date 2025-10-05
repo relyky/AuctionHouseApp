@@ -164,7 +164,7 @@ VALUES
       using var txn = await conn.BeginTransactionAsync();
       conn.Execute(sql, param, txn);
       await txn.CommitAsync();
-      return Ok(new MsgObj("SUCCESS"));
+      return Ok(new MsgObj($"Round {param.Round} #{param.PaddleNum} has sent.", Severity: "success"));
     }
     catch (Exception ex)
     {
