@@ -3,6 +3,7 @@ using Dapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Serilog.Core;
 using Vista.DB;
 using Vista.DB.Schema;
 
@@ -13,6 +14,8 @@ namespace AuctionHouseApp.Server.Controllers;
 [ApiController]
 public class SiteController : ControllerBase
 {
+  readonly object _lockObj = new object();
+
   [HttpPost("[action]/{mode}/{itemId?}")]
   public ActionResult<MsgObj> SwitchDisplay(string mode, string? itemId)
   {
@@ -134,4 +137,38 @@ SELECT TOP 1 *
     return Ok(info);
   }
 
+  /// <summary>
+  /// OpenAsk - 認捐輸入
+  /// </summary>
+  [HttpPost("[action]")]
+  public async Task<ActionResult<MsgObj>> OpenAskEntry([FromBody] AskInputDto args)
+  {
+    string sql = """
+DECLARE @Now DATETIME = GetDate()
+INSERT INTO [dbo].[OpenAskEntry]
+  ([Round],[Amount],[PaddleNum],[RecordStaff],[RecordDtm])
+VALUES
+  (@Round,@Amount,@PaddleNum,@RecordStaff,@Now)      
+""";
+
+    try
+    {
+      var param = new {
+        Round = args.Round,
+        Amount = args.Amount,
+        PaddleNum = args.PaddleNum,
+        RecordStaff = HttpContext.User.Identity?.Name
+      };
+
+      using var conn = await DBHelper.AUCDB.OpenAsync();
+      using var txn = await conn.BeginTransactionAsync();
+      conn.Execute(sql, param, txn);
+      await txn.CommitAsync();
+      return Ok(new MsgObj("SUCCESS"));
+    }
+    catch (Exception ex)
+    {
+      return BadRequest("Exception！" + ex.Message);
+    }
+  }
 }

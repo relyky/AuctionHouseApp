@@ -1,8 +1,12 @@
-import { Box, Button, Divider, LinearProgress, OutlinedInput, Paper, Stack, Toolbar, Typography } from "@mui/material";
-import { useEffect, useState } from "react";
+import { Box, Button, Divider, IconButton, InputAdornment, LinearProgress, OutlinedInput, Paper, Stack, Toolbar, Typography } from "@mui/material";
+import { useEffect, useMemo, useState, type FC, type FormEvent } from "react";
 import { useEventCallback } from "usehooks-ts";
 import { postData } from "../../tools/httpHelper";
 import { delayPromise } from "../../tools/utils";
+import { formatWithComma } from '../../tools/utils';
+//icons
+import PlusIcon from '@mui/icons-material/Add';
+import MinusIcon from '@mui/icons-material/Remove';
 
 export default function OpenAskPanel(props: {
   activity: ActivityEnum
@@ -11,7 +15,8 @@ export default function OpenAskPanel(props: {
   const [openAskRound, setOpenAskRound] = useState<IOpenAskRound | null>(null); // 現在回合。
   const [newAmount, setNewAmount] = useState<string>('1000')
 
-  const handleNewRound = useEventCallback(() => {
+  const handleNewRound = useEventCallback((event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
     setLoading(true)
     postData<IOpenAskRound>(`/api/Site/OpenAskNewRound/${newAmount}`)
       .then(setOpenAskRound)
@@ -20,6 +25,11 @@ export default function OpenAskPanel(props: {
         setTimeout(() => setLoading(false), 800)
       })
   });
+
+  const formatAskAmount = useMemo(() => {
+    if (!openAskRound) return '0';
+    return formatWithComma(openAskRound.amount); // 
+  }, [openAskRound])
 
   useEffect(() => {
     setLoading(true)
@@ -41,19 +51,33 @@ export default function OpenAskPanel(props: {
       {loading && <LinearProgress color='info' />}
 
       {openAskRound && <Box sx={{ m: 3 }}>
-        <span>第 {openAskRound.round} 輪 金額 NT${openAskRound.amount}元。啟動:{openAskRound.isActive}</span>
+        第 <HighlightSpan>{openAskRound.round}</HighlightSpan> 輪 NT$ <HighlightSpan>{formatAskAmount}</HighlightSpan> 元。
       </Box>}
 
       <Divider sx={{ my: 3 }} />
-      <Toolbar sx={{ gap: 2 }}>
+      <Toolbar component='form' onSubmit={handleNewRound}
+        sx={{ gap: 2 }}>
         <Box>認捐金額</Box>
-        <OutlinedInput type='number' size='small' autoFocus
+        <OutlinedInput type='number' size='small' autoFocus required
           value={newAmount} onChange={e => setNewAmount(String(Number(e.target.value)))}
+          endAdornment={
+            <InputAdornment position="end">
+              <IconButton onClick={() => setNewAmount(prev => Number(prev) > 500 ? String(Number(prev) - 500) : prev)}>
+                <MinusIcon color='primary' />
+              </IconButton>
+              <IconButton onClick={() => setNewAmount(prev => String(Number(prev) + 500))}>
+                <PlusIcon color='primary' />
+              </IconButton>
+            </InputAdornment>
+          }
           slotProps={{
-            input: { min: 1000, max: 1000000 }
+            input: {
+              min: 500,
+              max: 1000000,
+            }
           }}
         />
-        <Button onClick={handleNewRound} variant='contained'>
+        <Button type='submit' variant='contained'>
           開啟新一輪
         </Button>
       </Toolbar>
@@ -61,3 +85,14 @@ export default function OpenAskPanel(props: {
     </Paper>
   )
 }
+
+//-------------------------------------
+const HighlightSpan: FC<{
+  children: string | number
+}> = (props) => (
+  <Box component='span' sx={{
+    fontWeight: 600,
+    fontSize: '1.2em',
+    color: 'info.main'
+  }}>{props.children}</Box>
+)
