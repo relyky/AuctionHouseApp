@@ -197,4 +197,21 @@ THEN
       return BadRequest("Exception！" + ex.Message);
     }
   }
+
+  /// <summary>
+  /// OpenAsk - 載入某回合認捐輸入紀錄
+  /// </summary>
+  [HttpPost("[action]/{round}")]
+  public async Task<ActionResult<OpenAskRecord>> LoadOpenAskRecord(int round)
+  {
+    string sql = """
+SELECT *
+  FROM [dbo].[OpenAskRecord] (NOLOCK)
+  WHERE [Round] = @Round; 
+""";
+
+    using var conn = await DBHelper.AUCDB.OpenAsync();
+    var infoList = await conn.QueryAsync<OpenAskRecord>(sql, new { Round = round });
+    return Ok(infoList);
+  }
 }

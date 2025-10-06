@@ -76,6 +76,22 @@ export function formatDateYmd(isoDateStr: string) {
 }
 
 /**
+* 格式化 ISO Date 字串。以 HH:mm:ss 格式顯示。
+* helper funciton
+*/
+export function formatDateHms(isoDateStr: string) {
+  try {
+    if (!isoDateStr) return ''
+    if (typeof isoDateStr === 'string')
+      return format(parseISO(isoDateStr), 'HH:mm:ss');
+    return 'invalid time'
+  }
+  catch {
+    return 'invalid time'
+  }
+}
+
+/**
 * 格式化數值，加上千位逗號`,`
 * helper funciton
 */

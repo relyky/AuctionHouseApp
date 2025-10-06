@@ -218,6 +218,26 @@ interface IOpenAskRound {
   isActive: string;
 }
 
+interface IOpenAskRecord {
+  ssn: number;
+  round: number;
+  paddleNum: string;
+  paddleName: string;
+  amount: number;
+  recordStaff1: string;
+  recordDtm1: string;
+  recordStaff2: string;
+  recordDtm2: string;
+  status: string;
+  hasPaid: string;
+  paidDtm?: string;
+  paidStaff?: string;
+  hasFix?: string;
+  fixStaff?: string;
+  fixDtm?: string;
+  fixRemark?: string;
+}
+
 interface IVip {
   paddleNum: string;
   vipName: string;
