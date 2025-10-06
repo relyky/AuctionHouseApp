@@ -144,11 +144,37 @@ SELECT TOP 1 *
   public async Task<ActionResult<MsgObj>> OpenAskEntry([FromBody] AskInputDto args)
   {
     string sql = """
-DECLARE @Now DATETIME = GetDate()
+DECLARE @Now DATETIME = GetDate();
+
 INSERT INTO [dbo].[OpenAskEntry]
   ([Round],[Amount],[PaddleNum],[RecordStaff],[RecordDtm])
 VALUES
-  (@Round,@Amount,@PaddleNum,@RecordStaff,@Now)      
+  (@Round,@Amount,@PaddleNum,@RecordStaff,@Now);
+  
+MERGE INTO [dbo].[OpenAskRecord] AS tgt
+USING (
+  SELECT TOP 1 tgt2.Ssn, V.PaddleNum,V.VipName,
+    [Round]=@Round,[Amount]=@Amount,[RecordStaff]=@RecordStaff,[Now]=@Now
+  FROM VIP V
+  OUTER APPLY (
+    SELECT TOP 1 Ssn FROM [dbo].[OpenAskRecord]
+     WHERE [Round] = @Round AND [PaddleNum] = @PaddleNum 
+	   AND [RecordStaff1] != @RecordStaff
+	   AND [Status] = 'Pending'
+  ) tgt2
+  WHERE V.PaddleNum = @PaddleNum
+ ) AS src
+ ON tgt.Ssn = src.Ssn
+WHEN MATCHED 
+THEN
+  UPDATE SET 
+    [RecordStaff2] = src.[RecordStaff],
+    [RecordDtm2] = src.[Now],
+	[Status] = 'Confirmed'
+WHEN NOT MATCHED
+THEN
+  INSERT ([Round],[PaddleNum],[PaddleName],[Amount],[RecordStaff1],[RecordDtm1],[Status],[HasPaid])
+  VALUES ([Round],[PaddleNum],[VipName],[Amount],[RecordStaff],[Now],'Pending','N'); 
 """;
 
     try
