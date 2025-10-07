@@ -231,3 +231,40 @@ internal record SilentAuctionNotificationQueryResult
     public decimal NewHighestBid { get; set; }
     public DateTime Timestamp { get; set; }
 }
+
+/// <summary>
+/// Silent Auction 手動結標回應
+/// </summary>
+[TsInterface(Namespace = "dto.silentAuction")]
+public record SilentAuctionManualHammerResponse(
+    int HammeredCount,
+    int PassedCount,
+    int TotalCount,
+    SilentAuctionManualHammerItem[] Items
+);
+
+/// <summary>
+/// Silent Auction 手動結標項目
+/// </summary>
+[TsInterface(Namespace = "dto.silentAuction")]
+public record SilentAuctionManualHammerItem(
+    string ItemId,
+    string ItemName,
+    string Result,
+    string WinnerPaddleNum,
+    decimal HammerPrice
+);
+
+/// <summary>
+/// 資料庫查詢用 - Silent Auction 過期商品結果
+/// </summary>
+internal record SilentAuctionExpiredItemResult
+{
+    public string ItemId { get; set; } = string.Empty;
+    public string Name { get; set; } = string.Empty;
+    public string? WinnerPaddleNum { get; set; }
+    public string? WinnerName { get; set; }
+    public decimal? HammerPrice { get; set; }
+    public int TotalBidCount { get; set; }
+    public int UniqueBidderCount { get; set; }
+}
