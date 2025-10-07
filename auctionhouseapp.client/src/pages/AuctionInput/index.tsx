@@ -1,11 +1,17 @@
-import { Container, Typography } from "@mui/material";
+import { useAtomValue } from "jotai";
+import { auctionInputAtom } from "./atom";
+import ListView from "./ListView";
+import RecordBidView from "./RecordBidView";
+import PassView from "./PassView";
 
 export default function AuctionInput() {
+  const { mode } = useAtomValue(auctionInputAtom);
 
   return (
-    <Container>
-      <Typography variant='h5'>Live Auction 現場輸入</Typography>
-
-    </Container>
-  )
+    <>
+      {mode === 'RecordBid' && <RecordBidView />}
+      {mode === 'Pass' && <PassView />}
+      <ListView />
+    </>
+  );
 }

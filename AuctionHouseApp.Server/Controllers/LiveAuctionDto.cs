@@ -116,3 +116,68 @@ internal record AuctionStatusQueryResult
     public string? PassedReason { get; set; }
     public string ItemStatus { get; set; } = string.Empty;
 }
+
+/// <summary>
+/// 記錄競標請求
+/// </summary>
+[TsInterface(Namespace = "dto.liveAuction")]
+public record RecordBidRequest(
+    string ItemId,
+    string PaddleNum,
+    decimal BidAmount,
+    string? Notes
+);
+
+/// <summary>
+/// 記錄競標回應
+/// </summary>
+[TsInterface(Namespace = "dto.liveAuction")]
+public record RecordBidResponse(
+    long BidId,
+    string ItemId,
+    string PaddleNum,
+    string PaddleName,
+    decimal BidAmount,
+    string Timestamp
+);
+
+/// <summary>
+/// 結標請求
+/// </summary>
+[TsInterface(Namespace = "dto.liveAuction")]
+public record HammerRequest(
+    string ItemId
+);
+
+/// <summary>
+/// 結標回應
+/// </summary>
+[TsInterface(Namespace = "dto.liveAuction")]
+public record HammerResponse(
+    string ItemId,
+    string AuctionResult,
+    string WinnerPaddleNum,
+    string WinnerName,
+    decimal HammerPrice
+);
+
+/// <summary>
+/// 流標請求
+/// </summary>
+[TsInterface(Namespace = "dto.liveAuction")]
+public record PassRequest(
+    string ItemId,
+    string? PassedReason,
+    string? Notes
+);
+
+/// <summary>
+/// 流標回應
+/// </summary>
+[TsInterface(Namespace = "dto.liveAuction")]
+public record PassResponse(
+    string ItemId,
+    string AuctionResult,
+    string PassedReason,
+    decimal HighestBidAmount
+);
