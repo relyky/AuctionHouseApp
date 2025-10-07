@@ -1,4 +1,4 @@
-///## post data with JSON only.
+///## HTTP helpers for JSON data
 ///# ref→[Using Fetch](https://developer.mozilla.org/zh-TW/docs/Web/API/Fetch_API/Using_Fetch)
 
 //## 定義 ResponseError 類別，繼承自內建的 Error 類別
@@ -13,6 +13,39 @@ export class ResponseError extends Error {
     this.status = status;
     this.statusText = statusText;
   }
+}
+
+/// 說明:
+/// response 只接受: 200 JSON object 與 204 NoContent。
+export function getData<TResult>(url: string, authToken?: string): Promise<TResult> {
+  const headers: HeadersInit = {
+    'Content-Type': 'application/json',
+  }
+
+  if (typeof authToken === 'string')
+    headers['Authorization'] = `Bearer ${authToken}`
+
+  return new Promise<TResult>((resolve, reject) => {
+    fetch(url, {
+      headers,
+      method: 'GET',
+      mode: 'same-origin', // no-cors, cors, *same-origin
+      credentials: 'same-origin', // include, same-origin, *omit // 夾帶 Cookie 進行認證。
+      cache: 'no-cache',
+      referrer: 'no-referrer',
+    }).then(resp => {
+      if (resp.status === 204) // NoContent
+        resolve(undefined as TResult);
+      else if (resp.ok)
+        resolve(resp.json());
+      else
+        throw resp;
+    }).catch((xhr: Response) =>
+      xhr.text().then(errMsg =>
+        reject(new ResponseError(errMsg, xhr.status, xhr.statusText))
+      ).catch(fail => reject(fail))
+    );
+  });
 }
 
 /// 說明:
