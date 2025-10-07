@@ -16,7 +16,7 @@ export interface ConsecutiveSnackbarRef {
 }
 
 // Wrap the component with forwardRef to receive the ref.
-const ConsecutiveSnackbar = forwardRef<ConsecutiveSnackbarRef>((props, ref) => {
+const ConsecutiveSnackbar = forwardRef<ConsecutiveSnackbarRef>((_props, ref) => {
   const [snackPack, setSnackPack] = useState<readonly SnackbarMessage[]>([]);
   const [open, setOpen] = useState(false);
   const [messageInfo, setMessageInfo] = useState<SnackbarMessage | undefined>(undefined);
@@ -46,7 +46,7 @@ const ConsecutiveSnackbar = forwardRef<ConsecutiveSnackbarRef>((props, ref) => {
   }));
 
   const handleClose = (
-    event: React.SyntheticEvent | Event,
+    _event: React.SyntheticEvent | Event,
     reason?: SnackbarCloseReason,
   ) => {
     if (reason === 'clickaway') {

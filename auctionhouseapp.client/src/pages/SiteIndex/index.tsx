@@ -39,7 +39,7 @@ export default function SiteIndex() {
 
   const handleActivity = useEventCallback((activity: ActivityEnum) => {
     postData(`/api/Site/SwitchDisplay/${activity}`)
-      .then((msg) => {
+      .then((_msg) => {
         //console.log(msg)
         setActivity(activity)
       })
