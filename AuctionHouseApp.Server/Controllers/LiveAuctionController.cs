@@ -400,7 +400,7 @@ public class LiveAuctionController(
             }
 
             // 2. 取得最高出價記錄
-            var latestBid = await conn.QueryFirstOrDefaultAsync<dynamic>(
+            var latestBid = await conn.QueryFirstOrDefaultAsync<LatestBidResult>(
                 @"SELECT TOP 1 [PaddleNum], [PaddleName], [BidAmount]
                   FROM [dbo].[AuctionBidLog]
                   WHERE [ItemId] = @ItemId AND [IsValid] = 'Y' AND [Status] = 'Confirmed'

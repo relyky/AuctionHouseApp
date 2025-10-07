@@ -118,6 +118,16 @@ internal record AuctionStatusQueryResult
 }
 
 /// <summary>
+/// 資料庫查詢用 - 最高出價記錄結果
+/// </summary>
+internal record LatestBidResult
+{
+    public string PaddleNum { get; set; } = string.Empty;
+    public string PaddleName { get; set; } = string.Empty;
+    public decimal BidAmount { get; set; }
+}
+
+/// <summary>
 /// 記錄競標請求
 /// </summary>
 [TsInterface(Namespace = "dto.liveAuction")]
