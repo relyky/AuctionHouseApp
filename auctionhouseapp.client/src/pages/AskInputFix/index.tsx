@@ -23,7 +23,7 @@ export default function AskInputFix() {
         recordDtm2: formatDateHms(c.recordDtm2),
       })).sort((a, b) => {
         const sort1 = b.status.localeCompare(a.status)
-        return sort1 === 0 ? (a.ssn - b.ssn) : sort1;
+        return sort1 === 0 ? (a.status === 'Confirmed' ? (b.ssn - a.ssn) : (a.ssn - b.ssn)) : sort1;
       })
       
       setAskRecordList(recordList2);
