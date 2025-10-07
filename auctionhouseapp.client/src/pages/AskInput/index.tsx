@@ -6,6 +6,7 @@ import type { IAskInputDto } from "../../dto/IAskInputDto";
 import { postData } from "../../tools/httpHelper";
 import ConsecutiveSnackbar, { type ConsecutiveSnackbarRef } from "../../widgets/ConsecutiveSnackbar";
 import AskCurrentRound from "./AskCurrentRound";
+import { beep } from "../../tools/utils";
 // icons
 import ReturnIcon from '@mui/icons-material/KeyboardReturn';
 
@@ -36,6 +37,7 @@ export default function AskInput() {
         console.info('OpenAskEntry.then', msg);
         setPaddleNum('')
         snackbarRef.current?.showSnackbar(msg.message, msg.severity as any)
+        beep()
       })
       .catch(console.log)
       .finally(() => setTimeout(() => {

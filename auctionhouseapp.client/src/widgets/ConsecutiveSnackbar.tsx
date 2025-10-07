@@ -1,5 +1,6 @@
 import type { AlertColor, SnackbarCloseReason } from '@mui/material';
-import { Alert, IconButton, Snackbar } from '@mui/material';
+import { Alert, IconButton, Snackbar, Slide } from '@mui/material';
+import type { SlideProps } from '@mui/material/Slide';
 import { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
 // icons
 import CloseIcon from '@mui/icons-material/Close';
@@ -13,6 +14,10 @@ interface SnackbarMessage {
 // This type defines the functions that will be exposed via the ref.
 export interface ConsecutiveSnackbarRef {
   showSnackbar: (message: string, severity: AlertColor) => void;
+}
+
+function SlideTransition(props: SlideProps) {
+  return <Slide {...props} direction={props.in ? "up" : "down"} />;
 }
 
 // Wrap the component with forwardRef to receive the ref.
@@ -66,7 +71,12 @@ const ConsecutiveSnackbar = forwardRef<ConsecutiveSnackbarRef>((_props, ref) => 
       open={open}
       autoHideDuration={3000}
       onClose={handleClose}
-      slotProps={{ transition: { onExited: handleExited } }}
+      slots={{ transition: SlideTransition }}
+      slotProps={{
+        transition: {
+          onExited: handleExited
+        }
+      }}
       action={
         <IconButton
           aria-label="close"
