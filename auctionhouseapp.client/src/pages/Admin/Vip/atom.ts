@@ -23,7 +23,7 @@ const initialState: AdminVip_BizState = {
   mode: 'List',
   dataList: [],
   dataAim: null,
-  formData: initFormData,
+  formData: null,
 }
 
 export const adminVipAtom = atom(initialState)

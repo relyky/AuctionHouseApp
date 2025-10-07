@@ -1,5 +1,6 @@
 import type { AlertColor, SnackbarCloseReason } from '@mui/material';
-import { Alert, IconButton, Snackbar } from '@mui/material';
+import { Alert, IconButton, Snackbar, Slide } from '@mui/material';
+import type { SlideProps } from '@mui/material/Slide';
 import { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
 // icons
 import CloseIcon from '@mui/icons-material/Close';
@@ -15,8 +16,12 @@ export interface ConsecutiveSnackbarRef {
   showSnackbar: (message: string, severity: AlertColor) => void;
 }
 
+function SlideTransition(props: SlideProps) {
+  return <Slide {...props} direction={props.in ? "up" : "down"} />;
+}
+
 // Wrap the component with forwardRef to receive the ref.
-const ConsecutiveSnackbar = forwardRef<ConsecutiveSnackbarRef>((props, ref) => {
+const ConsecutiveSnackbar = forwardRef<ConsecutiveSnackbarRef>((_props, ref) => {
   const [snackPack, setSnackPack] = useState<readonly SnackbarMessage[]>([]);
   const [open, setOpen] = useState(false);
   const [messageInfo, setMessageInfo] = useState<SnackbarMessage | undefined>(undefined);
@@ -46,7 +51,7 @@ const ConsecutiveSnackbar = forwardRef<ConsecutiveSnackbarRef>((props, ref) => {
   }));
 
   const handleClose = (
-    event: React.SyntheticEvent | Event,
+    _event: React.SyntheticEvent | Event,
     reason?: SnackbarCloseReason,
   ) => {
     if (reason === 'clickaway') {
@@ -66,7 +71,12 @@ const ConsecutiveSnackbar = forwardRef<ConsecutiveSnackbarRef>((props, ref) => {
       open={open}
       autoHideDuration={3000}
       onClose={handleClose}
-      slotProps={{ transition: { onExited: handleExited } }}
+      slots={{ transition: SlideTransition }}
+      slotProps={{
+        transition: {
+          onExited: handleExited
+        }
+      }}
       action={
         <IconButton
           aria-label="close"

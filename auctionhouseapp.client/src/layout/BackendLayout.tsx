@@ -31,10 +31,16 @@ function HideOnScroll(props: Props) {
     target: window ? window() : undefined,
   });
 
+  const printHiddenCSS = {
+    '@media print': {
+      display: 'none',
+    },
+  };
+
   return (
-    <Slide appear={false} direction="down" in={!trigger}>
+    <Box sx={printHiddenCSS} component={Slide} appear={false} direction="down" in={!trigger}>
       {children ?? <div />}
-    </Slide>
+    </Box>
   );
 }
 

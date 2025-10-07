@@ -55,6 +55,8 @@ export default function AdminVip_Handler() {
         , formData: null
         , mode: 'Edit'
       }))
+
+      Swal.fire('Success', 'Create seccess.', 'success');
     } catch (error) {
       console.error(error);
       if (error instanceof ResponseError)
@@ -110,7 +112,7 @@ export default function AdminVip_Handler() {
         , dataList: prev.dataList.map(c => c.paddleNum === formData.paddleNum ? formData : c) // 更新清單
       }))
 
-      Swal.fire('SUCCESS');
+      Swal.fire('Success','Update seccess.','success');
     } catch (error) {
       console.error(error);
       if (error instanceof ResponseError)
@@ -133,6 +135,8 @@ export default function AdminVip_Handler() {
         , formData: null
         , mode: 'List'
       }))
+
+      Swal.fire('Success', 'Delete seccess.', 'success');
     } catch (error) {
       console.error(error);
       if (error instanceof ResponseError)
