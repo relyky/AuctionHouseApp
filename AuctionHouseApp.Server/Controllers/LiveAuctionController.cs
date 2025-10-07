@@ -269,7 +269,7 @@ public class LiveAuctionController(
     /// </summary>
     /// <param name="request">競標記錄請求</param>
     /// <returns></returns>
-  [Authorize(AuthenticationSchemes = "Bearer")]
+    [Authorize]
     [HttpPost("record-bid")]
     public async Task<ActionResult<CommonResult<RecordBidResponse>>> RecordBid([FromBody] RecordBidRequest request)
     {
@@ -373,7 +373,7 @@ public class LiveAuctionController(
     /// </summary>
     /// <param name="request">結標請求</param>
     /// <returns></returns>
-  [Authorize(AuthenticationSchemes = "Bearer")]
+    [Authorize]
     [HttpPost("hammer")]
     public async Task<ActionResult<CommonResult<HammerResponse>>> Hammer([FromBody] HammerRequest request)
     {
@@ -462,7 +462,7 @@ public class LiveAuctionController(
     /// </summary>
     /// <param name="request">流標請求</param>
     /// <returns></returns>
-  [Authorize(AuthenticationSchemes = "Bearer")]
+    [Authorize]
     [HttpPost("pass")]
     public async Task<ActionResult<CommonResult<PassResponse>>> Pass([FromBody] PassRequest request)
     {
