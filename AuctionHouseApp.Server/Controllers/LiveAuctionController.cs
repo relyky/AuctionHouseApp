@@ -269,7 +269,7 @@ public class LiveAuctionController(
     /// </summary>
     /// <param name="request">競標記錄請求</param>
     /// <returns></returns>
-    [Authorize]
+  [Authorize(AuthenticationSchemes = "Bearer")]
     [HttpPost("record-bid")]
     public async Task<ActionResult<CommonResult<RecordBidResponse>>> RecordBid([FromBody] RecordBidRequest request)
     {
@@ -373,7 +373,7 @@ public class LiveAuctionController(
     /// </summary>
     /// <param name="request">結標請求</param>
     /// <returns></returns>
-    [Authorize]
+  [Authorize(AuthenticationSchemes = "Bearer")]
     [HttpPost("hammer")]
     public async Task<ActionResult<CommonResult<HammerResponse>>> Hammer([FromBody] HammerRequest request)
     {
@@ -400,7 +400,7 @@ public class LiveAuctionController(
             }
 
             // 2. 取得最高出價記錄
-            var latestBid = await conn.QueryFirstOrDefaultAsync<dynamic>(
+            var latestBid = await conn.QueryFirstOrDefaultAsync<LatestBidResult>(
                 @"SELECT TOP 1 [PaddleNum], [PaddleName], [BidAmount]
                   FROM [dbo].[AuctionBidLog]
                   WHERE [ItemId] = @ItemId AND [IsValid] = 'Y' AND [Status] = 'Confirmed'
@@ -462,7 +462,7 @@ public class LiveAuctionController(
     /// </summary>
     /// <param name="request">流標請求</param>
     /// <returns></returns>
-    [Authorize]
+  [Authorize(AuthenticationSchemes = "Bearer")]
     [HttpPost("pass")]
     public async Task<ActionResult<CommonResult<PassResponse>>> Pass([FromBody] PassRequest request)
     {
