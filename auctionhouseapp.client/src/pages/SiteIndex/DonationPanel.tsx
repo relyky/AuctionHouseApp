@@ -31,9 +31,9 @@ export default function DonationPanel(props: {
   return (
     <Paper sx={{ pt: 1, px: 2, pb: 2 }}>
       <Typography variant='h6' borderBottom='solid 1px' >6. Donation Control Panel</Typography>
-      <Box color='text.secondary'>📃 自動播放捐贈累計金額</Box>
+      {/* <Box color='text.secondary'>📃 自動播放捐贈累計金額</Box> */}
 
-      <FormGroup>
+      <FormGroup sx={{ m: 3 }}>
         <FormControlLabel
           control={<Switch checked={checked} onChange={handleSwitch} disabled={loading} />}
           label="Donation Switch (愛心捐款開關)" />
