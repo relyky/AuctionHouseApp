@@ -1,4 +1,5 @@
-﻿using AuctionHouseApp.Server.Services;
+﻿using AuctionHouseApp.Server.Models;
+using AuctionHouseApp.Server.Services;
 using Dapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -242,7 +243,7 @@ SELECT T.RaffleTicketNo, O.RaffleOrderNo, O.SoldDtm, V.PaddleNum
   /// ```
   /// </returns>
   [HttpGet("winner/{prizeId}")]
-  public ActionResult<CommonResult<RaffleWinnerData>> GetMajorWinner(string prizeId)
+  public ActionResult<CommonResult<RaffleWinnerData>> DrawMajorWinner(string prizeId)
   {
     try
     {
@@ -442,4 +443,103 @@ ORDER BY W.DrawDtm DESC
     }
   }
 
+  /// <summary>
+  /// 一口氣抽完小獎（三大獎外）
+  /// (後台呼叫)
+  /// </summary>
+  [HttpPost("[action]")]
+  public ActionResult<CommonResult<MsgObj>> DrawMinorWinners()
+  {
+    try
+    {
+      //## 若已抽獎直接回傳結果。
+      using var conn = DBHelper.AUCDB.Open();
+
+      MsgObj? msg = null;
+      lock (lockObj)
+      {
+        //## 進行抽獎
+        msg = DoDrawMinorWinners(conn);
+      }
+
+      //## 送回抽獎結果。
+      //var msg = new MsgObj("To draw minor prize success.", Severity:"success");
+      var result = new CommonResult<MsgObj>(true, msg, null);
+      return Ok(result);
+    }
+    catch (Exception ex)
+    {
+      string errMsg = string.Format("Exception！{0}", ex.Message);
+      _logger.LogError(ex, errMsg);
+      return Ok(new CommonResult<dynamic>(false, null, errMsg));
+    }
+  }
+
+  [NonAction]
+  private MsgObj DoDrawMinorWinners(SqlConnection conn)
+  {
+    // -- 未開獎的小獎
+    string sqlAliveMinorPrize = """
+SELECT PrizeId 
+FROM RafflePrize 
+WHERE PrizeId NOT IN (SELECT TOP 3 PrizeId FROM RafflePrize ORDER BY PrizeId ASC)
+  AND PrizeId NOT IN (SELECT PrizeId FROM RaffleWinner)
+ORDER BY PrizeId ASC
+""";
+
+    // -- 未中獎的彩券
+    string sqlAliveTickets = """
+SELECT RaffleTicketNo FROM RaffleTicket T
+WHERE NOT EXISTS 
+(SELECT TOP 1 * FROM RaffleWinner W WHERE W.RaffleTickerNo = T.RaffleTicketNo)
+""";
+
+    // insert winner
+    string sqlInsertWinner = """
+INSERT INTO [dbo].[RaffleWinner]
+ ([PrizeId],[RaffleTickerNo],[DrawDtm])
+OUTPUT inserted.*
+VALUES
+ (@PrizeId, @RaffleTickerNo, GetDate())
+""";
+
+    try
+    {
+      using var txn = conn.BeginTransaction();
+
+      // 未開獎的小獎 list
+      string[] prizeArray = conn.Query<RafflePrize>(sqlAliveMinorPrize, null, txn)
+                                .Select(c => c.PrizeId)
+                                .ToArray();
+
+      // 所有小獎都已抽出。
+      if (prizeArray.Length == 0)
+        return new MsgObj("All minor prizes have been drawn.", Severity: "info");
+
+      //# 取得有效且未得獎的抽獎券
+      string[] ticketArray = conn.Query<RaffleTicket>(sqlAliveTickets, null, txn)
+                                 .Select(c => c.RaffleTicketNo)
+                                 .ToArray();
+
+      //# 進行抽將
+      string[] winTicketArray = _lotterySvc.DrawTicket(ticketArray, prizeArray.Length);
+
+      //# 存入DB
+      int minCount = Math.Min(winTicketArray.Length, prizeArray.Length);
+      List<RaffleWinner> winnerList = new();
+      for(int i = 0; i < minCount; i++)
+      {
+        var winner = conn.QueryFirst<RaffleWinner>(sqlInsertWinner, new { PrizeId = prizeArray[i], RaffleTickerNo = winTicketArray[i] }, txn);
+        winnerList.Add(winner);
+      }
+
+      //# SUCCESS
+      txn.Commit();
+      return new MsgObj($"Completed {winnerList.Count} minor prize draws.", Severity: "success");
+    }
+    catch (Exception ex)
+    {
+      throw new ApplicationException("DoDrawOtherMinorWinners fail!", ex);
+    }
+  }
 }

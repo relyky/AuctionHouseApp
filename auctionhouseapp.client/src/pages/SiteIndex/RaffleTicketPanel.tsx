@@ -1,8 +1,9 @@
-import { Box, Button, ButtonGroup, FormControlLabel, Paper, Stack, Switch, Typography, useEventCallback } from "@mui/material";
+import { Alert, Box, Button, ButtonGroup, FormControlLabel, Paper, Stack, Switch, Typography, useEventCallback } from "@mui/material";
 import { useAtomValue } from "jotai";
 import { useEffect, useMemo, useState } from "react";
 import { postData } from "../../tools/httpHelper";
 import { rafflePrizeProfileAtom } from "./atom";
+import type { ICommonResult } from "../../dto/activities/ICommonResult";
 
 export default function RaffleTicketPanel(props: {
   activity: ActivityEnum
@@ -10,6 +11,8 @@ export default function RaffleTicketPanel(props: {
   const rafflePrizeList = useAtomValue(rafflePrizeProfileAtom)
   const [mode, setMode] = useState<DisplayMode>('raffleWinnersCarousel')
   const [foolproof, setFoolproff] = useState(false)
+  const [msgObj, setMsgObj] = useState<MsgObj | null>(null)
+  const [loading, setLoading] = useState(false)
 
   const rafflePrizeTop3 = useMemo(() => {
     return rafflePrizeList.slice(0, 3).map((c) => c.prizeId).join(',')
@@ -25,7 +28,15 @@ export default function RaffleTicketPanel(props: {
   })
 
   const handleDrawMinor = useEventCallback(() => {
-    alert('未實作抽小獎');
+    setLoading(true)
+    setMsgObj(null)
+    postData<ICommonResult<MsgObj>>(`/api/RaffleTicket/DrawMinorWinners`)
+      .then((result) => {
+        setMsgObj(result.data)
+        setMode(mode)
+      })
+      .catch(console.error)
+      .finally(() => setTimeout(() => setLoading(false), 800))
   });
 
   useEffect(() => {
@@ -65,16 +76,23 @@ export default function RaffleTicketPanel(props: {
         </ButtonGroup>
 
         <Box display='flex' justifyContent='space-between' sx={{ my: 3 }}>
-          <Button variant='contained' color='secondary'
-            disabled={!foolproof}
-            onClick={handleDrawMinor}>小獎抽獎</Button>
+          <Box>
+            <Button variant='contained' color='secondary'
+              disabled={!foolproof}
+              loading={loading}
+              onClick={handleDrawMinor}>小獎抽獎</Button>
+
+            {msgObj &&
+              <Alert severity={msgObj.severity || 'info'} sx={{ my: 1 }}>
+                {msgObj.message}
+              </Alert>}
+          </Box>
+
 
           {/* 防呆: 防止手殘按下抽獎 */}
           <FormControlLabel label="Fool-proof"
             control={<Switch checked={foolproof} onChange={(_, chk) => setFoolproff(chk)} />} />
         </Box>
-
-
       </Stack>
 
     </Paper>
