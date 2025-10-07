@@ -1,10 +1,13 @@
-﻿using AuctionHouseApp.Server.Services;
+﻿using AuctionHouseApp.Server.Models;
+using AuctionHouseApp.Server.Services;
 using Dapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
 using Vista.DB;
 using Vista.DB.Schema;
+using Vista.DbPanda;
 
 namespace AuctionHouseApp.Server.Controllers;
 
@@ -12,9 +15,12 @@ namespace AuctionHouseApp.Server.Controllers;
 [ApiController]
 public class RaffleTicketController(
     ILogger<RaffleTicketController> _logger,
+    LotteryDrawService _lotterySvc,
     AuthVipService _vipSvc
 ) : ControllerBase
 {
+  private readonly object lockObj = new object();
+
   /// <summary>
   /// ### 5.1 取得獎品清單
   /// 大螢幕可沿用 → 不管制授權。
@@ -216,7 +222,7 @@ SELECT T.RaffleTicketNo, O.RaffleOrderNo, O.SoldDtm, V.PaddleNum
   }
 
   /// <summary>
-  /// 5.4 取得中獎結果
+  /// 5.4 取得中獎結果 (抽三大獎，由三獎→二獎→一獎)
   /// GET /api/raffleticket/winner/{prizeId}
   /// </summary>
   /// <param name="prizeId">獎品ID</param>
@@ -236,54 +242,29 @@ SELECT T.RaffleTicketNo, O.RaffleOrderNo, O.SoldDtm, V.PaddleNum
   /// }
   /// ```
   /// </returns>
-  [AllowAnonymous]
   [HttpGet("winner/{prizeId}")]
-  public async Task<ActionResult<CommonResult<RaffleWinnerData>>> GetWinner(string prizeId)
+  public ActionResult<CommonResult<RaffleWinnerData>> DrawMajorWinner(string prizeId)
   {
     try
     {
-      // 查詢指定獎品的中獎記錄
-      string sql = """
-SELECT
-    W.PrizeId,
-    W.RaffleTickerNo,
-    W.DrawDtm,
-    T.BuyerName,
-    T.BuyerEmail,
-    P.Name as PrizeName
-FROM [RaffleWinner] W (NOLOCK)
-INNER JOIN [RaffleTicket] T (NOLOCK) ON W.RaffleTickerNo = T.RaffleTicketNo
-INNER JOIN [RafflePrize] P (NOLOCK) ON W.PrizeId = P.PrizeId
-WHERE W.PrizeId = @PrizeId
-""";
+      // resource
+      var request = HttpContext.Request;
+      string publicWebRoot = $"{request.Scheme}://{request.Host}";
 
-      using var conn = await DBHelper.AUCDB.OpenAsync();
-      var result = await conn.QueryFirstOrDefaultAsync<RaffleWinnerQueryResult>(sql, new { PrizeId = prizeId });
+      //## 若已抽獎直接回傳結果。
+      using var conn = DBHelper.AUCDB.Open();
 
-      if (result == null)
+      RaffleWinner? winner = null;
+      lock (lockObj)
       {
-        return Ok(new CommonResult<RaffleWinnerData>(false, null, "尚未開獎或獎品不存在"));
+        //## 進行抽獎
+        winner = DoDrawRaffle(prizeId, conn);
       }
 
-      // 嘗試從 Vip 表取得 PaddleNum（如果買家是 VIP）
-      string vipSql = """
-SELECT PaddleNum FROM [Vip] (NOLOCK)
-WHERE VipEmail = @Email
-""";
-
-      var vipInfo = await conn.QueryFirstOrDefaultAsync<VipLookupResult>(vipSql, new { Email = result.BuyerEmail });
-      string winnerID = vipInfo?.PaddleNum ?? result.BuyerEmail; // 如果不是 VIP，使用 Email
-
-      var data = new RaffleWinnerData(
-          PrizeId: result.PrizeId,
-          PrizeName: result.PrizeName,
-          WinnerID: winnerID,
-          WinnerName: result.BuyerName,
-          TicketNumber: result.RaffleTickerNo,
-          DrawTime: result.DrawDtm.ToString("yyyy-MM-ddTHH:mm:ss.fffZ")
-      );
-
-      return Ok(new CommonResult<RaffleWinnerData>(true, data, null));
+      //## 送回抽獎結果。
+      var data = DoGetRaffleDrawingResult(winner, publicWebRoot, conn);
+      var result = new CommonResult<RaffleWinnerData>(true, data, null);
+      return Ok(result);
     }
     catch (Exception ex)
     {
@@ -291,6 +272,92 @@ WHERE VipEmail = @Email
       _logger.LogError(ex, errMsg);
       return Ok(new CommonResult<RaffleWinnerData>(false, null, errMsg));
     }
+  }
+
+  [NonAction]
+  private RaffleWinner DoDrawRaffle(string prizeId, SqlConnection conn)
+  {
+    string sqlInsertWinner = """
+INSERT INTO [dbo].[RaffleWinner]
+ ([PrizeId],[RaffleTickerNo],[DrawDtm])
+OUTPUT inserted.*
+VALUES
+ (@PrizeId, @RaffleTickerNo, GetDate())
+""";
+
+    string sqlAliveTickets = """
+SELECT RaffleTicketNo FROM RaffleTicket T
+WHERE NOT EXISTS 
+(SELECT TOP 1 * FROM RaffleWinner W WHERE W.RaffleTickerNo = T.RaffleTicketNo)
+""";
+
+    try
+    {
+      using var txn = conn.BeginTransaction();
+      RaffleWinner? winner = conn.GetEx<RaffleWinner>(new { PrizeId = prizeId }, txn);
+      if (winner != null)
+      {
+        //# 已開完獎，獎直接送回結果。
+        txn.Commit();
+        _logger.LogInformation($"已開完獎 {winner.PrizeId}-{winner.RaffleTickerNo} 直接送回結果。");
+        return winner;
+      }
+
+      //# 取得有效且未得獎的抽獎券
+      string[] ticketArray = conn.Query<RaffleTicket>(sqlAliveTickets, null, txn)
+                                 .Select(c => c.RaffleTicketNo)
+                                 .ToArray();
+
+      //# 進行抽將
+      string winTicket = _lotterySvc.DrawOneTicket(ticketArray);
+
+      //# 存入DB
+      winner = conn.QueryFirst<RaffleWinner>(sqlInsertWinner, new { PrizeId = prizeId, RaffleTickerNo = winTicket }, txn);
+
+      //# SUCCESS
+      txn.Commit();
+      _logger.LogInformation($"完成開獎 {winner.PrizeId}-{winner.RaffleTickerNo} 送回結果。");
+      return winner;
+    }
+    catch (Exception ex)
+    {
+      throw new ApplicationException("DoDrawGiveToWin fail!", ex);
+    }
+  }
+
+  /// <summary>
+  /// helper: 取得彩券中獎結果。
+  /// </summary>
+  [NonAction]
+  private RaffleWinnerData DoGetRaffleDrawingResult(RaffleWinner winner, string publicWebRoot, SqlConnection conn)
+  {
+    // ※ 執行此動作需先確認已完成抽獎了。
+    string sql = """
+SELECT
+ W.PrizeId,
+ W.RaffleTickerNo,
+ W.DrawDtm,
+ T.BuyerName,
+ T.BuyerEmail,
+ PrizeName = P.[Name],
+ V.PaddleNum
+FROM [RaffleWinner] W (NOLOCK)
+INNER JOIN [RaffleTicket] T (NOLOCK) ON W.RaffleTickerNo = T.RaffleTicketNo
+INNER JOIN [RafflePrize] P (NOLOCK) ON W.PrizeId = P.PrizeId
+LEFT JOIN [Vip] V (NOLOCK) ON T.BuyerEmail = V.VipEmail
+WHERE W.PrizeId = @PrizeId
+AND W.RaffleTickerNo = @RaffleTickerNo;
+""";
+
+    var info = conn.QueryFirst(sql, new { winner.PrizeId, winner.RaffleTickerNo });
+    return new RaffleWinnerData(
+      PrizeId: info.PrizeId,
+      PrizeName: info.PrizeName,
+      WinnerID: info.PaddleNum ?? info.BuyerEmail,
+      WinnerName: info.BuyerName,
+      TicketNumber: info.RaffleTickerNo,
+      DrawTime: info.DrawDtm.ToString("yyyy-MM-ddTHH:mm:ss.fffZ")
+    );
   }
 
   /// <summary>
@@ -332,38 +399,25 @@ WHERE VipEmail = @Email
       // 查詢所有得獎記錄
       string sql = """
 SELECT
-    W.PrizeId,
-    W.RaffleTickerNo,
-    W.DrawDtm,
-    T.BuyerName,
-    T.BuyerEmail,
-    P.Name as PrizeName,
-    P.Description as PrizeDescription,
-    P.Image as PrizeImage,
-    P.Value as PrizeValue
+  W.PrizeId,
+  W.RaffleTickerNo,
+  W.DrawDtm,
+  T.BuyerName,
+  T.BuyerEmail,
+  P.Name as PrizeName,
+  P.Description as PrizeDescription,
+  P.Image as PrizeImage,
+  P.Value as PrizeValue,
+	V.PaddleNum
 FROM [RaffleWinner] W (NOLOCK)
 INNER JOIN [RaffleTicket] T (NOLOCK) ON W.RaffleTickerNo = T.RaffleTicketNo
 INNER JOIN [RafflePrize] P (NOLOCK) ON W.PrizeId = P.PrizeId
+LEFT JOIN Vip V (NOLOCK) ON T.BuyerEmail = V.VipEmail
 ORDER BY W.DrawDtm DESC
 """;
 
       using var conn = await DBHelper.AUCDB.OpenAsync();
-      var results = await conn.QueryAsync<AllWinnersQueryResult>(sql);
-
-      // 批次查詢所有 VIP 的 PaddleNum
-      var emails = results.Select(r => r.BuyerEmail).Distinct().ToList();
-      var vipDict = new Dictionary<string, string>();
-
-      if (emails.Any())
-      {
-        string vipSql = """
-SELECT VipEmail, PaddleNum FROM [Vip] (NOLOCK)
-WHERE VipEmail IN @Emails
-""";
-
-        var vips = await conn.QueryAsync<VipBatchLookupResult>(vipSql, new { Emails = emails });
-        vipDict = vips.ToDictionary(v => v.VipEmail, v => v.PaddleNum);
-      }
+      var results = await conn.QueryAsync(sql);
 
       var winners = results.Select(r => new RaffleWinnerItem(
           PrizeId: r.PrizeId,
@@ -371,7 +425,7 @@ WHERE VipEmail IN @Emails
           PrizeDescription: r.PrizeDescription,
           PrizeImage: $"{publicWebRoot}{r.PrizeImage}",
           PrizeValue: r.PrizeValue.ToString(),
-          WinnerID: vipDict.ContainsKey(r.BuyerEmail) ? vipDict[r.BuyerEmail] : r.BuyerEmail,
+          WinnerID: r.PaddleNum ?? r.BuyerEmail,
           WinnerName: r.BuyerName,
           TicketNumber: r.RaffleTickerNo,
           DrawTime: r.DrawDtm.ToString("yyyy-MM-ddTHH:mm:ss.fffZ")
@@ -389,4 +443,103 @@ WHERE VipEmail IN @Emails
     }
   }
 
+  /// <summary>
+  /// 一口氣抽完小獎（三大獎外）
+  /// (後台呼叫)
+  /// </summary>
+  [HttpPost("[action]")]
+  public ActionResult<CommonResult<MsgObj>> DrawMinorWinners()
+  {
+    try
+    {
+      //## 若已抽獎直接回傳結果。
+      using var conn = DBHelper.AUCDB.Open();
+
+      MsgObj? msg = null;
+      lock (lockObj)
+      {
+        //## 進行抽獎
+        msg = DoDrawMinorWinners(conn);
+      }
+
+      //## 送回抽獎結果。
+      //var msg = new MsgObj("To draw minor prize success.", Severity:"success");
+      var result = new CommonResult<MsgObj>(true, msg, null);
+      return Ok(result);
+    }
+    catch (Exception ex)
+    {
+      string errMsg = string.Format("Exception！{0}", ex.Message);
+      _logger.LogError(ex, errMsg);
+      return Ok(new CommonResult<dynamic>(false, null, errMsg));
+    }
+  }
+
+  [NonAction]
+  private MsgObj DoDrawMinorWinners(SqlConnection conn)
+  {
+    // -- 未開獎的小獎
+    string sqlAliveMinorPrize = """
+SELECT PrizeId 
+FROM RafflePrize 
+WHERE PrizeId NOT IN (SELECT TOP 3 PrizeId FROM RafflePrize ORDER BY PrizeId ASC)
+  AND PrizeId NOT IN (SELECT PrizeId FROM RaffleWinner)
+ORDER BY PrizeId ASC
+""";
+
+    // -- 未中獎的彩券
+    string sqlAliveTickets = """
+SELECT RaffleTicketNo FROM RaffleTicket T
+WHERE NOT EXISTS 
+(SELECT TOP 1 * FROM RaffleWinner W WHERE W.RaffleTickerNo = T.RaffleTicketNo)
+""";
+
+    // insert winner
+    string sqlInsertWinner = """
+INSERT INTO [dbo].[RaffleWinner]
+ ([PrizeId],[RaffleTickerNo],[DrawDtm])
+OUTPUT inserted.*
+VALUES
+ (@PrizeId, @RaffleTickerNo, GetDate())
+""";
+
+    try
+    {
+      using var txn = conn.BeginTransaction();
+
+      // 未開獎的小獎 list
+      string[] prizeArray = conn.Query<RafflePrize>(sqlAliveMinorPrize, null, txn)
+                                .Select(c => c.PrizeId)
+                                .ToArray();
+
+      // 所有小獎都已抽出。
+      if (prizeArray.Length == 0)
+        return new MsgObj("All minor prizes have been drawn.", Severity: "info");
+
+      //# 取得有效且未得獎的抽獎券
+      string[] ticketArray = conn.Query<RaffleTicket>(sqlAliveTickets, null, txn)
+                                 .Select(c => c.RaffleTicketNo)
+                                 .ToArray();
+
+      //# 進行抽將
+      string[] winTicketArray = _lotterySvc.DrawTicket(ticketArray, prizeArray.Length);
+
+      //# 存入DB
+      int minCount = Math.Min(winTicketArray.Length, prizeArray.Length);
+      List<RaffleWinner> winnerList = new();
+      for(int i = 0; i < minCount; i++)
+      {
+        var winner = conn.QueryFirst<RaffleWinner>(sqlInsertWinner, new { PrizeId = prizeArray[i], RaffleTickerNo = winTicketArray[i] }, txn);
+        winnerList.Add(winner);
+      }
+
+      //# SUCCESS
+      txn.Commit();
+      return new MsgObj($"Completed {winnerList.Count} minor prize draws.", Severity: "success");
+    }
+    catch (Exception ex)
+    {
+      throw new ApplicationException("DoDrawOtherMinorWinners fail!", ex);
+    }
+  }
 }

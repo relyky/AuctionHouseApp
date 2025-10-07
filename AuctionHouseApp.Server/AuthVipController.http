@@ -86,6 +86,18 @@ GET {{AuctionHouseApp.Server_HostAddress}}/api/raffleticket/mytickets
 Accept: application/json
 Authorization: Bearer {{loginRequest.response.body.$.data.token}}
 
+### 5.4 取得中獎結果 (大螢幕觸發抽三獎→二獎→一獎)
+GET {{AuctionHouseApp.Server_HostAddress}}/api/raffleticket/winner/R03
+Accept: application/json
+
+### 5.5 取得所有得獎名單 (大螢幕)
+GET {{AuctionHouseApp.Server_HostAddress}}/api/raffleticket/winners
+Accept: application/json
+
+### 5.x 一口氣抽完小獎（三大獎外）
+POST {{AuctionHouseApp.Server_HostAddress}}/api/raffleticket/DrawMinorWinners
+Accept: application/json
+
 ###------------------------------------
 ### 6.1 取得福袋清單
 GET {{AuctionHouseApp.Server_HostAddress}}/api/givetowin/gifts
