@@ -15,6 +15,7 @@ public class vfnGiftInventoryResult
   public string PaymentStatus { get; set; } = default!;
   public DateTime? PaymentDtm { get; set; }
   public string PrizeGroup { get; set; } = default!;
+  public Decimal? PrizeValue { get; set; }
 }
 
 public class vfnGiftInventoryArgs 

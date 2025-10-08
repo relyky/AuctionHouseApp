@@ -263,6 +263,7 @@ interface IGiftInventoryResult {
   paymentStatus: string;
   paymentDtm: any;
   prizeGroup: string;
+  prizeValue: number;
 }
 
 //#endregion

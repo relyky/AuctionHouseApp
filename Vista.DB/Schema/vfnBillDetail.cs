@@ -15,6 +15,9 @@ public class vfnBillDetailResult
   public string ChargingItemId { get; set; } = default!;
   public string HasPaid { get; set; } = default!;
   public DateTime? PaidDtm { get; set; }
+  public string Name { get; set; } = default!;
+  public Decimal? PaidAmount { get; set; }
+  public string Time { get; set; } = default!;
 }
 
 public class vfnBillDetailArgs 
