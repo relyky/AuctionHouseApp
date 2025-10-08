@@ -6,6 +6,7 @@ using System.Globalization;
 using System.Security;
 using System.Security.Cryptography;
 using System.Text;
+using System.Web;
 
 /***************************************************************************
 第三版 DBHelper.v３.0 on 2025-9-30
@@ -40,7 +41,11 @@ public class ConnProxy
     try
     {
       /// 連線字串只有建構時可設定。
+#if DEBUG
       _connStr = config.GetConnectionString(connName)!;
+#else
+      _connStr = DecodeSAML(config.GetConnectionString(connName)!);
+#endif
     }
     catch (Exception ex)
     {
@@ -60,5 +65,33 @@ public class ConnProxy
     var conn = new SqlConnection(_connStr);
     await conn.OpenAsync();
     return conn;
+  }
+
+
+  /// <summary>
+  /// ref→[SAMLRequest, SAMLResponse快速加解密（或叫編碼解碼）範例](https://dotblogs.com.tw/kevinya/2019/09/20/152655)
+  /// </summary>
+  private static string EncodeSAML(string src)
+  {
+    byte[] bytes = System.Text.Encoding.ASCII.GetBytes(src);
+    string base64String = Convert.ToBase64String(bytes);
+    base64String = HttpUtility.UrlEncode(base64String);
+    return base64String;
+  }
+
+  /// <summary>
+  /// ref→[SAMLRequest, SAMLResponse快速加解密（或叫編碼解碼）範例](https://dotblogs.com.tw/kevinya/2019/09/20/152655)
+  /// </summary>
+  private static string DecodeSAML(string rawSamlData)
+  {
+    string samlAssertion = "";
+    if (rawSamlData.Contains('%'))
+    {
+      rawSamlData = HttpUtility.UrlDecode(rawSamlData);
+    }
+
+    byte[] samlData = Convert.FromBase64String(rawSamlData);
+    samlAssertion = System.Text.Encoding.ASCII.GetString(samlData);
+    return samlAssertion;
   }
 }

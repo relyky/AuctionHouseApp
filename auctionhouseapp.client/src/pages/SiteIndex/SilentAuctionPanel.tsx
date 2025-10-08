@@ -2,6 +2,7 @@ import { Alert, Box, Button, CircularProgress, FormControlLabel, Paper, Switch, 
 import { useState } from "react";
 import Swal from "sweetalert2";
 import { postData, ResponseError } from "../../tools/httpHelper";
+import type { ICommonResult } from "../../dto/activities/ICommonResult";
 
 interface ManualHammerResponse {
   hammeredCount: number;
@@ -40,10 +41,10 @@ export default function SilentAuctionPanel(props: {
 
       // 執行結標
       setLoading(true);
-      const result = await postData<CommonResult<ManualHammerResponse>>('/api/SilentAuction/ManualHammer');
+      const result = await postData<ICommonResult<ManualHammerResponse>>('/api/SilentAuction/ManualHammer');
 
       if (!result.success) {
-        throw new Error(result.errMsg || '結標失敗');
+        throw new Error(result.message || '結標失敗');
       }
 
       const data = result.data!;

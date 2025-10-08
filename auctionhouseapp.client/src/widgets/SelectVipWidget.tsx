@@ -48,6 +48,7 @@ export function SelectVipWidget(props: {
       onChange={handleChange}
       loading={loading}
       options={profileList}
+      noOptionsText='No options available'
       getOptionLabel={(option) => `${option.paddleNum}.${option.vipName}`}
       renderInput={(params) => <StyledTextField {...params}
         label={props.label}

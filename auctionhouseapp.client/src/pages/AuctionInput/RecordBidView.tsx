@@ -180,7 +180,7 @@ export default function RecordBidView() {
   );
 
   async function handleHammer() {
-    await handler.hammerItem(selectedItem.itemId);
+    await handler.hammerItem(selectedItem!.itemId);
   }
 
   async function handlePass() {
