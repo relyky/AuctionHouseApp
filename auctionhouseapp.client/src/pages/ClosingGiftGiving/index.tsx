@@ -1,4 +1,7 @@
-import { Box, Container, Typography } from "@mui/material";
+import { Box, Container, LinearProgress, Typography } from "@mui/material";
+import { useEffect, useState } from "react";
+import { postData } from "../../tools/httpHelper";
+import GiftInventoryLister from "./GiftInventoryLister";
 
 /**
  * 禮品清冊
@@ -6,11 +9,29 @@ import { Box, Container, Typography } from "@mui/material";
  * 可列印成紙本讓工作人員發送已付費禮品。
  */
 export default function ClosingGiftGiving() {
+  const [giftList, setGiftList] = useState<IGiftInventoryResult[]>([])
+  const [loading, setLoading] = useState(false)
+
+  useEffect(() => {
+    setLoading(true)
+    const args: IGiftInventoryArgs = {
+      paddleNum: null
+    }
+    postData<IGiftInventoryResult[]>('/api/ClosingGiftGiving/GiftInventory', args)
+      .then(setGiftList)
+      .catch(console.error)
+      .finally(() => setTimeout(() => setLoading(false), 800));
+  }, [])
+
   return (
     <Container>
       <Typography variant='h5' gutterBottom>禮品清冊</Typography>
-      <Box typography='body2' color='text.secondary'>在訂單畫面上針對未付費項目勾選並加總金額。在客人付費後註記『已付費』。已付費項目顯示在另一區。</Box>
+      <Box typography='body2' color='text.secondary'>活動尾聲貴賓付費完後現場領取禮品。可列印成紙本讓工作人員發送已付費禮品。</Box>
 
+      {loading && <LinearProgress color='info' sx={{ my: 1 }} />}
+
+      {!loading &&
+        <GiftInventoryLister giftList={giftList} />}
     </Container>
   );
 }

@@ -77,7 +77,7 @@ export default function OpenAskPanel(props: {
             }
           }}
         />
-        <Button type='submit' variant='contained'>
+        <Button type='submit' variant='contained' loading={loading} >
           開啟新一輪
         </Button>
       </Toolbar>

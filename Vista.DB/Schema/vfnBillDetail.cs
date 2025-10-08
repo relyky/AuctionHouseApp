@@ -19,7 +19,7 @@ public class vfnBillDetailResult
 
 public class vfnBillDetailArgs 
 {
-  public string PaddleNum { get; set; } = default!;
+  public string? PaddleNum { get; set; } = default!;
 }
 
 static partial class DBHelperClassExtensions

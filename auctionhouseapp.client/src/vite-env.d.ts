@@ -250,4 +250,19 @@ interface IVip {
   taxNum: string;
 }
 
+interface IGiftInventoryArgs {
+  paddleNum: string | null;
+}
+
+interface IGiftInventoryResult {
+  prizeId: string;
+  prizeName: string;
+  winnerId: string;
+  winnerName: string;
+  ticketNo: string;
+  paymentStatus: string;
+  paymentDtm: any;
+  prizeGroup: string;
+}
+
 //#endregion

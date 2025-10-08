@@ -19,7 +19,7 @@ public class vfnGiftInventoryResult
 
 public class vfnGiftInventoryArgs 
 {
-  public string PaddleNum { get; set; } = default!;
+  public string? PaddleNum { get; set; } = default!;
 }
 
 static partial class DBHelperClassExtensions
