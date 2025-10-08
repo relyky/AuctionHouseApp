@@ -58,7 +58,7 @@ export default function SilentAuctionPanel(props: {
         });
       } else {
         // 準備結果明細HTML
-        const itemsHtml = data.items.map(item => {
+        const itemsHtml = data.items.map((item: { itemId: string; itemName: string; result: string; winnerPaddleNum: string; hammerPrice: number }) => {
           const statusBadge = item.result === 'Hammered'
             ? '<span style="color: green;">✓ 成交</span>'
             : '<span style="color: orange;">✗ 流標</span>';

@@ -3,7 +3,6 @@ using Reinforced.Typings.Attributes;
 namespace AuctionHouseApp.Server.Controllers;
 
 // ========== 11.1 取得消費明細 ==========
-
 [TsInterface(Namespace = "dto.transactions")]
 public record TransactionSummaryResult_Data(
   TransactionWinningTickets WinningTickets,
@@ -42,8 +41,8 @@ public record TransactionSummary(
 
 [TsInterface(Namespace = "dto.transactions")]
 public record TransactionItem(
-  string TransactionId,
   string Type,
+  string TransactionId,
   string Name,
   decimal Amount,
   string Status,
@@ -71,5 +70,44 @@ public record UpdateReceiptArgs(
 
 [TsInterface(Namespace = "dto.transactions")]
 public record UpdateReceiptResult_Data(
+  string Message
+);
+
+// ========== 11.3 更新付款狀態 ==========
+
+[TsInterface(Namespace = "dto.transactions")]
+public record UpdatePaymentArgs(
+  string PaddleNum,
+  string Type,
+  string TransactionId,
+  string PaymentStatus,
+  decimal PaidAmount,
+  string? PaymentNotes
+);
+
+[TsInterface(Namespace = "dto.transactions")]
+public record UpdatePaymentResult_Data(
+  string Message
+);
+
+// ========== 11.4 批次更新付款狀態 ==========
+
+[TsInterface(Namespace = "dto.transactions")]
+public record BatchUpdatePaymentArgs(
+  string PaddleNum,
+  List<BatchPaymentItem> Transactions,
+  string PaymentStatus,
+  string? PaymentNotes
+);
+
+[TsInterface(Namespace = "dto.transactions")]
+public record BatchPaymentItem(
+  string Type,
+  string TransactionId
+);
+
+[TsInterface(Namespace = "dto.transactions")]
+public record BatchUpdatePaymentResult_Data(
+  int UpdatedCount,
   string Message
 );

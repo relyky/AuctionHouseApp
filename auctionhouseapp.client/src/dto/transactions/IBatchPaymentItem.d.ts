@@ -2,13 +2,8 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 
-export interface ITransactionItem
+export interface IBatchPaymentItem
 {
 	type: string;
 	transactionId: string;
-	name: string;
-	amount: number;
-	status: string;
-	paidAmount: number;
-	time: string;
 }
