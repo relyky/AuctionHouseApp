@@ -7,7 +7,7 @@ using Microsoft.Data.SqlClient;
 
 public class vfnBillDetailResult 
 {
-  public string PadleNum { get; set; } = default!;
+  public string PaddleNum { get; set; } = default!;
   public string VipName { get; set; } = default!;
   public Decimal? Amount { get; set; }
   public string Activity { get; set; } = default!;

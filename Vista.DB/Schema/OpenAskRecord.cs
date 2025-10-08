@@ -15,6 +15,7 @@ public class OpenAskRecord
   /// </summary>
   [Display(Name = "系統序號")]
   [Key]
+  [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
   public int Ssn { get; set; }
   /// <summary>
   /// 公開叫價回合
