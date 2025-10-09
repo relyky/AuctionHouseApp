@@ -5,6 +5,7 @@ import { postData } from "../../tools/httpHelper";
 export default function DonationPanel(props: {
   activity: ActivityEnum
 }) {
+  const [closingChecked, setClosingChecked] = useState<boolean>(false)
   const [checked, setChecked] = useState<boolean>(false)
   const [loading, setLoading] = useState<boolean>(false)
 
@@ -17,8 +18,22 @@ export default function DonationPanel(props: {
       .finally(() => setLoading(false))
   });
 
+  const handleClosingSwitch = useEventCallback((_, checked: boolean) => {
+    setLoading(true)
+    const onOff = checked ? 'on' : 'off'
+    postData<MsgObj>(`/api/Site/EventClosingSwitch/${onOff}`)
+      .then(msg => setClosingChecked(msg.message === "on"))
+      .catch(console.log)
+      .finally(() => setLoading(false))
+  });
+
   useEffect(() => {
     setLoading(true)
+
+    postData<MsgObj>('/api/Site/GetEventClosingSwitch')
+      .then(msg => setClosingChecked(msg.message === "on"))
+      .catch(console.log)
+
     postData<MsgObj>('/api/Site/GetDonationSwitch')
       .then(msg => setChecked(msg.message === "on"))
       .catch(console.log)
@@ -37,6 +52,12 @@ export default function DonationPanel(props: {
         <FormControlLabel
           control={<Switch checked={checked} onChange={handleSwitch} disabled={loading} />}
           label="Donation Switch (愛心捐款開關)" />
+      </FormGroup>
+
+      <FormGroup sx={{ m: 3 }}>
+        <FormControlLabel
+          control={<Switch checked={closingChecked} onChange={handleClosingSwitch} disabled={loading} />}
+          label="Event Closing Switch (活動尾聲開關)" />
       </FormGroup>
     </Paper>
   )
