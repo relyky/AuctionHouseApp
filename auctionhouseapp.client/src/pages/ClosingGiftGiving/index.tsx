@@ -32,6 +32,9 @@ export default function ClosingGiftGiving() {
 
       {!loading &&
         <GiftInventoryLister giftList={giftList} />}
+
+      {/* tail */}
+      <Box sx={{ height: '3rem' }}></Box>
     </Container>
   );
 }

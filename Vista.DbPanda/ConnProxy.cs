@@ -41,11 +41,10 @@ public class ConnProxy
     try
     {
       /// 連線字串只有建構時可設定。
-#if DEBUG
-      _connStr = config.GetConnectionString(connName)!;
-#else
-      _connStr = DecodeSAML(config.GetConnectionString(connName)!);
-#endif
+      if ("EnablePlainText".Equals(config["ConnStringParser"]))
+        _connStr = config.GetConnectionString(connName)!;
+      else
+        _connStr = DecodeSAML(config.GetConnectionString(connName)!);
     }
     catch (Exception ex)
     {

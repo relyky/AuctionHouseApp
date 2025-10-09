@@ -9,7 +9,7 @@ export default function LiveEventsView() {
       <Paper square sx={{ p: 2 }}>
         <Typography variant='h6' gutterBottom>現場活動</Typography>
         <Grid container spacing={2}>
-          <AuthorizeGuard role='Admin'>
+          <AuthorizeGuard role='Director'>
             <Grid size={{ xs: 12, sm: 6 }}>
               <Button component={NavLink} fullWidth variant='outlined' to='/site'>
                 活動主控台(大螢幕切換)</Button>
@@ -21,10 +21,12 @@ export default function LiveEventsView() {
                 Live Auction 競價輸入</Button>
             </Grid>
           </AuthorizeGuard>
-          <Grid size={{ xs: 12, sm: 6 }}>
-            <Button component={NavLink} fullWidth variant='outlined' to='/site/ask'>
-              Open Ask 認捐輸入</Button>
-          </Grid>
+          <AuthorizeGuard role='Sales'>
+            <Grid size={{ xs: 12, sm: 6 }}>
+              <Button component={NavLink} fullWidth variant='outlined' to='/site/ask'>
+                Open Ask 認捐輸入</Button>
+            </Grid>
+          </AuthorizeGuard>
           <AuthorizeGuard role='Admin'>
             <Grid size={{ xs: 12, sm: 6 }}>
               <Button component={NavLink} fullWidth variant='outlined' to='/site/askfix'>

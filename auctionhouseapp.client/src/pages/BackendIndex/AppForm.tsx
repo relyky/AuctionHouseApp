@@ -1,20 +1,32 @@
 import { Alert, Box, Button, Container, Link, Stack, Typography } from "@mui/material";
 import { useAtomValue } from "jotai";
-import type { FC } from "react";
+import { useEffect, useState, type FC } from "react";
 import { NavLink } from "react-router";
 import { selectIsAuthedStaff, staffAccountAtom } from "../../atoms/staffAccountAtom";
 import AuthorizeGuard from "../../layout/AuthorizeGuard";
 import LiveEventsPanel from "./LiveEventsPanel";
 import EventsClosingPanel from "./EventsClosingPanel";
+import { postData } from "../../tools/httpHelper";
 
 export default function BackendIndex_AppForm() {
   const isAuthedStaff = useAtomValue(selectIsAuthedStaff)
   const acct = useAtomValue(staffAccountAtom)
 
+  const [eventClosing, setEventClosing] = useState<boolean>(false) // 活動尾聲
+  const [loading, setLoading] = useState<boolean>(false)
+
   //// 工作人員需先登入。
   //useEffect(() => {
   //  if (!isAuthedStaff) navigate('/stafflogin')
   //}, [isAuthedStaff])
+
+  useEffect(() => {
+    setLoading(true)
+    postData<MsgObj>('/api/Site/GetEventClosingSwitch')
+      .then(msg => setEventClosing(msg.message === "on"))
+      .catch(console.log)
+      .finally(() => setLoading(false))
+  }, []) 
 
   // 工作人員需先登入。
   if (!isAuthedStaff) {
@@ -71,7 +83,7 @@ export default function BackendIndex_AppForm() {
       <LiveEventsPanel />
 
       {/* 活動尾聲 */}
-      <EventsClosingPanel />
+      {eventClosing && <EventsClosingPanel />}
 
       <Box sx={{ height: '6rem' }} ></Box>
       <Footer />

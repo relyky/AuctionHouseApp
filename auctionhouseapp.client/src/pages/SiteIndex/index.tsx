@@ -13,6 +13,7 @@ import { givePrizeProfileAtom, rafflePrizeProfileAtom, auctionPrizeProfileAtom, 
 import type { IRafflePrizeProfile } from "../../dto/display/IRafflePrizeProfile"
 import type { IGivePrizeProfile } from "../../dto/display/IGivePrizeProfile"
 import type { IAuctionPrizeProfile } from "../../dto/display/IAuctionPrizeProfile"
+import AuthorizeGuard from "../../layout/AuthorizeGuard";
 
 export default function SiteIndex() {
   const [activity, setActivity] = useState<ActivityEnum>('silentAuction')
@@ -47,31 +48,33 @@ export default function SiteIndex() {
   })
 
   return (
-    <Container maxWidth='md'>
-      <Typography variant='h5' gutterBottom>活動主控台(大螢幕切換)</Typography>
+    <AuthorizeGuard role='Director'>
+      <Container maxWidth='md'>
+        <Typography variant='h5' gutterBottom>活動主控台(大螢幕切換)</Typography>
 
-      <Box display='flex' gap={2} flexWrap='wrap' justifyContent='center' mb={2} >
-        <ActivitySwitch value={activity} onChange={handleActivity} activity='raffle'
-          label={<span>1. Raffle Ticket <br />(彩券抽獎)</span>} />
-        <ActivitySwitch value={activity} onChange={handleActivity} activity='give'
-          label={<span>2. Give to Win <br />(福袋抽獎)</span>} />
-        <ActivitySwitch value={activity} onChange={handleActivity} activity='liveAuction'
-          label={<span>3. Live Auction <br />(現場拍賣)</span>} />
-        <ActivitySwitch value={activity} onChange={handleActivity} activity='silentAuction'
-          label={<span>4. Silent Auction <br />(靜默拍賣)</span>} />
-        <ActivitySwitch value={activity} onChange={handleActivity} activity='openAsk'
-          label={<span>5. Open Ask <br />(募款活動)</span>} />
-        <ActivitySwitch value={activity} onChange={handleActivity} activity='donation'
-          label={<span>6. Donation <br />(愛心捐款)</span>} />
-      </Box>
+        <Box display='flex' gap={2} flexWrap='wrap' justifyContent='center' mb={2} >
+          <ActivitySwitch value={activity} onChange={handleActivity} activity='raffle'
+            label={<span>1. Raffle Ticket <br />(彩券抽獎)</span>} />
+          <ActivitySwitch value={activity} onChange={handleActivity} activity='give'
+            label={<span>2. Give to Win <br />(福袋抽獎)</span>} />
+          <ActivitySwitch value={activity} onChange={handleActivity} activity='liveAuction'
+            label={<span>3. Live Auction <br />(現場拍賣)</span>} />
+          <ActivitySwitch value={activity} onChange={handleActivity} activity='silentAuction'
+            label={<span>4. Silent Auction <br />(靜默拍賣)</span>} />
+          <ActivitySwitch value={activity} onChange={handleActivity} activity='openAsk'
+            label={<span>5. Open Ask <br />(募款活動)</span>} />
+          <ActivitySwitch value={activity} onChange={handleActivity} activity='donation'
+            label={<span>6. Donation <br />(愛心捐款)</span>} />
+        </Box>
 
-      <RaffleTicketPanel activity={activity} />
-      <GiveToWinPanel activity={activity} />
-      <LiveAuctionPanel activity={activity} />
-      <SilentAuctionPanel activity={activity} />
-      <OpenAskPanel activity={activity} />
-      <DonationPanel activity={activity} />
-    </Container>
+        <RaffleTicketPanel activity={activity} />
+        <GiveToWinPanel activity={activity} />
+        <LiveAuctionPanel activity={activity} />
+        <SilentAuctionPanel activity={activity} />
+        <OpenAskPanel activity={activity} />
+        <DonationPanel activity={activity} />
+      </Container>
+    </AuthorizeGuard>
   )
 }
 

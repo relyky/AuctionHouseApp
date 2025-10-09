@@ -88,8 +88,52 @@ WHERE StateName = 'DonationSwitch'
 """;
 
     using var conn = await DBHelper.AUCDB.OpenAsync();
-    var info = await conn.QueryFirstAsync<LiveSession>(sql);
-    return Ok(new MsgObj(info.StringValue));
+    var info = await conn.QueryFirstOrDefaultAsync<LiveSession>(sql);
+    return Ok(new MsgObj(info?.StringValue ?? "off"));
+  }
+
+  [HttpPost("[action]/{onOff}")]
+  public ActionResult<MsgObj> EventClosingSwitch(string onOff)
+  {
+    try
+    {
+      string sql = """
+UPDATE LiveSession
+ SET StringValue = @onOff
+ OUTPUT inserted.*
+ WHERE StateName = 'EventClosingSwitch'
+""";
+
+      if (onOff != "on") onOff = "off";
+
+      using var conn = DBHelper.AUCDB.Open();
+      using var txn = conn.BeginTransaction();
+      var info = conn.QueryFirst<LiveSession>(sql, new { onOff }, txn);
+      txn.Commit();
+
+      return Ok(new MsgObj(info.StringValue));
+    }
+    catch (Exception ex)
+    {
+      return BadRequest("Exception！" + ex.Message);
+    }
+  }
+
+  /// <summary>
+  /// 活動尾聲狀態
+  /// </summary>
+  [HttpPost("[action]")]
+  public async Task<ActionResult<MsgObj>> GetEventClosingSwitch()
+  {
+    string sql = """
+SELECT TOP 1 * 
+FROM LiveSession (NOLOCK)
+WHERE StateName = 'EventClosingSwitch'
+""";
+
+    using var conn = await DBHelper.AUCDB.OpenAsync();
+    var info = await conn.QueryFirstOrDefaultAsync<LiveSession>(sql);
+    return Ok(new MsgObj(info?.StringValue ?? "off"));
   }
 
   /// <summary>
